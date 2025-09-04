@@ -1574,6 +1574,65 @@ export class McpHub {
 		}
 	}
 
+	async addServer(url: string, source: "global" | "project"): Promise<void> {
+		try {
+			const parsedUrl = new URL(url)
+			const serverName = parsedUrl.hostname
+
+			// Check if a server with this name already exists in the given source
+			const existingConnection = this.findConnection(serverName, source)
+			if (existingConnection) {
+				vscode.window.showErrorMessage(t("mcp:errors.server_exists", { serverName }))
+				return
+			}
+
+			// For now, we'll default to sse and allow the user to change it.
+			// In the future we could try to auto-detect.
+			const newConfig = {
+				type: "sse",
+				url,
+			}
+
+			// Determine which config file to update
+			let configPath: string
+			if (source === "project") {
+				const projectMcpPath = await this.getProjectMcpPath()
+				if (projectMcpPath) {
+					configPath = projectMcpPath
+				} else {
+					// Create it if it doesn't exist
+					const workspaceFolder = vscode.workspace.workspaceFolders?.[0]
+					if (!workspaceFolder) {
+						throw new Error("Cannot create project-level mcp.json without a workspace.")
+					}
+					const kilocodeDir = path.join(workspaceFolder.uri.fsPath, ".kilocode")
+					await fs.mkdir(kilocodeDir, { recursive: true })
+					configPath = path.join(kilocodeDir, "mcp.json")
+					await fs.writeFile(configPath, JSON.stringify({ mcpServers: {} }, null, 2))
+				}
+			} else {
+				configPath = await this.getMcpSettingsFilePath()
+			}
+
+			const content = await fs.readFile(configPath, "utf-8")
+			const config = JSON.parse(content)
+
+			if (!config.mcpServers) {
+				config.mcpServers = {}
+			}
+
+			config.mcpServers[serverName] = newConfig
+
+			await fs.writeFile(configPath, JSON.stringify(config, null, 2))
+
+			// The file watcher will pick up the change and add the server.
+			vscode.window.showInformationMessage(t("mcp:info.server_added", { serverName }))
+		} catch (error) {
+			this.showErrorMessage(`Failed to add MCP server`, error)
+			throw error
+		}
+	}
+
 	async readResource(serverName: string, uri: string, source?: "global" | "project"): Promise<McpResourceResponse> {
 		const connection = this.findConnection(serverName, source)
 		if (!connection || connection.type !== "connected") {

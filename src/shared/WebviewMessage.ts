@@ -168,6 +168,7 @@ export interface WebviewMessage {
 		| "checkpointRestore"
 		| "seeNewChanges" // kilocode_change
 		| "deleteMcpServer"
+		| "addMcpServer"
 		| "maxOpenTabsContext"
 		| "maxWorkspaceFiles"
 		| "humanRelayResponse"
