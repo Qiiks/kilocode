@@ -50,6 +50,35 @@ const McpView = ({ onDone, hideHeader = false }: McpViewProps) => {
 
 	const { t } = useAppTranslation()
 
+	// Add URL-based MCP dialog state
+	const [showAddDialog, setShowAddDialog] = useState(false)
+	const [newName, setNewName] = useState("")
+	const [newType, setNewType] = useState<"sse" | "streamable-http">("sse")
+	const [newUrl, setNewUrl] = useState("")
+	const [newHeaders, setNewHeaders] = useState('{"Authorization":"Bearer <token>"}')
+	const [newSource, setNewSource] = useState<"global" | "project">("global")
+
+	const submitAddServer = () => {
+		// Basic inline guard; full validation in extension
+		if (!newName.trim() || !newUrl.trim()) {
+			alert("Please provide a name and URL.")
+			return
+		}
+		vscode.postMessage({
+			type: "addMcpServer",
+			values: {
+				serverName: newName.trim(),
+				type: newType,
+				url: newUrl.trim(),
+				headers: newHeaders.trim(),
+				source: newSource,
+			},
+		})
+		setShowAddDialog(false)
+		// Reset inputs (optional)
+		setNewName("")
+		setNewUrl("")
+	}
 	return (
 		// kilocode_change: add relative className
 		<Tab className="relative">
@@ -160,6 +189,15 @@ const McpView = ({ onDone, hideHeader = false }: McpViewProps) => {
 								<span className="codicon codicon-refresh" style={{ marginRight: "6px" }}></span>
 								{t("mcp:refreshMCP")}
 							</Button>
+							<Button
+								variant="secondary"
+								style={{ width: "100%" }}
+								onClick={() => {
+									setShowAddDialog(true)
+								}}>
+								<span className="codicon codicon-add" style={{ marginRight: "6px" }}></span>
+								Add URL-based MCP
+							</Button>
 							{/* kilocode_change
 							<StandardTooltip content={t("mcp:marketplace")}>
 								<Button
@@ -204,6 +242,83 @@ const McpView = ({ onDone, hideHeader = false }: McpViewProps) => {
 					</>
 				)}
 			</TabContent>
+
+			{/* Add URL-based MCP Dialog */}
+			<Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Add URL-based MCP</DialogTitle>
+						<DialogDescription>
+							Provide the server details. Name and URL are required.
+						</DialogDescription>
+					</DialogHeader>
+
+					<div className="space-y-3">
+						<div className="flex flex-col gap-1">
+							<label className="text-sm">Name</label>
+							<input
+								className="w-full px-2 py-1 bg-[var(--vscode-input-background)] text-[var(--vscode-input-foreground)] border border-[var(--vscode-input-border)] rounded"
+								placeholder="My Server"
+								value={newName}
+								onChange={(e) => setNewName(e.target.value)}
+							/>
+						</div>
+
+						<div className="flex flex-col gap-1">
+							<label className="text-sm">Type</label>
+							<select
+								className="w-full px-2 py-1 bg-[var(--vscode-dropdown-background)] text-[var(--vscode-dropdown-foreground)] border border-[var(--vscode-dropdown-border)] rounded"
+								value={newType}
+								onChange={(e) => setNewType(e.target.value as "sse" | "streamable-http")}
+							>
+								<option value="sse">sse</option>
+								<option value="streamable-http">streamable-http</option>
+							</select>
+						</div>
+
+						<div className="flex flex-col gap-1">
+							<label className="text-sm">URL</label>
+							<input
+								className="w-full px-2 py-1 bg-[var(--vscode-input-background)] text-[var(--vscode-input-foreground)] border border-[var(--vscode-input-border)] rounded"
+								placeholder="https://example.com/mcp"
+								value={newUrl}
+								onChange={(e) => setNewUrl(e.target.value)}
+							/>
+						</div>
+
+						<div className="flex flex-col gap-1">
+							<label className="text-sm">Headers (JSON)</label>
+							<textarea
+								className="w-full px-2 py-1 bg-[var(--vscode-input-background)] text-[var(--vscode-input-foreground)] border border-[var(--vscode-input-border)] rounded"
+								rows={4}
+								value={newHeaders}
+								onChange={(e) => setNewHeaders(e.target.value)}
+							/>
+						</div>
+
+						<div className="flex flex-col gap-1">
+							<label className="text-sm">Source</label>
+							<select
+								className="w-full px-2 py-1 bg-[var(--vscode-dropdown-background)] text-[var(--vscode-dropdown-foreground)] border border-[var(--vscode-dropdown-border)] rounded"
+								value={newSource}
+								onChange={(e) => setNewSource(e.target.value as "global" | "project")}
+							>
+								<option value="global">global</option>
+								<option value="project">project</option>
+							</select>
+						</div>
+					</div>
+
+					<DialogFooter>
+						<Button variant="secondary" onClick={() => setShowAddDialog(false)}>
+							Cancel
+						</Button>
+						<Button variant="default" onClick={submitAddServer}>
+							Add
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</Tab>
 	)
 }
@@ -324,6 +439,7 @@ const ServerRow = ({ server, alwaysAllowMcp }: { server: McpServer; alwaysAllowM
 						variant="ghost"
 						size="icon"
 						onClick={() => setShowDeleteConfirm(true)}
+						
 						style={{ marginRight: "8px" }}>
 						<span className="codicon codicon-trash" style={{ fontSize: "14px" }}></span>
 					</Button>

@@ -6,10 +6,10 @@ import {
 	type ModeConfig,
 	type InstallMarketplaceItemOptions,
 	type MarketplaceItem,
-	type ShareVisibility,
 	marketplaceItemSchema,
 	CommitRange, // kilocode_change
 } from "@roo-code/types"
+import type { ShareVisibility } from "@roo-code/cloud"
 
 import { Mode } from "./modes"
 
@@ -70,6 +70,9 @@ export interface WebviewMessage {
 		| "openInBrowser"
 		| "fetchOpenGraphData"
 		| "checkIsImageUrl"
+		| "openRouterImageApiKey"
+		| "kiloCodeImageApiKey"
+		| "openRouterImageGenerationSelectedModel"
 		| "exportSettings"
 		| "resetState"
 		| "flushRouterModels"
@@ -117,6 +120,7 @@ export interface WebviewMessage {
 		| "toggleToolAlwaysAllow"
 		| "toggleToolEnabledForPrompt"
 		| "toggleMcpServer"
+		| "addMcpServer"
 		| "updateMcpTimeout"
 		| "fuzzyMatchThreshold"
 		| "morphApiKey" // kilocode_change: Morph fast apply - global setting
@@ -213,7 +217,7 @@ export interface WebviewMessage {
 		| "createRuleFile" // kilocode_change
 		| "deleteRuleFile" // kilocode_change
 		| "hasOpenedModeSelector"
-		| "cloudButtonClicked"
+		| "accountButtonClicked"
 		| "rooCloudSignIn"
 		| "rooCloudSignOut"
 		| "condenseTaskContextRequest"
@@ -264,13 +268,9 @@ export interface WebviewMessage {
 		| "createCommand"
 		| "insertTextIntoTextarea"
 		| "showMdmAuthRequiredNotification"
-		| "imageGenerationSettings"
-		| "openRouterImageApiKey"
-		| "kiloCodeImageApiKey"
-		| "openRouterImageGenerationSelectedModel"
 	text?: string
 	editedMessageContent?: string
-	tab?: "settings" | "history" | "mcp" | "modes" | "chat" | "marketplace" | "cloud"
+	tab?: "settings" | "history" | "mcp" | "modes" | "chat" | "marketplace" | "account"
 	disabled?: boolean
 	context?: string
 	dataUri?: string
@@ -313,7 +313,7 @@ export interface WebviewMessage {
 	modeConfig?: ModeConfig
 	timeout?: number
 	payload?: WebViewMessagePayload
-	source?: "global" | "project"
+	source?: "global" | "project" | "vscode"
 	requestId?: string
 	ids?: string[]
 	hasSystemPromptOverride?: boolean
@@ -321,7 +321,6 @@ export interface WebviewMessage {
 	messageTs?: number
 	historyPreviewCollapsed?: boolean
 	filters?: { type?: string; search?: string; tags?: string[] }
-	settings?: any
 	url?: string // For openExternal
 	mpItem?: MarketplaceItem
 	mpInstallOptions?: InstallMarketplaceItemOptions
@@ -333,13 +332,7 @@ export interface WebviewMessage {
 		// Global state settings
 		codebaseIndexEnabled: boolean
 		codebaseIndexQdrantUrl: string
-		codebaseIndexEmbedderProvider:
-			| "openai"
-			| "ollama"
-			| "openai-compatible"
-			| "gemini"
-			| "mistral"
-			| "vercel-ai-gateway"
+		codebaseIndexEmbedderProvider: "openai" | "ollama" | "openai-compatible" | "gemini" | "mistral"
 		codebaseIndexEmbedderBaseUrl?: string
 		codebaseIndexEmbedderModelId: string
 		codebaseIndexEmbedderModelDimension?: number // Generic dimension for all providers
@@ -353,7 +346,6 @@ export interface WebviewMessage {
 		codebaseIndexOpenAiCompatibleApiKey?: string
 		codebaseIndexGeminiApiKey?: string
 		codebaseIndexMistralApiKey?: string
-		codebaseIndexVercelAiGatewayApiKey?: string
 	}
 }
 
