@@ -59,7 +59,7 @@ import { Terminal } from "../../integrations/terminal/Terminal"
 import { downloadTask } from "../../integrations/misc/export-markdown"
 import { getTheme } from "../../integrations/theme/getTheme"
 import WorkspaceTracker from "../../integrations/workspace/WorkspaceTracker"
-
+import { VSCLMToolsService } from "../../services/vsclm/VSCLMToolsService"
 import { McpHub } from "../../services/mcp/McpHub"
 import { McpServerManager } from "../../services/mcp/McpServerManager"
 import { MarketplaceManager } from "../../services/marketplace"
@@ -126,6 +126,7 @@ export class ClineProvider
 	private codeIndexStatusSubscription?: vscode.Disposable
 	private currentWorkspaceManager?: CodeIndexManager
 	private _workspaceTracker?: WorkspaceTracker // workSpaceTracker read-only for access outside this class
+	private vsclmtService: VSCLMToolsService
 	protected mcpHub?: McpHub // Change from private to protected
 	private marketplaceManager: MarketplaceManager
 	private mdmService?: MdmService
@@ -168,6 +169,8 @@ export class ClineProvider
 		this.customModesManager = new CustomModesManager(this.context, async () => {
 			await this.postStateToWebview()
 		})
+
+		this.vsclmtService = new VSCLMToolsService(context)
 
 		// Initialize MCP Hub through the singleton manager
 		McpServerManager.getInstance(this.context, this)
@@ -392,7 +395,20 @@ export class ClineProvider
 		}
 	}
 
-	getTaskStackSize(): number {
+	// returns the current cline object in the stack (the top one)
+	// if the stack is empty, returns undefined
+	getCurrentCline(): Task | undefined {
+		if (this.clineStack.length === 0) {
+			return undefined
+		}
+		return this.clineStack[this.clineStack.length - 1]
+	}
+
+	public getVSCLMToolService(): VSCLMToolsService {
+		return this.vsclmtService
+	}
+	// returns the current clineStack length (how many cline objects are in the stack)
+	getClineStackSize(): number {
 		return this.clineStack.length
 	}
 
@@ -2845,7 +2861,7 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 	// kilocode_change start
 	// Add new methods for favorite functionality
 	async toggleTaskFavorite(id: string) {
-		const history = this.getGlobalState("taskHistory") ?? []
+		const history = (this.getGlobalState("taskHistory") as HistoryItem[] | undefined) ?? []
 		const updatedHistory = history.map((item) => {
 			if (item.id === id) {
 				return { ...item, isFavorited: !item.isFavorited }
@@ -2857,13 +2873,13 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 	}
 
 	async getFavoriteTasks(): Promise<HistoryItem[]> {
-		const history = this.getGlobalState("taskHistory") ?? []
+		const history = (this.getGlobalState("taskHistory") as HistoryItem[] | undefined) ?? []
 		return history.filter((item) => item.isFavorited)
 	}
 
 	// Modify batch delete to respect favorites
 	async deleteMultipleTasks(taskIds: string[]) {
-		const history = this.getGlobalState("taskHistory") ?? []
+		const history = (this.getGlobalState("taskHistory") as HistoryItem[] | undefined) ?? []
 		const favoritedTaskIds = taskIds.filter((id) => history.find((item) => item.id === id)?.isFavorited)
 
 		if (favoritedTaskIds.length > 0) {
@@ -2876,7 +2892,7 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 	}
 
 	async setTaskFileNotFound(id: string) {
-		const history = this.getGlobalState("taskHistory") ?? []
+		const history = (this.getGlobalState("taskHistory") as HistoryItem[] | undefined) ?? []
 		const updatedHistory = history.map((item) => {
 			if (item.id === id) {
 				return { ...item, fileNotfound: true }
