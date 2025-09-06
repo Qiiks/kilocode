@@ -844,7 +844,7 @@ export class McpHub {
 			this.connections.push(connection)
 
 			// Connect (this will automatically start the transport)
-			await client.connect(transport)
+			await this.connectWithRetry(client, transport, name, source)
 			connection.server.status = "connected"
 			connection.server.error = ""
 			connection.server.instructions = client.getInstructions()

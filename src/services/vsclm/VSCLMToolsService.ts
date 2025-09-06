@@ -349,13 +349,13 @@ export class VSCLMToolsService implements vscode.TreeDataProvider<ToolTreeItem> 
 	async setApprovalMode(autoApprove: boolean): Promise<void> {
 		try {
 			// Get current setting value
-			const config = vscode.workspace.getConfiguration()
+			const config = vscode.workspace.getConfiguration("kilo-code")
 			const currentValue = config.get<boolean>("chat.tools.autoApprove", false)
 
 			// Only update if value is different
 			if (autoApprove !== currentValue) {
 				// Update the configuration
-				await config.update("chat.tools.autoApprove", autoApprove, vscode.ConfigurationTarget.Workspace)
+				await config.update("chat.tools.autoApprove", autoApprove, vscode.ConfigurationTarget.Global)
 
 				const mode = autoApprove ? "Auto" : "Manual"
 				vscode.window.showInformationMessage(`Tool approval mode: ${mode}`)
@@ -370,7 +370,7 @@ export class VSCLMToolsService implements vscode.TreeDataProvider<ToolTreeItem> 
 	}
 
 	private updateTreeViewTitle(): void {
-		const config = vscode.workspace.getConfiguration()
+		const config = vscode.workspace.getConfiguration("kilo-code")
 		const autoApprove = config.get<boolean>("chat.tools.autoApprove", false)
 		const approvalMode = autoApprove ? "Auto" : "Manual"
 		const selectedCount = this.getSelectedTools().length

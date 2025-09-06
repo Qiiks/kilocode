@@ -438,12 +438,12 @@
 				{
 					"command": "kilo-code.setManualApproval",
 					"group": "navigation@1",
-					"when": "view == kilo-tool-selection && config.chat.tools.autoApprove == true"
+					"when": "view == kilo-tool-selection && config.kilo-code.chat.tools.autoApprove == true"
 				},
 				{
 					"command": "kilo-code.setAutoApproval",
 					"group": "navigation@1",
-					"when": "view == kilo-tool-selection && config.chat.tools.autoApprove != true"
+					"when": "view == kilo-tool-selection && config.kilo-code.chat.tools.autoApprove != true"
 				},
 				{
 					"command": "kilo-code.addMoreTools",
@@ -550,9 +550,10 @@
 		"configuration": {
 			"title": "%configuration.title%",
 			"properties": {
-				"chat.tools.autoApprove": {
+				"kilo-code.chat.tools.autoApprove": {
 					"type": "boolean",
 					"default": false,
+					"scope": "user",
 					"description": "Automatically approve tool invocations in chat without manual confirmation"
 				},
 				"kilo-code.allowedCommands": {

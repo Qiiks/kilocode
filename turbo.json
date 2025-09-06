@@ -12,7 +12,7 @@
 		},
 		"build": {
 			"outputs": ["dist/**"],
-			"inputs": ["src/**", "package.json", "tsconfig.json", "tsup.config.ts", "vite.config.ts"]
+			"inputs": [".env", "src/**", "package.json", "tsconfig.json", "tsup.config.ts", "vite.config.ts"]
 		},
 		"watch:tsc": {
 			"cache": false

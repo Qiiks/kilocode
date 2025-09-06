@@ -6,4 +6,5 @@ export const GlobalFileNames = {
 	taskMetadata: "task_metadata.json",
 	kiloRules: ".kilocode/rules", // kilocode_change
 	workflows: ".kilocode/workflows", // kilocode_change
+	taskHistory: "task_history.json",
 }

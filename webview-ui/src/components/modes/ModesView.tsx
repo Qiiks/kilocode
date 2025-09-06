@@ -1645,11 +1645,10 @@ const ModesView = ({ onDone }: ModesViewProps) => {
 								variant="default"
 								onClick={() => {
 									if (!isImporting) {
-										const selectedLevel = (
-											document.querySelector(
-												'input[name="importLevel"]:checked',
-											) as HTMLInputElement
-										)?.value as "global" | "project"
+										const selectedInput = document.querySelector(
+											'input[name="importLevel"]:checked',
+										) as HTMLInputElement | null
+										const selectedLevel = selectedInput?.value as "global" | "project" | undefined
 										setIsImporting(true)
 										vscode.postMessage({
 											type: "importMode",

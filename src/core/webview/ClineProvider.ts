@@ -91,6 +91,8 @@ import { getSystemPromptFilePath } from "../prompts/sections/custom-system-promp
 import { webviewMessageHandler } from "./webviewMessageHandler"
 import { getNonce } from "./getNonce"
 import { getUri } from "./getUri"
+import { HistoryService, readTaskHistory, writeTaskHistory } from "../../utils/history"
+import { getTaskDirectoryPath, getStorageDirectoryPath } from "../../utils/storage"
 
 //kilocode_change start
 import { McpDownloadResponse, McpMarketplaceCatalog } from "../../shared/kilocode/mcp"
@@ -230,6 +232,43 @@ export class ClineProvider
 		this.initializeCloudProfileSync().catch((error) => {
 			this.log(`Failed to initialize cloud profile sync: ${error}`)
 		})
+		this.migrateLegacyHistory()
+	}
+	private async migrateLegacyHistory() {
+		const legacyHistory = this.contextProxy.getValue("taskHistory")
+		if (legacyHistory && Array.isArray(legacyHistory) && legacyHistory.length > 0) {
+			try {
+				await writeTaskHistory(this.context, legacyHistory)
+				await this.contextProxy.setValue("taskHistory", undefined)
+				this.log("Successfully migrated legacy task history to file-based storage.")
+			} catch (error) {
+				this.log(`Error migrating legacy task history: ${error}`)
+			}
+		}
+	}
+
+	private async getTaskHistory(): Promise<HistoryItem[]> {
+		// First check if we have migrated history in files
+		const historyService = HistoryService.getInstance(this.context)
+		const fileHistory = await historyService.getHistory()
+
+		// If we have file-based history, use it
+		if (fileHistory.length > 0) {
+			return fileHistory
+		}
+
+		// Fallback to legacy globalState for backward compatibility
+		const legacyHistory = this.getGlobalState("taskHistory")
+		if (legacyHistory && Array.isArray(legacyHistory)) {
+			return legacyHistory
+		}
+
+		return []
+	}
+
+	private async setTaskHistory(history: HistoryItem[]): Promise<void> {
+		const historyService = HistoryService.getInstance(this.context)
+		await historyService.setHistory(history)
 	}
 
 	/**
@@ -1003,7 +1042,7 @@ export class ClineProvider
 
 			try {
 				// Update the task history with the new mode first.
-				const history = this.getGlobalState("taskHistory") ?? []
+				const history = await this.getTaskHistory()
 				const taskHistoryItem = history.find((item) => item.id === cline.taskId)
 
 				if (taskHistoryItem) {
@@ -1217,9 +1256,8 @@ export class ClineProvider
 	}
 
 	async ensureSettingsDirectoryExists(): Promise<string> {
-		const { getSettingsDirectoryPath } = await import("../../utils/storage")
-		const globalStoragePath = this.contextProxy.globalStorageUri.fsPath
-		return getSettingsDirectoryPath(globalStoragePath)
+		const { getStorageDirectoryPath } = await import("../../utils/storage")
+		return getStorageDirectoryPath(this.context, "settings")
 	}
 
 	// OpenRouter
@@ -1330,13 +1368,11 @@ export class ClineProvider
 		uiMessagesFilePath: string
 		apiConversationHistory: Anthropic.MessageParam[]
 	}> {
-		const history = this.getGlobalState("taskHistory") ?? []
+		const history = await this.getTaskHistory()
 		const historyItem = history.find((item) => item.id === id)
 
 		if (historyItem) {
-			const { getTaskDirectoryPath } = await import("../../utils/storage")
-			const globalStoragePath = this.contextProxy.globalStorageUri.fsPath
-			const taskDirPath = await getTaskDirectoryPath(globalStoragePath, id)
+			const taskDirPath = await getTaskDirectoryPath(this.context, id)
 			const apiConversationHistoryFilePath = path.join(taskDirPath, GlobalFileNames.apiConversationHistory)
 			const uiMessagesFilePath = path.join(taskDirPath, GlobalFileNames.uiMessages)
 			const fileExists = await fileExistsAtPath(apiConversationHistoryFilePath)
@@ -1406,7 +1442,7 @@ export class ClineProvider
 
 			// kilocode_change start
 			// Check if task is favorited
-			const history = this.getGlobalState("taskHistory") ?? []
+			const history = await this.getTaskHistory()
 			const task = history.find((item) => item.id === id)
 			if (task?.isFavorited) {
 				throw new Error("Cannot delete a favorited task. Please unfavorite it first.")
@@ -1456,10 +1492,14 @@ export class ClineProvider
 	}
 
 	async deleteTaskFromState(id: string) {
-		const taskHistory = this.getGlobalState("taskHistory") ?? []
+		const taskHistory = await this.getTaskHistory()
 		const updatedTaskHistory = taskHistory.filter((task) => task.id !== id)
-		await this.updateGlobalState("taskHistory", updatedTaskHistory)
+		await this.setTaskHistory(updatedTaskHistory)
 		this.recentTasksCache = undefined
+		// Update the cache asynchronously
+		this.updateRecentTasksCache().catch((error) => {
+			console.error("Failed to update recent tasks cache after delete:", error)
+		})
 		await this.postStateToWebview()
 	}
 
@@ -1733,13 +1773,21 @@ export class ClineProvider
 			uriScheme: vscode.env.uriScheme,
 			uiKind: vscode.UIKind[vscode.env.uiKind], // kilocode_change
 			kiloCodeWrapperProperties, // kilocode_change wrapper information
-			kilocodeDefaultModel: await getKilocodeDefaultModel(apiConfiguration.kilocodeToken),
+			kilocodeDefaultModel: await (async () => {
+				try {
+					return await getKilocodeDefaultModel(apiConfiguration.kilocodeToken)
+				} catch (error) {
+					console.error("Failed to get default model:", error)
+					// Fallback to openRouterDefaultModelId or a default model
+					return openRouterDefaultModelId
+				}
+			})(),
 			currentTaskItem: this.getCurrentTask()?.taskId
 				? (taskHistory || []).find((item: HistoryItem) => item.id === this.getCurrentTask()?.taskId)
 				: undefined,
 			clineMessages: this.getCurrentTask()?.clineMessages || [],
 			currentTaskTodos: this.getCurrentTask()?.todoList || [],
-			taskHistory: (taskHistory || [])
+			taskHistory: ((await this.getTaskHistory()) || [])
 				.filter((item: HistoryItem) => item.ts && item.task)
 				.sort((a: HistoryItem, b: HistoryItem) => b.ts - a.ts),
 			soundEnabled: soundEnabled ?? false,
@@ -1950,7 +1998,7 @@ export class ClineProvider
 			allowedMaxCost: stateValues.allowedMaxCost,
 			autoCondenseContext: stateValues.autoCondenseContext ?? true,
 			autoCondenseContextPercent: stateValues.autoCondenseContextPercent ?? 100,
-			taskHistory: stateValues.taskHistory,
+			taskHistory: await this.getTaskHistory(),
 			allowedCommands: stateValues.allowedCommands,
 			deniedCommands: stateValues.deniedCommands,
 			soundEnabled: stateValues.soundEnabled ?? false,
@@ -2070,18 +2118,14 @@ export class ClineProvider
 	}
 
 	async updateTaskHistory(item: HistoryItem): Promise<HistoryItem[]> {
-		const history = (this.getGlobalState("taskHistory") as HistoryItem[] | undefined) || []
-		const existingItemIndex = history.findIndex((h) => h.id === item.id)
-
-		if (existingItemIndex !== -1) {
-			history[existingItemIndex] = item
-		} else {
-			history.push(item)
-		}
-
-		await this.updateGlobalState("taskHistory", history)
+		const historyService = HistoryService.getInstance(this.context)
+		await historyService.updateTaskHistory(item)
+		const history = await historyService.getHistory()
 		this.recentTasksCache = undefined
-
+		// Update the cache asynchronously
+		this.updateRecentTasksCache().catch((error) => {
+			console.error("Failed to update recent tasks cache after update:", error)
+		})
 		return history
 	}
 
@@ -2305,44 +2349,59 @@ export class ClineProvider
 			return this.recentTasksCache
 		}
 
-		const history = this.getGlobalState("taskHistory") ?? []
-		const workspaceTasks: HistoryItem[] = []
+		// For backward compatibility and to avoid breaking the interface,
+		// we'll populate the cache asynchronously and return empty array for now
+		this.updateRecentTasksCache().catch((error) => {
+			console.error("Failed to update recent tasks cache:", error)
+		})
 
-		for (const item of history) {
-			if (!item.ts || !item.task || item.workspace !== this.cwd) {
-				continue
-			}
+		return []
+	}
 
-			workspaceTasks.push(item)
-		}
+	// Private method to update the recent tasks cache asynchronously
+	private async updateRecentTasksCache(): Promise<void> {
+		try {
+			const history = await this.getTaskHistory()
+			const workspaceTasks: HistoryItem[] = []
 
-		if (workspaceTasks.length === 0) {
-			this.recentTasksCache = []
-			return this.recentTasksCache
-		}
-
-		workspaceTasks.sort((a, b) => b.ts - a.ts)
-		let recentTaskIds: string[] = []
-
-		if (workspaceTasks.length >= 100) {
-			// If we have at least 100 tasks, return tasks from the last 7 days.
-			const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
-
-			for (const item of workspaceTasks) {
-				// Stop when we hit tasks older than 7 days.
-				if (item.ts < sevenDaysAgo) {
-					break
+			for (const item of history) {
+				if (!item.ts || !item.task || item.workspace !== this.cwd) {
+					continue
 				}
 
-				recentTaskIds.push(item.id)
+				workspaceTasks.push(item)
 			}
-		} else {
-			// Otherwise, return the most recent 100 tasks (or all if less than 100).
-			recentTaskIds = workspaceTasks.slice(0, Math.min(100, workspaceTasks.length)).map((item) => item.id)
-		}
 
-		this.recentTasksCache = recentTaskIds
-		return this.recentTasksCache
+			if (workspaceTasks.length === 0) {
+				this.recentTasksCache = []
+				return
+			}
+
+			workspaceTasks.sort((a, b) => b.ts - a.ts)
+			let recentTaskIds: string[] = []
+
+			if (workspaceTasks.length >= 100) {
+				// If we have at least 100 tasks, return tasks from the last 7 days.
+				const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+
+				for (const item of workspaceTasks) {
+					// Stop when we hit tasks older than 7 days.
+					if (item.ts < sevenDaysAgo) {
+						break
+					}
+
+					recentTaskIds.push(item.id)
+				}
+			} else {
+				// Otherwise, return the most recent 100 tasks (or all if less than 100).
+				recentTaskIds = workspaceTasks.slice(0, Math.min(100, workspaceTasks.length)).map((item) => item.id)
+			}
+
+			this.recentTasksCache = recentTaskIds
+		} catch (error) {
+			console.error("Error updating recent tasks cache:", error)
+			this.recentTasksCache = []
+		}
 	}
 
 	// When initializing a new task, (not from history but from a tool command
@@ -2861,25 +2920,30 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 	// kilocode_change start
 	// Add new methods for favorite functionality
 	async toggleTaskFavorite(id: string) {
-		const history = (this.getGlobalState("taskHistory") as HistoryItem[] | undefined) ?? []
+		const history = await this.getTaskHistory()
 		const updatedHistory = history.map((item) => {
 			if (item.id === id) {
 				return { ...item, isFavorited: !item.isFavorited }
 			}
 			return item
 		})
-		await this.updateGlobalState("taskHistory", updatedHistory)
+		await this.setTaskHistory(updatedHistory)
+		this.recentTasksCache = undefined
+		// Update the cache asynchronously
+		this.updateRecentTasksCache().catch((error) => {
+			console.error("Failed to update recent tasks cache after toggle favorite:", error)
+		})
 		await this.postStateToWebview()
 	}
 
 	async getFavoriteTasks(): Promise<HistoryItem[]> {
-		const history = (this.getGlobalState("taskHistory") as HistoryItem[] | undefined) ?? []
+		const history = await this.getTaskHistory()
 		return history.filter((item) => item.isFavorited)
 	}
 
 	// Modify batch delete to respect favorites
 	async deleteMultipleTasks(taskIds: string[]) {
-		const history = (this.getGlobalState("taskHistory") as HistoryItem[] | undefined) ?? []
+		const history = await this.getTaskHistory()
 		const favoritedTaskIds = taskIds.filter((id) => history.find((item) => item.id === id)?.isFavorited)
 
 		if (favoritedTaskIds.length > 0) {
@@ -2892,14 +2956,19 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 	}
 
 	async setTaskFileNotFound(id: string) {
-		const history = (this.getGlobalState("taskHistory") as HistoryItem[] | undefined) ?? []
+		const history = await this.getTaskHistory()
 		const updatedHistory = history.map((item) => {
 			if (item.id === id) {
 				return { ...item, fileNotfound: true }
 			}
 			return item
 		})
-		await this.updateGlobalState("taskHistory", updatedHistory)
+		await this.setTaskHistory(updatedHistory)
+		this.recentTasksCache = undefined
+		// Update the cache asynchronously
+		this.updateRecentTasksCache().catch((error) => {
+			console.error("Failed to update recent tasks cache after set file not found:", error)
+		})
 		await this.postStateToWebview()
 	}
 
