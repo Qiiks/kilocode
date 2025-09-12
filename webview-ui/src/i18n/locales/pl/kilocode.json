@@ -36,7 +36,8 @@
 			"login": "Zaloguj się do Kilo Code",
 			"logout": "Wyloguj się z Kilo Code",
 			"providerRouting": {
-				"title": "Kilo Code - Routing dostawców OpenRouter",
+				"title": "Routing dostawców",
+				"managedByOrganization": "Ustawienia routingu dostawców są zarządzane przez Twoją organizację.",
 				"description": "Kilo Code kieruje żądania do najlepszych dostępnych dostawców dla Twojego modelu. Domyślnie żądania są równoważone obciążeniem między najlepszymi dostawcami, aby zmaksymalizować czas działania. Możesz jednak wybrać konkretnego dostawcę do użycia dla tego modelu.",
 				"sorting": {
 					"default": "Domyślne sortowanie dostawców",
@@ -248,5 +249,12 @@
 		"modelNoImageSupport": "Obrazy nie są obsługiwane przez aktualny model.",
 		"maxImagesReached": "Maksymalnie 20 obrazów na wiadomość. Usuń niektóre obrazy, aby dodać więcej.",
 		"imagesRemovedNoSupport": "Obrazy usunięte, nieobsługiwane przez model."
+	},
+	"invalidModel": {
+		"alphaPeriodEnded": "🎉 Okres alfa dla {{model}} się zakończył! Zmień na inny model, aby kontynuować.",
+		"notAllowedForTeam": "⚠️ Twoja organizacja nie zezwala na używanie modelu {{model}}. Zmień na inny model, aby kontynuować.",
+		"modelUnavailable": "⚠️ Model {{model}} jest niedostępny. Zmień na inny model, aby kontynuować.",
+		"continueWith": "Kontynuuj z {{model}}",
+		"continue": "Kontynuuj"
 	}
 }

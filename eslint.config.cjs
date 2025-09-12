@@ -1,14 +1,18 @@
 const tsPlugin = require("@typescript-eslint/eslint-plugin");
 module.exports = [
   {
-    ignores: ["node_modules"],
+    files: ["src/**/*.ts"],
+    ignores: ["**/node_modules/**", "**/dist/**"],
     languageOptions: {
-      parser: require.resolve("@typescript-eslint/parser"),
+      parser: require("@typescript-eslint/parser"),
       parserOptions: { project: "./tsconfig.json" }
     },
     plugins: { "@typescript-eslint": tsPlugin },
-    // incorporate the plugin's recommended config object for flat config usage:
-    ...tsPlugin.configs.recommended,
-    rules: {}
+        // Recommended rules for @typescript-eslint (flat config does not support "extends")
+        rules: {
+          "@typescript-eslint/no-unused-vars": "warn",
+          "@typescript-eslint/no-explicit-any": "warn",
+          "@typescript-eslint/explicit-module-boundary-types": "warn"
+        }
   }
 ];

@@ -31,6 +31,7 @@ import {
 	type HistoryItem,
 	type CloudUserInfo,
 	type CreateTaskOptions,
+	type TokenUsage,
 	RooCodeEventName,
 	requestyDefaultModelId,
 	openRouterDefaultModelId,
@@ -47,7 +48,7 @@ import { Package } from "../../shared/package"
 import { findLast } from "../../shared/array"
 import { supportPrompt } from "../../shared/support-prompt"
 import { GlobalFileNames } from "../../shared/globalFileNames"
-import { ExtensionMessage, MarketplaceInstalledMetadata } from "../../shared/ExtensionMessage"
+import type { ExtensionMessage, ExtensionState, MarketplaceInstalledMetadata } from "../../shared/ExtensionMessage"
 import { Mode, defaultModeSlug, getModeBySlug } from "../../shared/modes"
 import { experimentDefault } from "../../shared/experiments"
 import { formatLanguage } from "../../shared/language"
@@ -91,7 +92,7 @@ import { getSystemPromptFilePath } from "../prompts/sections/custom-system-promp
 import { webviewMessageHandler } from "./webviewMessageHandler"
 import { getNonce } from "./getNonce"
 import { getUri } from "./getUri"
-import { HistoryService, readTaskHistory, writeTaskHistory } from "../../utils/history"
+import { HistoryService } from "../../utils/history"
 import { getTaskDirectoryPath, getStorageDirectoryPath } from "../../utils/storage"
 
 //kilocode_change start
@@ -111,6 +112,20 @@ export type ClineProviderState = Awaited<ReturnType<ClineProvider["getState"]>>
  * https://github.com/KumarVariable/vscode-extension-sidebar-html/blob/master/src/customSidebarViewProvider.ts
  */
 
+export type ClineProviderEvents = {
+	clineCreated: [cline: Task]
+}
+
+interface PendingEditOperation {
+	messageTs: number
+	editedContent: string
+	images?: string[]
+	messageIndex: number
+	apiConversationHistoryIndex: number
+	timeoutId: NodeJS.Timeout
+	createdAt: number
+}
+
 export class ClineProvider
 	extends EventEmitter<TaskProviderEvents>
 	implements vscode.WebviewViewProvider, TelemetryPropertiesProvider, TaskProviderLike
@@ -126,7 +141,7 @@ export class ClineProvider
 	private view?: vscode.WebviewView | vscode.WebviewPanel
 	private clineStack: Task[] = []
 	private codeIndexStatusSubscription?: vscode.Disposable
-	private currentWorkspaceManager?: CodeIndexManager
+	private codeIndexManager?: CodeIndexManager
 	private _workspaceTracker?: WorkspaceTracker // workSpaceTracker read-only for access outside this class
 	private vsclmtService: VSCLMToolsService
 	protected mcpHub?: McpHub // Change from private to protected
@@ -134,8 +149,11 @@ export class ClineProvider
 	private mdmService?: MdmService
 	private taskCreationCallback: (task: Task) => void
 	private taskEventListeners: WeakMap<Task, Array<() => void>> = new WeakMap()
+	private currentWorkspacePath: string | undefined
 
 	private recentTasksCache?: string[]
+	private pendingOperations: Map<string, PendingEditOperation> = new Map()
+	private static readonly PENDING_OPERATION_TIMEOUT_MS = 30000 // 30 seconds
 
 	public isViewLaunched = false
 	public settingsImportedAt?: number
@@ -151,6 +169,7 @@ export class ClineProvider
 		mdmService?: MdmService,
 	) {
 		super()
+		this.currentWorkspacePath = getWorkspacePath()
 
 		ClineProvider.activeInstances.add(this)
 
@@ -193,7 +212,7 @@ export class ClineProvider
 
 			// Create named listener functions so we can remove them later.
 			const onTaskStarted = () => this.emit(RooCodeEventName.TaskStarted, instance.taskId)
-			const onTaskCompleted = (taskId: string, tokenUsage: any, toolUsage: any) =>
+			const onTaskCompleted = (taskId: string, tokenUsage: TokenUsage, toolUsage: unknown) =>
 				this.emit(RooCodeEventName.TaskCompleted, taskId, tokenUsage, toolUsage)
 			const onTaskAborted = () => this.emit(RooCodeEventName.TaskAborted, instance.taskId)
 			const onTaskFocused = () => this.emit(RooCodeEventName.TaskFocused, instance.taskId)
@@ -202,6 +221,12 @@ export class ClineProvider
 			const onTaskInteractive = (taskId: string) => this.emit(RooCodeEventName.TaskInteractive, taskId)
 			const onTaskResumable = (taskId: string) => this.emit(RooCodeEventName.TaskResumable, taskId)
 			const onTaskIdle = (taskId: string) => this.emit(RooCodeEventName.TaskIdle, taskId)
+			const onTaskPaused = (taskId: string) => this.emit(RooCodeEventName.TaskPaused, taskId)
+			const onTaskUnpaused = (taskId: string) => this.emit(RooCodeEventName.TaskUnpaused, taskId)
+			const onTaskSpawned = (taskId: string) => this.emit(RooCodeEventName.TaskSpawned, taskId)
+			const onTaskUserMessage = (taskId: string) => this.emit(RooCodeEventName.TaskUserMessage, taskId)
+			const onTaskTokenUsageUpdated = (taskId: string, tokenUsage: TokenUsage) =>
+				this.emit(RooCodeEventName.TaskTokenUsageUpdated, taskId, tokenUsage)
 
 			// Attach the listeners.
 			instance.on(RooCodeEventName.TaskStarted, onTaskStarted)
@@ -213,6 +238,11 @@ export class ClineProvider
 			instance.on(RooCodeEventName.TaskInteractive, onTaskInteractive)
 			instance.on(RooCodeEventName.TaskResumable, onTaskResumable)
 			instance.on(RooCodeEventName.TaskIdle, onTaskIdle)
+			instance.on(RooCodeEventName.TaskPaused, onTaskPaused)
+			instance.on(RooCodeEventName.TaskUnpaused, onTaskUnpaused)
+			instance.on(RooCodeEventName.TaskSpawned, onTaskSpawned)
+			instance.on(RooCodeEventName.TaskUserMessage, onTaskUserMessage)
+			instance.on(RooCodeEventName.TaskTokenUsageUpdated, onTaskTokenUsageUpdated)
 
 			// Store the cleanup functions for later removal.
 			this.taskEventListeners.set(instance, [
@@ -225,6 +255,11 @@ export class ClineProvider
 				() => instance.off(RooCodeEventName.TaskInteractive, onTaskInteractive),
 				() => instance.off(RooCodeEventName.TaskResumable, onTaskResumable),
 				() => instance.off(RooCodeEventName.TaskIdle, onTaskIdle),
+				() => instance.off(RooCodeEventName.TaskUserMessage, onTaskUserMessage),
+				() => instance.off(RooCodeEventName.TaskPaused, onTaskPaused),
+				() => instance.off(RooCodeEventName.TaskUnpaused, onTaskUnpaused),
+				() => instance.off(RooCodeEventName.TaskSpawned, onTaskSpawned),
+				() => instance.off(RooCodeEventName.TaskTokenUsageUpdated, onTaskTokenUsageUpdated),
 			])
 		}
 
@@ -324,6 +359,13 @@ export class ClineProvider
 	private async setTaskHistory(history: HistoryItem[]): Promise<void> {
 		const historyService = HistoryService.getInstance(this.context)
 		await historyService.setHistory(history)
+		if (CloudService.hasInstance()) {
+			this.initializeCloudProfileSync().catch((error) => {
+				this.log(`Failed to initialize cloud profile sync: ${error}`)
+			})
+		} else {
+			this.log("CloudService not ready, deferring cloud profile sync")
+		}
 	}
 
 	/**
@@ -333,7 +375,7 @@ export class ClineProvider
 		event: K,
 		listener: (...args: TaskProviderEvents[K]) => void | Promise<void>,
 	): this {
-		return super.on(event, listener as any)
+		return super.on(event, listener as (...args: TaskProviderEvents[K]) => void | Promise<void>)
 	}
 
 	/**
@@ -343,7 +385,7 @@ export class ClineProvider
 		event: K,
 		listener: (...args: TaskProviderEvents[K]) => void | Promise<void>,
 	): this {
-		return super.off(event, listener as any)
+		return super.off(event, listener as (...args: TaskProviderEvents[K]) => void | Promise<void>)
 	}
 
 	/**
@@ -413,11 +455,30 @@ export class ClineProvider
 		}
 	}
 
+	/**
+	 * Initialize cloud profile synchronization when CloudService is ready
+	 * This method is called externally after CloudService has been initialized
+	 */
+	public async initializeCloudProfileSyncWhenReady(): Promise<void> {
+		try {
+			if (CloudService.hasInstance() && CloudService.instance.isAuthenticated()) {
+				await this.syncCloudProfiles()
+			}
+
+			if (CloudService.hasInstance()) {
+				CloudService.instance.off("settings-updated", this.handleCloudSettingsUpdate)
+				CloudService.instance.on("settings-updated", this.handleCloudSettingsUpdate)
+			}
+		} catch (error) {
+			this.log(`Failed to initialize cloud profile sync when ready: ${error}`)
+		}
+	}
+
 	// Adds a new Task instance to clineStack, marking the start of a new task.
 	// The instance is pushed to the top of the stack (LIFO order).
 	// When the task is completed, the top instance is removed, reactivating the
 	// previous task.
-	async addClineToStack(task: Task) {
+	async addClineToStack(task: Task): Promise<void> {
 		// Add this cline instance into the stack that represents the order of
 		// all the called tasks.
 		this.clineStack.push(task)
@@ -434,7 +495,7 @@ export class ClineProvider
 		}
 	}
 
-	async performPreparationTasks(cline: Task) {
+	async performPreparationTasks(cline: Task): Promise<void> {
 		// LMStudio: We need to force model loading in order to read its context
 		// size; we do it now since we're starting a task with that model selected.
 		if (cline.apiConfiguration && cline.apiConfiguration.apiProvider === "lmstudio") {
@@ -454,7 +515,7 @@ export class ClineProvider
 
 	// Removes and destroys the top Cline instance (the current finished task),
 	// activating the previous one (resuming the parent task).
-	async removeClineFromStack() {
+	async removeClineFromStack(): Promise<void> {
 		if (this.clineStack.length === 0) {
 			return
 		}
@@ -515,13 +576,78 @@ export class ClineProvider
 	// exists).
 	// This is used when a subtask is finished and the parent task needs to be
 	// resumed.
-	async finishSubTask(lastMessage: string) {
+	async finishSubTask(lastMessage: string): Promise<void> {
 		// Remove the last cline instance from the stack (this is the finished
 		// subtask).
 		await this.removeClineFromStack()
 		// Resume the last cline instance in the stack (if it exists - this is
 		// the 'parent' calling task).
-		await this.getCurrentTask()?.resumePausedTask(lastMessage)
+		await this.getCurrentTask()?.completeSubtask(lastMessage)
+	}
+	// Pending Edit Operations Management
+
+	/**
+	 * Sets a pending edit operation with automatic timeout cleanup
+	 */
+	public setPendingEditOperation(
+		operationId: string,
+		editData: {
+			messageTs: number
+			editedContent: string
+			images?: string[]
+			messageIndex: number
+			apiConversationHistoryIndex: number
+		},
+	): void {
+		// Clear any existing operation with the same ID
+		this.clearPendingEditOperation(operationId)
+
+		// Create timeout for automatic cleanup
+		const timeoutId = setTimeout(() => {
+			this.clearPendingEditOperation(operationId)
+			this.log(`[setPendingEditOperation] Automatically cleared stale pending operation: ${operationId}`)
+		}, ClineProvider.PENDING_OPERATION_TIMEOUT_MS)
+
+		// Store the operation
+		this.pendingOperations.set(operationId, {
+			...editData,
+			timeoutId,
+			createdAt: Date.now(),
+		})
+
+		this.log(`[setPendingEditOperation] Set pending operation: ${operationId}`)
+	}
+
+	/**
+	 * Gets a pending edit operation by ID
+	 */
+	private getPendingEditOperation(operationId: string): PendingEditOperation | undefined {
+		return this.pendingOperations.get(operationId)
+	}
+
+	/**
+	 * Clears a specific pending edit operation
+	 */
+	private clearPendingEditOperation(operationId: string): boolean {
+		const operation = this.pendingOperations.get(operationId)
+		if (operation) {
+			clearTimeout(operation.timeoutId)
+			this.pendingOperations.delete(operationId)
+			this.log(`[clearPendingEditOperation] Cleared pending operation: ${operationId}`)
+			return true
+		}
+		return false
+	}
+
+	/**
+	 * Clears all pending edit operations
+	 */
+	private clearAllPendingEditOperations(): void {
+		for (const [operationId, operation] of this.pendingOperations) {
+			clearTimeout(operation.timeoutId)
+		}
+		this.pendingOperations.clear()
+		this.log(`[clearAllPendingEditOperations] Cleared all pending operations`)
 	}
 
 	/*
@@ -538,7 +664,7 @@ export class ClineProvider
 		}
 	}
 
-	async dispose() {
+	async dispose(): Promise<void> {
 		this.log("Disposing ClineProvider...")
 
 		// Clear all tasks from the stack.
@@ -547,6 +673,10 @@ export class ClineProvider
 		}
 
 		this.log("Cleared all tasks")
+
+		// Clear all pending edit operations to prevent memory leaks
+		this.clearAllPendingEditOperations()
+		this.log("Cleared pending operations")
 
 		if (this.view && "dispose" in this.view) {
 			this.view.dispose()
@@ -681,7 +811,7 @@ export class ClineProvider
 		}
 	}
 
-	async resolveWebviewView(webviewView: vscode.WebviewView | vscode.WebviewPanel) {
+	async resolveWebviewView(webviewView: vscode.WebviewView | vscode.WebviewPanel): Promise<void> {
 		this.view = webviewView
 
 		// kilocode_change start: extract constant inTabMode
@@ -794,7 +924,7 @@ export class ClineProvider
 					this.log("Clearing webview resources for sidebar view")
 					this.clearWebviewResources()
 					// Reset current workspace manager reference when view is disposed
-					this.currentWorkspaceManager = undefined
+					this.codeIndexManager = undefined
 				}
 			},
 			null,
@@ -814,7 +944,9 @@ export class ClineProvider
 		await this.removeClineFromStack()
 	}
 
-	public async createTaskWithHistoryItem(historyItem: HistoryItem & { rootTask?: Task; parentTask?: Task }) {
+	public async createTaskWithHistoryItem(
+		historyItem: HistoryItem & { rootTask?: Task; parentTask?: Task },
+	): Promise<Task> {
 		await this.removeClineFromStack()
 
 		// If the history item has a saved mode, restore it and its associated API configuration.
@@ -883,6 +1015,7 @@ export class ClineProvider
 			rootTask: historyItem.rootTask,
 			parentTask: historyItem.parentTask,
 			taskNumber: historyItem.number,
+			workspacePath: historyItem.workspace,
 			onCreated: this.taskCreationCallback,
 			enableBridge: BridgeOrchestrator.isEnabled(cloudUserInfo, remoteControlEnabled),
 		})
@@ -893,10 +1026,53 @@ export class ClineProvider
 			`[createTaskWithHistoryItem] ${task.parentTask ? "child" : "parent"} task ${task.taskId}.${task.instanceId} instantiated`,
 		)
 
+		// Check if there's a pending edit after checkpoint restoration
+		const operationId = `task-${task.taskId}`
+		const pendingEdit = this.getPendingEditOperation(operationId)
+		if (pendingEdit) {
+			this.clearPendingEditOperation(operationId) // Clear the pending edit
+
+			this.log(`[createTaskWithHistoryItem] Processing pending edit after checkpoint restoration`)
+
+			// Process the pending edit after a short delay to ensure the task is fully initialized
+			setTimeout(async () => {
+				try {
+					// Find the message index in the restored state
+					const { messageIndex, apiConversationHistoryIndex } = (() => {
+						const messageIndex = task.clineMessages.findIndex((msg) => msg.ts === pendingEdit.messageTs)
+						const apiConversationHistoryIndex = task.apiConversationHistory.findIndex(
+							(msg) => msg.ts === pendingEdit.messageTs,
+						)
+						return { messageIndex, apiConversationHistoryIndex }
+					})()
+
+					if (messageIndex !== -1) {
+						// Remove the target message and all subsequent messages
+						await task.overwriteClineMessages(task.clineMessages.slice(0, messageIndex))
+
+						if (apiConversationHistoryIndex !== -1) {
+							await task.overwriteApiConversationHistory(
+								task.apiConversationHistory.slice(0, apiConversationHistoryIndex),
+							)
+						}
+
+						// Process the edited message
+						await task.handleWebviewAskResponse(
+							"messageResponse",
+							pendingEdit.editedContent,
+							pendingEdit.images,
+						)
+					}
+				} catch (error) {
+					this.log(`[createTaskWithHistoryItem] Error processing pending edit: ${error}`)
+				}
+			}, 100) // Small delay to ensure task is fully ready
+		}
+
 		return task
 	}
 
-	public async postMessageToWebview(message: ExtensionMessage) {
+	public async postMessageToWebview(message: ExtensionMessage): Promise<void> {
 		await this.view?.webview.postMessage(message)
 	}
 
@@ -1088,17 +1264,21 @@ export class ClineProvider
 	 * Handle switching to a new mode, including updating the associated API configuration
 	 * @param newMode The mode to switch to
 	 */
-	public async handleModeSwitch(newMode: Mode) {
-		const cline = this.getCurrentTask()
+	public async handleModeSwitch(newMode: Mode): Promise<void> {
+		const task = this.getCurrentTask()
 
-		if (cline) {
-			TelemetryService.instance.captureModeSwitch(cline.taskId, newMode)
-			cline.emit(RooCodeEventName.TaskModeSwitched, cline.taskId, newMode)
+		if (task) {
+			TelemetryService.instance.captureModeSwitch(task.taskId, newMode)
+			task.emit(RooCodeEventName.TaskModeSwitched, task.taskId, newMode)
 
 			try {
 				// Update the task history with the new mode first.
 				const history = await this.getTaskHistory()
-				const taskHistoryItem = history.find((item) => item.id === cline.taskId)
+				const taskHistoryItem = history.find((item) => item.id === task.taskId)
+				// <<<< MERGED: start of upstream content
+				const historyUpstream = this.getGlobalState("taskHistory") ?? []
+				const taskHistoryItemUpstream = historyUpstream.find((item) => item.id === task.taskId)
+				// >>>> MERGED: end of upstream content
 
 				if (taskHistoryItem) {
 					taskHistoryItem.mode = newMode
@@ -1106,11 +1286,12 @@ export class ClineProvider
 				}
 
 				// Only update the task's mode after successful persistence.
-				;(cline as any)._taskMode = newMode
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				;(task as any)._taskMode = newMode
 			} catch (error) {
 				// If persistence fails, log the error but don't update the in-memory state.
 				this.log(
-					`Failed to persist mode switch for task ${cline.taskId}: ${error instanceof Error ? error.message : String(error)}`,
+					`Failed to persist mode switch for task ${task.taskId}: ${error instanceof Error ? error.message : String(error)}`,
 				)
 
 				// Optionally, we could emit an event to notify about the failure.
@@ -1225,7 +1406,7 @@ export class ClineProvider
 		}
 	}
 
-	async deleteProviderProfile(profileToDelete: ProviderSettingsEntry) {
+	async deleteProviderProfile(profileToDelete: ProviderSettingsEntry): Promise<void> {
 		const globalSettings = this.contextProxy.getValues()
 		let profileToActivate: string | undefined = globalSettings.currentApiConfigName
 
@@ -1248,7 +1429,7 @@ export class ClineProvider
 		await this.postStateToWebview()
 	}
 
-	async activateProviderProfile(args: { name: string } | { id: string }) {
+	async activateProviderProfile(args: { name: string } | { id: string }): Promise<void> {
 		const { name, id, ...providerSettings } = await this.providerSettingsManager.activateProfile(args)
 
 		// See `upsertProviderProfile` for a description of what this is doing.
@@ -1279,7 +1460,7 @@ export class ClineProvider
 		}
 	}
 
-	async updateCustomInstructions(instructions?: string) {
+	async updateCustomInstructions(instructions?: string): Promise<void> {
 		// User may be clearing the field.
 		await this.updateGlobalState("customInstructions", instructions || undefined)
 		await this.postStateToWebview()
@@ -1317,15 +1498,17 @@ export class ClineProvider
 
 	// OpenRouter
 
-	async handleOpenRouterCallback(code: string) {
-		let { apiConfiguration, currentApiConfigName } = await this.getState()
+	async handleOpenRouterCallback(code: string): Promise<void> {
+		let { apiConfiguration, currentApiConfigName = "default" } = await this.getState()
 
 		let apiKey: string
+
 		try {
 			const baseUrl = apiConfiguration.openRouterBaseUrl || "https://openrouter.ai/api/v1"
-			// Extract the base domain for the auth endpoint
+			// Extract the base domain for the auth endpoint.
 			const baseUrlDomain = baseUrl.match(/^(https?:\/\/[^\/]+)/)?.[1] || "https://openrouter.ai"
 			const response = await axios.post(`${baseUrlDomain}/api/v1/auth/keys`, { code })
+
 			if (response.data && response.data.key) {
 				apiKey = response.data.key
 			} else {
@@ -1335,6 +1518,7 @@ export class ClineProvider
 			this.log(
 				`Error exchanging code for API key: ${JSON.stringify(error, Object.getOwnPropertyNames(error), 2)}`,
 			)
+
 			throw error
 		}
 
@@ -1350,10 +1534,12 @@ export class ClineProvider
 
 	// Glama
 
-	async handleGlamaCallback(code: string) {
+	async handleGlamaCallback(code: string): Promise<void> {
 		let apiKey: string
+
 		try {
 			const response = await axios.post("https://glama.ai/api/gateway/v1/auth/exchange-code", { code })
+
 			if (response.data && response.data.apiKey) {
 				apiKey = response.data.apiKey
 			} else {
@@ -1363,10 +1549,11 @@ export class ClineProvider
 			this.log(
 				`Error exchanging code for API key: ${JSON.stringify(error, Object.getOwnPropertyNames(error), 2)}`,
 			)
+
 			throw error
 		}
 
-		const { apiConfiguration, currentApiConfigName } = await this.getState()
+		const { apiConfiguration, currentApiConfigName = "default" } = await this.getState()
 
 		const newConfiguration: ProviderSettings = {
 			...apiConfiguration,
@@ -1380,8 +1567,8 @@ export class ClineProvider
 
 	// Requesty
 
-	async handleRequestyCallback(code: string) {
-		let { apiConfiguration, currentApiConfigName } = await this.getState()
+	async handleRequestyCallback(code: string): Promise<void> {
+		let { apiConfiguration, currentApiConfigName = "default" } = await this.getState()
 
 		const newConfiguration: ProviderSettings = {
 			...apiConfiguration,
@@ -1394,9 +1581,9 @@ export class ClineProvider
 	}
 
 	// kilocode_change:
-	async handleKiloCodeCallback(token: string) {
+	async handleKiloCodeCallback(token: string): Promise<void> {
 		const kilocode: ProviderName = "kilocode"
-		let { apiConfiguration, currentApiConfigName } = await this.getState()
+		let { apiConfiguration, currentApiConfigName = "default" } = await this.getState()
 
 		await this.upsertProviderProfile(currentApiConfigName, {
 			...apiConfiguration,
@@ -1458,7 +1645,7 @@ export class ClineProvider
 		throw new Error("Task not found")
 	}
 
-	async showTaskWithId(id: string) {
+	async showTaskWithId(id: string): Promise<void> {
 		if (id !== this.getCurrentTask()?.taskId) {
 			// Non-current task.
 			const { historyItem } = await this.getTaskWithId(id)
@@ -1468,13 +1655,13 @@ export class ClineProvider
 		await this.postMessageToWebview({ type: "action", action: "chatButtonClicked" })
 	}
 
-	async exportTaskWithId(id: string) {
+	async exportTaskWithId(id: string): Promise<void> {
 		const { historyItem, apiConversationHistory } = await this.getTaskWithId(id)
 		await downloadTask(historyItem.ts, apiConversationHistory)
 	}
 
 	/* Condenses a task's message history to use fewer tokens. */
-	async condenseTaskContext(taskId: string) {
+	async condenseTaskContext(taskId: string): Promise<void> {
 		let task: Task | undefined
 		for (let i = this.clineStack.length - 1; i >= 0; i--) {
 			if (this.clineStack[i].taskId === taskId) {
@@ -1490,7 +1677,7 @@ export class ClineProvider
 	}
 
 	// this function deletes a task from task hidtory, and deletes it's checkpoints and delete the task folder
-	async deleteTaskWithId(id: string) {
+	async deleteTaskWithId(id: string): Promise<void> {
 		try {
 			// get the task directory full path
 			const { taskDirPath } = await this.getTaskWithId(id)
@@ -1546,7 +1733,7 @@ export class ClineProvider
 		}
 	}
 
-	async deleteTaskFromState(id: string) {
+	async deleteTaskFromState(id: string): Promise<void> {
 		const taskHistory = await this.getTaskHistory()
 		const updatedTaskHistory = taskHistory.filter((task) => task.id !== id)
 		await this.setTaskHistory(updatedTaskHistory)
@@ -1558,7 +1745,12 @@ export class ClineProvider
 		await this.postStateToWebview()
 	}
 
-	async postStateToWebview() {
+	async refreshWorkspace(): Promise<void> {
+		this.currentWorkspacePath = getWorkspacePath()
+		await this.postStateToWebview()
+	}
+
+	async postStateToWebview(): Promise<void> {
 		const state = await this.getStateToPostToWebview()
 		this.postMessageToWebview({ type: "state", state })
 
@@ -1570,7 +1762,7 @@ export class ClineProvider
 	}
 
 	// kilocode_change start
-	async postRulesDataToWebview() {
+	async postRulesDataToWebview(): Promise<void> {
 		const workspacePath = this.cwd
 		if (workspacePath) {
 			this.postMessageToWebview({
@@ -1584,7 +1776,7 @@ export class ClineProvider
 	/**
 	 * Fetches marketplace dataon demand to avoid blocking main state updates
 	 */
-	async fetchMarketplaceData() {
+	async fetchMarketplaceData(): Promise<void> {
 		try {
 			const [marketplaceResult, marketplaceInstalledMetadata] = await Promise.all([
 				this.marketplaceManager.getMarketplaceItems().catch((error) => {
@@ -1690,7 +1882,7 @@ export class ClineProvider
 		}
 	}
 
-	async getStateToPostToWebview() {
+	async getStateToPostToWebview(): Promise<ExtensionState> {
 		const {
 			apiConfiguration,
 			customInstructions,
@@ -1789,6 +1981,7 @@ export class ClineProvider
 			openRouterImageApiKey,
 			kiloCodeImageApiKey,
 			openRouterImageGenerationSelectedModel,
+			openRouterUseMiddleOutTransform,
 		} = await this.getState()
 
 		const telemetryKey = process.env.KILOCODE_POSTHOG_API_KEY
@@ -1828,23 +2021,17 @@ export class ClineProvider
 			uriScheme: vscode.env.uriScheme,
 			uiKind: vscode.UIKind[vscode.env.uiKind], // kilocode_change
 			kiloCodeWrapperProperties, // kilocode_change wrapper information
-			kilocodeDefaultModel: await (async () => {
-				try {
-					return await getKilocodeDefaultModel(apiConfiguration.kilocodeToken)
-				} catch (error) {
-					console.error("Failed to get default model:", error)
-					// Fallback to openRouterDefaultModelId or a default model
-					return openRouterDefaultModelId
-				}
-			})(),
+			kilocodeDefaultModel: await getKilocodeDefaultModel(
+				apiConfiguration.kilocodeToken,
+				apiConfiguration.kilocodeOrganizationId,
+			),
 			currentTaskItem: this.getCurrentTask()?.taskId
 				? (taskHistory || []).find((item: HistoryItem) => item.id === this.getCurrentTask()?.taskId)
 				: undefined,
 			clineMessages: this.getCurrentTask()?.clineMessages || [],
 			currentTaskTodos: this.getCurrentTask()?.todoList || [],
-			taskHistory: ((await this.getTaskHistory()) || [])
-				.filter((item: HistoryItem) => item.ts && item.task)
-				.sort((a: HistoryItem, b: HistoryItem) => b.ts - a.ts),
+			taskHistory: (await this.getTaskHistory()) || [],
+			messageQueue: this.getCurrentTask()?.messageQueueService?.messages,
 			soundEnabled: soundEnabled ?? false,
 			ttsEnabled: ttsEnabled ?? false,
 			ttsSpeed: ttsSpeed ?? 1.0,
@@ -1952,6 +2139,7 @@ export class ClineProvider
 			openRouterImageApiKey,
 			kiloCodeImageApiKey,
 			openRouterImageGenerationSelectedModel,
+			openRouterUseMiddleOutTransform,
 		}
 	}
 
@@ -1961,7 +2149,17 @@ export class ClineProvider
 	 * https://www.eliostruyf.com/devhack-code-extension-storage-options/
 	 */
 
-	async getState() {
+	async getState(): Promise<
+		Omit<
+			ExtensionState,
+			| "clineMessages"
+			| "renderContext"
+			| "hasOpenedModeSelector"
+			| "version"
+			| "shouldShowAnnouncement"
+			| "hasSystemPromptOverride"
+		>
+	> {
 		const stateValues = this.contextProxy.getValues()
 		const customModes = await this.customModesManager.getCustomModes()
 
@@ -2029,9 +2227,13 @@ export class ClineProvider
 			)
 		}
 
-		// Return the same structure as before
+		// Return the same structure as before.
 		return {
 			apiConfiguration: providerSettings,
+			kilocodeDefaultModel: await getKilocodeDefaultModel(
+				providerSettings.kilocodeToken,
+				providerSettings.kilocodeOrganizationId,
+			), // kilocode_change
 			lastShownAnnouncementId: stateValues.lastShownAnnouncementId,
 			customInstructions: stateValues.customInstructions,
 			apiModelId: stateValues.apiModelId,
@@ -2108,7 +2310,7 @@ export class ClineProvider
 			customModes,
 			maxOpenTabsContext: stateValues.maxOpenTabsContext ?? 20,
 			maxWorkspaceFiles: stateValues.maxWorkspaceFiles ?? 200,
-			openRouterUseMiddleOutTransform: stateValues.openRouterUseMiddleOutTransform ?? true,
+			openRouterUseMiddleOutTransform: stateValues.openRouterUseMiddleOutTransform,
 			browserToolEnabled: stateValues.browserToolEnabled ?? true,
 			telemetrySetting: stateValues.telemetrySetting || "unset",
 			showRooIgnoredFiles: stateValues.showRooIgnoredFiles ?? false,
@@ -2128,7 +2330,6 @@ export class ClineProvider
 			sharingEnabled,
 			organizationAllowList,
 			organizationSettingsVersion,
-			// Explicitly add condensing settings
 			condensingApiConfigId: stateValues.condensingApiConfigId,
 			customCondensingPrompt: stateValues.customCondensingPrompt,
 			codebaseIndexModels: stateValues.codebaseIndexModels ?? EMBEDDING_MODEL_PROFILES,
@@ -2148,12 +2349,9 @@ export class ClineProvider
 				codebaseIndexSearchMinScore: stateValues.codebaseIndexConfig?.codebaseIndexSearchMinScore,
 			},
 			profileThresholds: stateValues.profileThresholds ?? {},
-			// Add diagnostic message settings
 			includeDiagnosticMessages: stateValues.includeDiagnosticMessages ?? true,
 			maxDiagnosticMessages: stateValues.maxDiagnosticMessages ?? 50,
-			// Add includeTaskHistoryInEnhance setting
 			includeTaskHistoryInEnhance: stateValues.includeTaskHistoryInEnhance ?? true,
-			// Add remoteControlEnabled setting - get from cloud settings
 			remoteControlEnabled: (() => {
 				try {
 					const cloudSettings = CloudService.instance.getUserSettings()
@@ -2165,7 +2363,6 @@ export class ClineProvider
 					return false
 				}
 			})(),
-			// Add image generation settings
 			openRouterImageApiKey: stateValues.openRouterImageApiKey,
 			kiloCodeImageApiKey: stateValues.kiloCodeImageApiKey,
 			openRouterImageGenerationSelectedModel: stateValues.openRouterImageGenerationSelectedModel,
@@ -2196,7 +2393,7 @@ export class ClineProvider
 		return this.contextProxy.getValue(key)
 	}
 
-	public async setValue<K extends keyof RooCodeSettings>(key: K, value: RooCodeSettings[K]) {
+	public async setValue<K extends keyof RooCodeSettings>(key: K, value: RooCodeSettings[K]): Promise<void> {
 		await this.contextProxy.setValue(key, value)
 	}
 
@@ -2208,13 +2405,13 @@ export class ClineProvider
 		return this.contextProxy.getValues()
 	}
 
-	public async setValues(values: RooCodeSettings) {
+	public async setValues(values: RooCodeSettings): Promise<void> {
 		await this.contextProxy.setValues(values)
 	}
 
 	// dev
 
-	async resetState() {
+	async resetState(): Promise<void> {
 		const answer = await vscode.window.showInformationMessage(
 			t("common:confirmation.reset_state"),
 			{ modal: true },
@@ -2226,7 +2423,7 @@ export class ClineProvider
 		}
 
 		// Logout from Kilo Code provider before resetting (same approach as ProfileView logout)
-		const { apiConfiguration, currentApiConfigName } = await this.getState()
+		const { apiConfiguration, currentApiConfigName = "default" } = await this.getState()
 		if (apiConfiguration.kilocodeToken) {
 			await this.upsertProviderProfile(currentApiConfigName, {
 				...apiConfiguration,
@@ -2245,7 +2442,7 @@ export class ClineProvider
 
 	// logging
 
-	public log(message: string) {
+	public log(message: string): void {
 		this.outputChannel.appendLine(message)
 		console.log(message)
 	}
@@ -2286,9 +2483,8 @@ export class ClineProvider
 		return true
 	}
 
-	public async remoteControlEnabled(enabled: boolean) {
+	public async remoteControlEnabled(enabled: boolean): Promise<void> {
 		const userInfo = CloudService.instance.getUserInfo()
-
 		const config = await CloudService.instance.cloudAPI?.bridgeConfig().catch(() => undefined)
 
 		if (!config) {
@@ -2348,7 +2544,7 @@ export class ClineProvider
 		const currentManager = this.getCurrentWorkspaceCodeIndexManager()
 
 		// If the manager hasn't changed, no need to update subscription
-		if (currentManager === this.currentWorkspaceManager) {
+		if (currentManager === this.codeIndexManager) {
 			return
 		}
 
@@ -2359,7 +2555,7 @@ export class ClineProvider
 		}
 
 		// Update the current workspace manager reference
-		this.currentWorkspaceManager = currentManager
+		this.codeIndexManager = currentManager
 
 		// Subscribe to the new manager's progress updates if it exists
 		if (currentManager) {
@@ -2547,20 +2743,21 @@ export class ClineProvider
 	}
 
 	public async cancelTask(): Promise<void> {
-		const cline = this.getCurrentTask()
+		const task = this.getCurrentTask()
 
-		if (!cline) {
+		if (!task) {
 			return
 		}
 
-		console.log(`[cancelTask] cancelling task ${cline.taskId}.${cline.instanceId}`)
+		console.log(`[cancelTask] cancelling task ${task.taskId}.${task.instanceId}`)
 
-		const { historyItem } = await this.getTaskWithId(cline.taskId)
+		const { historyItem } = await this.getTaskWithId(task.taskId)
+
 		// Preserve parent and root task information for history item.
-		const rootTask = cline.rootTask
-		const parentTask = cline.parentTask
+		const rootTask = task.rootTask
+		const parentTask = task.parentTask
 
-		cline.abortTask()
+		task.abortTask()
 
 		await pWaitFor(
 			() =>
@@ -2610,7 +2807,12 @@ export class ClineProvider
 	// Modes
 
 	public async getModes(): Promise<{ slug: string; name: string }[]> {
-		return DEFAULT_MODES.map((mode) => ({ slug: mode.slug, name: mode.name }))
+		try {
+			const customModes = await this.customModesManager.getCustomModes()
+			return [...DEFAULT_MODES, ...customModes].map(({ slug, name }) => ({ slug, name }))
+		} catch (error) {
+			return DEFAULT_MODES.map(({ slug, name }) => ({ slug, name }))
+		}
 	}
 
 	public async getMode(): Promise<string> {
@@ -2625,12 +2827,12 @@ export class ClineProvider
 	// Provider Profiles
 
 	public async getProviderProfiles(): Promise<{ name: string; provider?: string }[]> {
-		const { listApiConfigMeta } = await this.getState()
+		const { listApiConfigMeta = [] } = await this.getState()
 		return listApiConfigMeta.map((profile) => ({ name: profile.name, provider: profile.apiProvider }))
 	}
 
 	public async getProviderProfile(): Promise<string> {
-		const { currentApiConfigName } = await this.getState()
+		const { currentApiConfigName = "default" } = await this.getState()
 		return currentApiConfigName
 	}
 
@@ -2695,7 +2897,7 @@ export class ClineProvider
 	}
 
 	private async getTaskProperties(): Promise<DynamicAppProperties & TaskProperties> {
-		const { language, mode, apiConfiguration } = await this.getState()
+		const { language = "en", mode, apiConfiguration } = await this.getState()
 
 		const task = this.getCurrentTask()
 		const todoList = task?.todoList
@@ -2854,7 +3056,7 @@ export class ClineProvider
 		}
 	}
 
-	async silentlyRefreshMcpMarketplace() {
+	async silentlyRefreshMcpMarketplace(): Promise<void> {
 		try {
 			const catalog = await this.fetchMcpMarketplaceFromApi(true)
 			if (catalog) {
@@ -2868,7 +3070,7 @@ export class ClineProvider
 		}
 	}
 
-	async fetchMcpMarketplace(forceRefresh: boolean = false) {
+	async fetchMcpMarketplace(forceRefresh: boolean = false): Promise<void> {
 		try {
 			// Check if we have cached data
 			const cachedCatalog = (await this.getGlobalState("mcpMarketplaceCatalog")) as
@@ -2900,7 +3102,7 @@ export class ClineProvider
 		}
 	}
 
-	async downloadMcp(mcpId: string) {
+	async downloadMcp(mcpId: string): Promise<void> {
 		try {
 			// First check if we already have this MCP server installed
 			const servers = this.mcpHub?.getServers() || []
@@ -2987,7 +3189,7 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 
 	// kilocode_change start
 	// Add new methods for favorite functionality
-	async toggleTaskFavorite(id: string) {
+	async toggleTaskFavorite(id: string): Promise<void> {
 		const history = await this.getTaskHistory()
 		const updatedHistory = history.map((item) => {
 			if (item.id === id) {
@@ -3010,7 +3212,7 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 	}
 
 	// Modify batch delete to respect favorites
-	async deleteMultipleTasks(taskIds: string[]) {
+	async deleteMultipleTasks(taskIds: string[]): Promise<void> {
 		const history = await this.getTaskHistory()
 		const favoritedTaskIds = taskIds.filter((id) => history.find((item) => item.id === id)?.isFavorited)
 
@@ -3023,7 +3225,7 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 		}
 	}
 
-	async setTaskFileNotFound(id: string) {
+	async setTaskFileNotFound(id: string): Promise<void> {
 		const history = await this.getTaskHistory()
 		const updatedHistory = history.map((item) => {
 			if (item.id === id) {
@@ -3043,7 +3245,7 @@ Here is the project's README to help you get started:\n\n${mcpDetails.readmeCont
 	// kilocode_change end
 
 	public get cwd() {
-		return getWorkspacePath()
+		return this.currentWorkspacePath || getWorkspacePath()
 	}
 
 	/**

@@ -13,6 +13,13 @@
 		"addCredit": "Thêm tín dụng",
 		"lowBalance": "Số dư Kilo Code của bạn thấp"
 	},
+	"invalidModel": {
+		"alphaPeriodEnded": "🎉 Giai đoạn alpha cho {{model}} đã kết thúc! Chuyển sang mô hình khác để tiếp tục.",
+		"notAllowedForTeam": "⚠️ Tổ chức của bạn không cho phép sử dụng mô hình {{model}}. Chuyển sang mô hình khác để tiếp tục.",
+		"modelUnavailable": "⚠️ Mô hình {{model}} không khả dụng. Chuyển sang mô hình khác để tiếp tục.",
+		"continueWith": "Tiếp tục với {{model}}",
+		"continue": "Tiếp tục"
+	},
 	"pricing": {
 		"costUnknown": "chi phí không xác định",
 		"costUnknownDescription": "Nhà cung cấp API không cung cấp dữ liệu chi phí hoặc yêu cầu đã bị hủy.",
@@ -42,7 +49,8 @@
 			"login": "Đăng nhập vào Kilo Code",
 			"logout": "Đăng xuất khỏi Kilo Code",
 			"providerRouting": {
-				"title": "Kilo Code - Định tuyến nhà cung cấp OpenRouter",
+				"title": "Định tuyến nhà cung cấp",
+				"managedByOrganization": "Cài đặt Định tuyến nhà cung cấp được quản lý bởi tổ chức của bạn.",
 				"description": "Kilo Code định tuyến các yêu cầu đến các nhà cung cấp tốt nhất có sẵn cho mô hình của bạn. Theo mặc định, các yêu cầu được cân bằng tải trên các nhà cung cấp hàng đầu để tối đa hóa thời gian hoạt động. Tuy nhiên, bạn có thể chọn một nhà cung cấp cụ thể để sử dụng cho mô hình này.",
 				"sorting": {
 					"default": "Sắp xếp nhà cung cấp mặc định",
