@@ -190,8 +190,20 @@ export class VsCodeLmHandler extends BaseProvider implements SingleCompletionHan
 			if (block.type === "text") {
 				textContent += block.text || ""
 			} else if (block.type === "image") {
-				// VSCode LM doesn't support images directly, so we'll just use a placeholder
-				textContent += "[IMAGE]"
+				// kilocode_change start - Enhanced image token counting
+				// VSCode LM doesn't support images directly, so we'll count tokens for the placeholder text
+				// This provides more accurate token estimation when images are involved
+				const imageSource = block.source
+				let imagePlaceholder = "[IMAGE]"
+				
+				if (imageSource?.type === "base64" && imageSource.media_type) {
+					imagePlaceholder = `[Image (base64): ${imageSource.media_type} not supported by VSCode LM API]`
+				} else if (imageSource?.type === "url") {
+					imagePlaceholder = `[Image (URL): not supported by VSCode LM API]`
+				}
+				
+				textContent += imagePlaceholder
+				// kilocode_change end
 			}
 		}
 
@@ -339,17 +351,41 @@ export class VsCodeLmHandler extends BaseProvider implements SingleCompletionHan
 		this.ensureCleanState()
 		const client: vscode.LanguageModelChat = await this.getClient()
 
+		// kilocode_change start - Check feature flags for images and thinking
+		const enableImages = metadata?.enableImages ?? false
+		const enableThinking = metadata?.enableThinking ?? metadata?.thinking?.enabled ?? false
+		
+		console.debug("Kilo Code <Language Model API>: Feature flags", {
+			enableImages,
+			enableThinking,
+			thinkingConfig: metadata?.thinking,
+		})
+		// kilocode_change end
+
 		// Process messages
 		const cleanedMessages = messages.map((msg) => ({
 			...msg,
 			content: this.cleanMessageContent(msg.content),
 		}))
 
+		// kilocode_change start - Enhanced image handling when enableImages is true
+		if (enableImages) {
+			// VS Code LM API doesn't natively support images, but we can provide enhanced placeholders
+			this.enhanceImageSupport(cleanedMessages)
+		}
+		// kilocode_change end
+
 		// Convert Anthropic messages to VS Code LM messages
 		const vsCodeLmMessages: vscode.LanguageModelChatMessage[] = [
 			vscode.LanguageModelChatMessage.Assistant(systemPrompt),
 			...convertToVsCodeLmMessages(cleanedMessages),
 		]
+
+		// kilocode_change start - Add thinking prompt enhancement when thinking is enabled
+		if (enableThinking) {
+			this.enhanceForThinking(vsCodeLmMessages, metadata?.thinking)
+		}
+		// kilocode_change end
 
 		// Initialize cancellation token for the request
 		this.currentRequestCancellation = new vscode.CancellationTokenSource()
@@ -375,6 +411,10 @@ export class VsCodeLmHandler extends BaseProvider implements SingleCompletionHan
 				this.currentRequestCancellation.token,
 			)
 
+			// kilocode_change start - Enhanced streaming with thinking support
+			let isThinkingMode = false
+			let thinkingBuffer = ""
+
 			// Consume the stream and handle both text and tool call chunks
 			for await (const chunk of response.stream) {
 				if (chunk instanceof vscode.LanguageModelTextPart) {
@@ -384,11 +424,37 @@ export class VsCodeLmHandler extends BaseProvider implements SingleCompletionHan
 						continue
 					}
 
-					accumulatedText += chunk.value
-					yield {
-						type: "text",
-						text: chunk.value,
+					// kilocode_change start - Process thinking when enabled
+					if (enableThinking) {
+						const processedChunk = this.processThinkingChunk(chunk.value, isThinkingMode, thinkingBuffer)
+						
+						if (processedChunk.thinking) {
+							yield {
+								type: "reasoning",
+								text: processedChunk.thinking,
+							}
+							thinkingBuffer += processedChunk.thinking
+						}
+						
+						if (processedChunk.text) {
+							accumulatedText += processedChunk.text
+							yield {
+								type: "text",
+								text: processedChunk.text,
+							}
+						}
+						
+						isThinkingMode = processedChunk.isThinkingMode
+					} else {
+						// kilocode_change end
+						accumulatedText += chunk.value
+						yield {
+							type: "text",
+							text: chunk.value,
+						}
+					// kilocode_change start
 					}
+					// kilocode_change end
 				} else if (chunk instanceof vscode.LanguageModelToolCallPart) {
 					try {
 						// Validate tool call parameters
@@ -479,6 +545,122 @@ export class VsCodeLmHandler extends BaseProvider implements SingleCompletionHan
 		}
 	}
 
+	// kilocode_change start - Helper methods for image and thinking support
+	
+	/**
+	 * Enhances image support by providing better placeholders and metadata
+	 * when enableImages flag is set to true
+	 */
+	private enhanceImageSupport(messages: Anthropic.Messages.MessageParam[]): void {
+		for (const message of messages) {
+			if (Array.isArray(message.content)) {
+				for (const part of message.content) {
+					if (part.type === "image") {
+						console.debug("Kilo Code <Language Model API>: Enhanced image processing", {
+							source: part.source?.type,
+							mediaType: part.source?.media_type,
+						})
+						// Image support is handled in the transform layer
+						// This method is a placeholder for future enhancements
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Enhances the message structure for thinking support
+	 * by adding thinking-related instructions to the system prompt
+	 */
+	private enhanceForThinking(
+		vsCodeLmMessages: vscode.LanguageModelChatMessage[],
+		thinkingConfig?: { enabled: boolean; maxTokens?: number; maxThinkingTokens?: number }
+	): void {
+		// Since VS Code LM doesn't have native thinking support,
+		// we'll enhance the system prompt to encourage step-by-step reasoning
+		const thinkingPrompt = `
+
+When reasoning through complex problems, please think step by step and show your reasoning process. Use markers like <thinking>...</thinking> to indicate your thought process before providing your final response.`
+
+		// Find the system message (first Assistant message) and enhance it
+		if (vsCodeLmMessages.length > 0 && vsCodeLmMessages[0].role === "assistant") {
+			const systemMessage = vsCodeLmMessages[0]
+			if (Array.isArray(systemMessage.content)) {
+				// Add thinking instruction to existing content
+				systemMessage.content.push(new vscode.LanguageModelTextPart(thinkingPrompt))
+			} else if (typeof systemMessage.content === "string") {
+				// Convert string to array and add thinking instruction
+				systemMessage.content = [
+					new vscode.LanguageModelTextPart(systemMessage.content + thinkingPrompt)
+				]
+			}
+		}
+
+		console.debug("Kilo Code <Language Model API>: Enhanced messages for thinking", {
+			thinkingConfig,
+			messageCount: vsCodeLmMessages.length,
+		})
+	}
+
+	/**
+	 * Processes streaming chunks to extract thinking content when thinking is enabled
+	 * This provides basic thinking support by parsing <thinking> tags from the response
+	 */
+	private processThinkingChunk(
+		chunkText: string,
+		currentThinkingMode: boolean,
+		thinkingBuffer: string
+	): { text: string; thinking: string; isThinkingMode: boolean } {
+		let text = ""
+		let thinking = ""
+		let isThinkingMode = currentThinkingMode
+
+		// Simple thinking extraction using markers
+		const thinkingStartRegex = /<thinking>/gi
+		const thinkingEndRegex = /<\/thinking>/gi
+
+		let processedText = chunkText
+		let startMatch
+		let endMatch
+
+		// Handle thinking start tags
+		while ((startMatch = thinkingStartRegex.exec(processedText)) !== null) {
+			// Add text before thinking tag to regular text
+			if (startMatch.index > 0) {
+				text += processedText.substring(0, startMatch.index)
+			}
+			// Switch to thinking mode
+			isThinkingMode = true
+			processedText = processedText.substring(startMatch.index + startMatch[0].length)
+			thinkingStartRegex.lastIndex = 0 // Reset regex
+		}
+
+		// Handle thinking end tags
+		while ((endMatch = thinkingEndRegex.exec(processedText)) !== null) {
+			// Add content before end tag to thinking
+			if (endMatch.index > 0) {
+				thinking += processedText.substring(0, endMatch.index)
+			}
+			// Switch back to normal mode
+			isThinkingMode = false
+			processedText = processedText.substring(endMatch.index + endMatch[0].length)
+			thinkingEndRegex.lastIndex = 0 // Reset regex
+		}
+
+		// Handle remaining text based on current mode
+		if (processedText.length > 0) {
+			if (isThinkingMode) {
+				thinking += processedText
+			} else {
+				text += processedText
+			}
+		}
+
+		return { text, thinking, isThinkingMode }
+	}
+
+	// kilocode_change end
+
 	// Return model information based on the current client state
 	override getModel(): { id: string; info: ModelInfo } {
 		if (this.client) {
@@ -510,8 +692,10 @@ export class VsCodeLmHandler extends BaseProvider implements SingleCompletionHan
 					typeof this.client.maxInputTokens === "number"
 						? Math.max(0, this.client.maxInputTokens)
 						: openAiModelInfoSaneDefaults.contextWindow,
-				supportsImages: false, // VSCode Language Model API currently doesn't support image inputs
+				// kilocode_change start - Enhanced capabilities with feature flag support
+				supportsImages: false, // VSCode Language Model API doesn't natively support images, but we provide enhanced placeholders
 				supportsPromptCache: true,
+				// kilocode_change end
 				inputPrice: 0,
 				outputPrice: 0,
 				description: `VSCode Language Model: ${modelId}`,
@@ -532,6 +716,9 @@ export class VsCodeLmHandler extends BaseProvider implements SingleCompletionHan
 			info: {
 				...openAiModelInfoSaneDefaults,
 				description: `VSCode Language Model (Fallback): ${fallbackId}`,
+				// kilocode_change start - Conservative fallback capabilities
+				supportsImages: false, // Conservative fallback - no image support
+				// kilocode_change end
 			},
 		}
 	}

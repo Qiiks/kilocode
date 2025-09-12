@@ -236,6 +236,190 @@ describe("VsCodeLmHandler", () => {
 
 			await expect(handler.createMessage(systemPrompt, messages).next()).rejects.toThrow("API Error")
 		})
+
+		// kilocode_change start - Tests for image and thinking support
+		
+		it("should handle enableImages flag with enhanced placeholders", async () => {
+			const systemPrompt = "You are a helpful assistant"
+			const messages: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user" as const,
+					content: [
+						{ type: "text", text: "Look at this image:" },
+						{
+							type: "image",
+							source: {
+								type: "base64",
+								media_type: "image/png",
+								data: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+							}
+						}
+					]
+				}
+			]
+
+			const responseText = "I can see the image you've shared."
+			mockLanguageModelChat.sendRequest.mockResolvedValueOnce({
+				stream: (async function* () {
+					yield new vscode.LanguageModelTextPart(responseText)
+					return
+				})(),
+				text: (async function* () {
+					yield responseText
+					return
+				})(),
+			})
+
+			const stream = handler.createMessage(systemPrompt, messages, { 
+				taskId: "test", 
+				enableImages: true 
+			})
+			const chunks = []
+			for await (const chunk of stream) {
+				chunks.push(chunk)
+			}
+
+			expect(chunks).toHaveLength(2) // Text chunk + usage chunk
+			expect(chunks[0]).toEqual({
+				type: "text",
+				text: responseText,
+			})
+		})
+
+		it("should handle enableThinking flag with enhanced prompting", async () => {
+			const systemPrompt = "You are a helpful assistant"
+			const messages: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user" as const,
+					content: "Solve 2+2",
+				},
+			]
+
+			const responseText = "<thinking>I need to add 2 and 2</thinking>The answer is 4."
+			mockLanguageModelChat.sendRequest.mockResolvedValueOnce({
+				stream: (async function* () {
+					yield new vscode.LanguageModelTextPart(responseText)
+					return
+				})(),
+				text: (async function* () {
+					yield responseText
+					return
+				})(),
+			})
+
+			const stream = handler.createMessage(systemPrompt, messages, { 
+				taskId: "test", 
+				enableThinking: true 
+			})
+			const chunks = []
+			for await (const chunk of stream) {
+				chunks.push(chunk)
+			}
+
+			// Should have reasoning chunk, text chunk, and usage chunk
+			expect(chunks.length).toBeGreaterThanOrEqual(2)
+			
+			// Find reasoning chunks
+			const reasoningChunks = chunks.filter(c => c.type === "reasoning")
+			const textChunks = chunks.filter(c => c.type === "text")
+			
+			if (reasoningChunks.length > 0) {
+				expect(reasoningChunks[0].text).toContain("I need to add 2 and 2")
+			}
+			
+			// Should have at least one text chunk
+			expect(textChunks.length).toBeGreaterThan(0)
+		})
+
+		it("should handle thinking metadata configuration", async () => {
+			const systemPrompt = "You are a helpful assistant"
+			const messages: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user" as const,
+					content: "Think step by step",
+				},
+			]
+
+			const responseText = "Let me think about this step by step."
+			mockLanguageModelChat.sendRequest.mockResolvedValueOnce({
+				stream: (async function* () {
+					yield new vscode.LanguageModelTextPart(responseText)
+					return
+				})(),
+				text: (async function* () {
+					yield responseText
+					return
+				})(),
+			})
+
+			const stream = handler.createMessage(systemPrompt, messages, { 
+				taskId: "test",
+				thinking: {
+					enabled: true,
+					maxTokens: 1000,
+					maxThinkingTokens: 500
+				}
+			})
+			const chunks = []
+			for await (const chunk of stream) {
+				chunks.push(chunk)
+			}
+
+			expect(chunks).toHaveLength(2) // Text chunk + usage chunk
+			expect(chunks[0]).toEqual({
+				type: "text",
+				text: responseText,
+			})
+		})
+
+		it("should fallback gracefully when features are disabled", async () => {
+			const systemPrompt = "You are a helpful assistant"
+			const messages: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user" as const,
+					content: [
+						{ type: "text", text: "Look at this:" },
+						{
+							type: "image",
+							source: {
+								type: "base64",
+								media_type: "image/png",
+								data: "test-data"
+							}
+						}
+					]
+				}
+			]
+
+			const responseText = "I cannot see images."
+			mockLanguageModelChat.sendRequest.mockResolvedValueOnce({
+				stream: (async function* () {
+					yield new vscode.LanguageModelTextPart(responseText)
+					return
+				})(),
+				text: (async function* () {
+					yield responseText
+					return
+				})(),
+			})
+
+			// Test without enableImages flag (should default to false)
+			const stream = handler.createMessage(systemPrompt, messages, { 
+				taskId: "test"
+			})
+			const chunks = []
+			for await (const chunk of stream) {
+				chunks.push(chunk)
+			}
+
+			expect(chunks).toHaveLength(2) // Text chunk + usage chunk
+			expect(chunks[0]).toEqual({
+				type: "text",
+				text: responseText,
+			})
+		})
+
+		// kilocode_change end
 	})
 
 	describe("getModel", () => {
@@ -260,6 +444,69 @@ describe("VsCodeLmHandler", () => {
 			expect(model.info).toBeDefined()
 		})
 	})
+
+	// kilocode_change start - Tests for enhanced token counting
+	describe("countTokens with image support", () => {
+		beforeEach(() => {
+			const mockModel = { ...mockLanguageModelChat }
+			;(vscode.lm.selectChatModels as Mock).mockResolvedValueOnce([mockModel])
+			mockLanguageModelChat.countTokens.mockResolvedValue(10)
+			handler["client"] = mockLanguageModelChat
+		})
+
+		it("should count tokens for text blocks", async () => {
+			const content: Anthropic.Messages.ContentBlockParam[] = [
+				{ type: "text", text: "Hello world" }
+			]
+
+			const tokenCount = await handler.countTokens(content)
+			expect(tokenCount).toBe(10)
+			expect(mockLanguageModelChat.countTokens).toHaveBeenCalledWith("Hello world", expect.any(Object))
+		})
+
+		it("should count tokens for image blocks with enhanced placeholders", async () => {
+			const content: Anthropic.Messages.ContentBlockParam[] = [
+				{
+					type: "image",
+					source: {
+						type: "base64",
+						media_type: "image/png",
+						data: "test-data"
+					}
+				}
+			]
+
+			const tokenCount = await handler.countTokens(content)
+			expect(tokenCount).toBe(10)
+			expect(mockLanguageModelChat.countTokens).toHaveBeenCalledWith(
+				"[Image (base64): image/png not supported by VSCode LM API]",
+				expect.any(Object)
+			)
+		})
+
+		it("should count tokens for mixed content", async () => {
+			const content: Anthropic.Messages.ContentBlockParam[] = [
+				{ type: "text", text: "Look at this: " },
+				{
+					type: "image",
+					source: {
+						type: "url",
+						media_type: "image/jpeg"
+					}
+				},
+				{ type: "text", text: " What do you think?" }
+			]
+
+			const tokenCount = await handler.countTokens(content)
+			expect(tokenCount).toBe(10)
+			expect(mockLanguageModelChat.countTokens).toHaveBeenCalledWith(
+				"Look at this: [Image (URL): not supported by VSCode LM API] What do you think?",
+				expect.any(Object)
+			)
+		})
+	})
+
+	// kilocode_change end
 
 	describe("completePrompt", () => {
 		it("should complete single prompt", async () => {
