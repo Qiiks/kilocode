@@ -235,32 +235,87 @@ export class ClineProvider
 		this.migrateLegacyHistory()
 	}
 	private async migrateLegacyHistory() {
+		// Migrate from contextProxy (workspace state)
 		const legacyHistory = this.contextProxy.getValue("taskHistory")
 		if (legacyHistory && Array.isArray(legacyHistory) && legacyHistory.length > 0) {
 			try {
-				await writeTaskHistory(this.context, legacyHistory)
+				// kilocode_change start - use HistoryService instance
+				const { HistoryService } = await import("../../utils/history")
+				const historyService = HistoryService.getInstance(this.context)
+				await historyService.saveHistory(legacyHistory)
+				// kilocode_change end
 				await this.contextProxy.setValue("taskHistory", undefined)
-				this.log("Successfully migrated legacy task history to file-based storage.")
+				this.log("Successfully migrated legacy task history from workspace state to file-based storage.")
 			} catch (error) {
-				this.log(`Error migrating legacy task history: ${error}`)
+				this.log(`Error migrating legacy task history from workspace state: ${error}`)
 			}
 		}
+
+		// Also clean up any globalState taskHistory // kilocode_change start
+		const globalLegacyHistory = this.getGlobalState("taskHistory")
+		if (globalLegacyHistory && Array.isArray(globalLegacyHistory) && globalLegacyHistory.length > 0) {
+			try {
+				const { HistoryService } = await import("../../utils/history")
+				const historyService = HistoryService.getInstance(this.context)
+				// Only save if we don't already have file-based history
+				const existingHistory = await historyService.getHistory()
+				if (existingHistory.length === 0) {
+					await historyService.saveHistory(globalLegacyHistory)
+					this.log("Successfully migrated legacy task history from global state to file-based storage.")
+				}
+				// Clear the global state regardless
+				await this.context.globalState.update("taskHistory", undefined) // kilocode_change
+				this.log("Cleaned up legacy task history from global state.")
+			} catch (error) {
+				this.log(`Error cleaning up legacy task history from global state: ${error}`)
+			}
+		}
+
+		// One-time cleanup of legacy task history from global state // kilocode_change start
+		const cleanupCompleted = this.context.globalState.get("legacyCleanupCompleted")
+		if (!cleanupCompleted) {
+			try {
+				// Clean up known legacy keys
+				const legacyKeys = ["taskHistory"]
+				for (const key of legacyKeys) {
+					const value = this.context.globalState.get(key)
+					if (value !== undefined) {
+						await this.context.globalState.update(key, undefined)
+						this.log(`Cleaned up legacy global state key: ${key}`)
+					}
+				}
+
+				// Mark cleanup as completed
+				await this.context.globalState.update("legacyCleanupCompleted", true)
+				this.log("Completed cleanup of legacy global state data.")
+			} catch (error) {
+				this.log(`Error during cleanup: ${error}`)
+			}
+		}
+		// kilocode_change end
 	}
 
 	private async getTaskHistory(): Promise<HistoryItem[]> {
-		// First check if we have migrated history in files
+		// Dynamically import HistoryService to avoid circular dependency
+		const { HistoryService } = await import("../../utils/history")
 		const historyService = HistoryService.getInstance(this.context)
-		const fileHistory = await historyService.getHistory()
+
+		// Get recent history only to prevent memory issues (limit to 100 most recent items) // kilocode_change
+		const fileHistory = await historyService.getRecentHistory(100) // kilocode_change
 
 		// If we have file-based history, use it
 		if (fileHistory.length > 0) {
 			return fileHistory
 		}
 
-		// Fallback to legacy globalState for backward compatibility
+		// Fallback to legacy globalState for backward compatibility, but limit it
 		const legacyHistory = this.getGlobalState("taskHistory")
 		if (legacyHistory && Array.isArray(legacyHistory)) {
+			// Sort by timestamp and limit to most recent 100 items // kilocode_change
 			return legacyHistory
+				.filter((item) => item && item.ts) // Ensure valid items
+				.sort((a, b) => (b.ts || 0) - (a.ts || 0))
+				.slice(0, 100)
 		}
 
 		return []

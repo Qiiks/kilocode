@@ -13,6 +13,7 @@ import { BaseTelemetryClient } from "./BaseTelemetryClient"
 export class PostHogTelemetryClient extends BaseTelemetryClient {
 	private client: PostHog
 	private distinctId: string = vscode.env.machineId
+	private hasValidApiKey: boolean = false // kilocode_change
 	// Git repository properties that should be filtered out
 	private readonly gitPropertyNames = ["repositoryUrl", "repositoryName", "defaultBranch"]
 
@@ -28,10 +29,26 @@ export class PostHogTelemetryClient extends BaseTelemetryClient {
 			debug,
 		)
 
-		this.client = new PostHog(process.env.KILOCODE_POSTHOG_API_KEY || "", {
+		// kilocode_change start - check for valid API key
+		const apiKey = process.env.KILOCODE_POSTHOG_API_KEY
+		if (!apiKey || apiKey.trim() === "") {
+			console.warn("PostHog API key not provided, telemetry client will not be functional")
+			// Initialize with a dummy key to prevent errors, but don't send events
+			this.client = new PostHog("dummy-key", {
+				host: "https://us.i.posthog.com",
+				disableGeoip: false,
+			})
+			this.hasValidApiKey = false
+			return
+		}
+		// kilocode_change end
+
+		this.client = new PostHog(apiKey, {
+			// kilocode_change - use validated apiKey
 			host: "https://us.i.posthog.com",
 			disableGeoip: false, // kilocode_change
 		})
+		this.hasValidApiKey = true // kilocode_change
 	}
 
 	/**
@@ -48,6 +65,15 @@ export class PostHogTelemetryClient extends BaseTelemetryClient {
 	}
 
 	public override async capture(event: TelemetryEvent): Promise<void> {
+		// kilocode_change start - check for valid API key
+		if (!this.hasValidApiKey) {
+			if (this.debug) {
+				console.info(`[PostHogTelemetryClient#capture] Skipping event due to missing API key: ${event.event}`)
+			}
+			return
+		}
+		// kilocode_change end
+
 		if (!this.isTelemetryEnabled() || !this.isEventCapturable(event.event)) {
 			if (this.debug) {
 				console.info(`[PostHogTelemetryClient#capture] Skipping event: ${event.event}`)
