@@ -63,6 +63,21 @@ export interface ApiHandlerCreateMessageMetadata {
 	 * Used to enforce "skip once" after a condense operation.
 	 */
 	suppressPreviousResponseId?: boolean
+	// kilocode_change start - Add image and thinking support flags
+	/**
+	 * Feature flags for VS Code LM provider capabilities
+	 */
+	enableImages?: boolean
+	enableThinking?: boolean
+	/**
+	 * Thinking configuration options
+	 */
+	thinking?: {
+		enabled: boolean
+		maxTokens?: number
+		maxThinkingTokens?: number
+	}
+	// kilocode_change end
 }
 
 export interface ApiHandler {

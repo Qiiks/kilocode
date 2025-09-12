@@ -73,7 +73,7 @@ export function convertToVsCodeLmMessages(
 								: (toolMessage.content?.map((part) => {
 										if (part.type === "image") {
 											return new vscode.LanguageModelTextPart(
-												// kilocode_change begin support type==url
+												// kilocode_change begin enhanced image placeholder support
 												`[Image (${part.source?.type || "Unknown source-type"}): ${part.source?.type === "url" ? "URL" : part.source?.media_type || "unknown media-type"} not supported by VSCode LM API]`,
 												// kilocode_change end
 											)
@@ -88,7 +88,7 @@ export function convertToVsCodeLmMessages(
 					...nonToolMessages.map((part) => {
 						if (part.type === "image") {
 							return new vscode.LanguageModelTextPart(
-								// kilocode_change begin support type==url
+								// kilocode_change begin enhanced image placeholder support
 								`[Image (${part.source?.type || "Unknown source-type"}): ${part.source?.type === "url" ? "URL" : part.source?.media_type || "unknown media-type"} not supported by VSCode LM API]`,
 								// kilocode_change end
 							)
@@ -133,6 +133,7 @@ export function convertToVsCodeLmMessages(
 					// Convert non-tool messages to TextParts after tool messages
 					...nonToolMessages.map((part) => {
 						if (part.type === "image") {
+							// kilocode_change - Enhanced image generation placeholder
 							return new vscode.LanguageModelTextPart("[Image generation not supported by VSCode LM API]")
 						}
 						return new vscode.LanguageModelTextPart(part.text)
