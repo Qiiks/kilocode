@@ -112,7 +112,6 @@ export class CustomModesManager {
 	 * - \u201C-\u201D: Smart double quotes
 	 */
 	private static readonly PROBLEMATIC_CHARS_REGEX =
-		// eslint-disable-next-line no-misleading-character-class
 		/[\u00A0\u200B\u200C\u200D\u2010\u2011\u2012\u2013\u2014\u2015\u2212\u2018\u2019\u201C\u201D]/g
 
 	/**

@@ -651,7 +651,6 @@ describe("Cline", () => {
 				// Create a stream that fails on first chunk
 				const mockError = new Error("API Error")
 				const mockFailedStream = {
-					// eslint-disable-next-line require-yield
 					async *[Symbol.asyncIterator]() {
 						throw mockError
 					},
@@ -777,7 +776,6 @@ describe("Cline", () => {
 				// Create a stream that fails on first chunk
 				const mockError = new Error("API Error")
 				const mockFailedStream = {
-					// eslint-disable-next-line require-yield
 					async *[Symbol.asyncIterator]() {
 						throw mockError
 					},

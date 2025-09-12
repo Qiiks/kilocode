@@ -1,5 +1,3 @@
-/* eslint-disable no-irregular-whitespace */
-
 import { distance } from "fastest-levenshtein"
 
 import { ToolProgressStatus } from "@roo-code/types"
