@@ -26,6 +26,7 @@ import { cerebrasModels } from "@roo-code/types"
 // kilocode_change end
 
 import { getDeepInfraModels } from "./deepinfra"
+import { getCopilotModels } from "./copilot"
 const memoryCache = new NodeCache({ stdTTL: 5 * 60, checkperiod: 5 * 60 })
 
 export /*kilocode_change*/ async function writeModels(router: RouterName, data: ModelRecord) {
@@ -114,6 +115,9 @@ export const getModels = async (options: GetModelsOptions): Promise<ModelRecord>
 				break
 			case "vercel-ai-gateway":
 				models = await getVercelAiGatewayModels()
+				break
+			case "copilot":
+				models = await getCopilotModels()
 				break
 			default: {
 				// Ensures router is exhaustively checked if RouterName is a strict union

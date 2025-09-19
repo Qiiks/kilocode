@@ -229,6 +229,8 @@ function getModelIdForProvider(apiConfiguration: ProviderSettings, provider: str
 			return apiConfiguration.ioIntelligenceModelId
 		case "vercel-ai-gateway":
 			return apiConfiguration.vercelAiGatewayModelId
+		case "copilot":
+			return apiConfiguration.copilotModelId
 		default:
 			return apiConfiguration.apiModelId
 	}
@@ -307,6 +309,9 @@ export function validateModelId(apiConfiguration: ProviderSettings, routerModels
 			break
 		case "vercel-ai-gateway":
 			modelId = apiConfiguration.vercelAiGatewayModelId
+			break
+		case "copilot":
+			modelId = apiConfiguration.copilotModelId
 			break
 	}
 

@@ -70,6 +70,7 @@ export const providerNames = [
 	"fireworks",
 	"featherless",
 	"io-intelligence",
+	"copilot",
 	"roo",
 	"vercel-ai-gateway",
 ] as const
@@ -375,9 +376,12 @@ const ioIntelligenceSchema = apiModelIdProviderModelSchema.extend({
 	ioIntelligenceModelId: z.string().optional(),
 	ioIntelligenceApiKey: z.string().optional(),
 })
-
 const qwenCodeSchema = apiModelIdProviderModelSchema.extend({
 	qwenCodeOauthPath: z.string().optional(),
+})
+
+const copilotSchema = baseProviderSettingsSchema.extend({
+	copilotModelId: z.string().optional(),
 })
 
 const rooSchema = apiModelIdProviderModelSchema.extend({
@@ -432,6 +436,7 @@ export const providerSettingsSchemaDiscriminated = z.discriminatedUnion("apiProv
 	featherlessSchema.merge(z.object({ apiProvider: z.literal("featherless") })),
 	ioIntelligenceSchema.merge(z.object({ apiProvider: z.literal("io-intelligence") })),
 	qwenCodeSchema.merge(z.object({ apiProvider: z.literal("qwen-code") })),
+	copilotSchema.merge(z.object({ apiProvider: z.literal("copilot") })),
 	rooSchema.merge(z.object({ apiProvider: z.literal("roo") })),
 	vercelAiGatewaySchema.merge(z.object({ apiProvider: z.literal("vercel-ai-gateway") })),
 	defaultSchema,
@@ -477,6 +482,7 @@ export const providerSettingsSchema = z.object({
 	...featherlessSchema.shape,
 	...ioIntelligenceSchema.shape,
 	...qwenCodeSchema.shape,
+	...copilotSchema.shape,
 	...rooSchema.shape,
 	...vercelAiGatewaySchema.shape,
 	...codebaseIndexProviderSchema.shape,
@@ -509,6 +515,7 @@ export const MODEL_ID_KEYS: Partial<keyof ProviderSettings>[] = [
 	"ioIntelligenceModelId",
 	"vercelAiGatewayModelId",
 	"deepInfraModelId",
+	"copilotModelId",
 ]
 
 export const getModelId = (settings: ProviderSettings): string | undefined => {

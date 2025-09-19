@@ -35,6 +35,7 @@ import {
 	fireworksDefaultModelId,
 	featherlessDefaultModelId,
 	ioIntelligenceDefaultModelId,
+	copilotDefaultModelId,
 	rooDefaultModelId,
 	vercelAiGatewayDefaultModelId,
 	deepInfraDefaultModelId,
@@ -92,6 +93,7 @@ import {
 	Unbound,
 	Vertex,
 	VSCodeLM,
+	Copilot,
 	XAI,
 	// kilocode_change start
 	GeminiCli,
@@ -381,6 +383,7 @@ const ApiOptions = ({
 				openai: { field: "openAiModelId" },
 				ollama: { field: "ollamaModelId" },
 				lmstudio: { field: "lmStudioModelId" },
+				copilot: { field: "copilotModelId", default: copilotDefaultModelId },
 				// kilocode_change start
 				kilocode: { field: "kilocodeModel", default: kilocodeDefaultModel },
 				"gemini-cli": { field: "apiModelId", default: geminiCliDefaultModelId },
@@ -629,6 +632,15 @@ const ApiOptions = ({
 
 			{selectedProvider === "vscode-lm" && (
 				<VSCodeLM apiConfiguration={apiConfiguration} setApiConfigurationField={setApiConfigurationField} />
+			)}
+
+			{selectedProvider === "copilot" && (
+				<Copilot
+					apiConfiguration={apiConfiguration}
+					setApiConfigurationField={setApiConfigurationField}
+					organizationAllowList={organizationAllowList}
+					modelValidationError={modelValidationError}
+				/>
 			)}
 
 			{selectedProvider === "ollama" && (

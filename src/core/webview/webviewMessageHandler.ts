@@ -4,6 +4,7 @@ import * as os from "os"
 import * as fs from "fs/promises"
 import pWaitFor from "p-wait-for"
 import * as vscode from "vscode"
+
 // kilocode_change start
 import axios from "axios"
 import { getKiloBaseUriFromToken } from "../../shared/kilocode/token"
@@ -70,6 +71,7 @@ import { getCommand } from "../../utils/commands"
 import { toggleWorkflow, toggleRule, createRuleFile, deleteRuleFile } from "./kilorules"
 import { mermaidFixPrompt } from "../prompts/utilities/mermaid" // kilocode_change
 import { editMessageHandler, fetchKilocodeNotificationsHandler } from "../kilocode/webview/webviewMessageHandlerUtils" // kilocode_change
+import { DefaultMessageHandlerRegistry } from "./message-handle"
 
 const ALLOWED_VSCODE_SETTINGS = new Set(["terminal.integrated.inheritEnv"])
 
@@ -92,6 +94,8 @@ export const webviewMessageHandler = async (
 	const getCurrentCwd = () => {
 		return provider.getCurrentTask()?.cwd || provider.cwd
 	}
+
+	const messageHandler = DefaultMessageHandlerRegistry.getInstance()
 	/**
 	 * Shared utility to find message indices based on timestamp
 	 */
@@ -796,6 +800,7 @@ export const webviewMessageHandler = async (
 				ollama: {},
 				lmstudio: {},
 				deepinfra: {},
+				copilot: {},
 			}
 
 			const safeGetModels = async (options: GetModelsOptions): Promise<ModelRecord> => {
@@ -870,6 +875,7 @@ export const webviewMessageHandler = async (
 					options: { provider: "litellm", apiKey: litellmApiKey, baseUrl: litellmBaseUrl },
 				})
 			}
+			modelFetchPromises.push({ key: "copilot", options: { provider: "copilot" } })
 
 			const results = await Promise.allSettled(
 				modelFetchPromises.map(async ({ key, options }) => {
@@ -3583,6 +3589,19 @@ export const webviewMessageHandler = async (
 				type: "dismissedUpsells",
 				list: dismissedUpsells,
 			})
+			break
+		}
+
+		default: {
+			// Try to handle the message using the strategy pattern
+			const handler = await messageHandler.getStrategy(message.type)
+			if (handler) {
+				await handler.handle({ provider, message, marketplaceManager })
+				break
+			}
+
+			// Message type not recognized
+			console.warn(`Unhandled message type: ${message.type}`)
 			break
 		}
 	}
