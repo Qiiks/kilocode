@@ -1,5 +1,43 @@
 # kilo-code
 
+## [v4.97.1]
+
+- [#2625](https://github.com/Kilo-Org/kilocode/pull/2625) [`3409665`](https://github.com/Kilo-Org/kilocode/commit/340966544bda3a069f9cf2478658bf58f5e2cf3c) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add fix for Gemini CLI not being able to refresh access token anymore
+
+- [#2536](https://github.com/Kilo-Org/kilocode/pull/2536) [`1a01114`](https://github.com/Kilo-Org/kilocode/commit/1a011145572333d053b8999c3f38bf718bbedf66) Thanks [@mcowger](https://github.com/mcowger)! - Only validate embedders when they match the currently configured provider
+
+- [#2491](https://github.com/Kilo-Org/kilocode/pull/2491) [`06afc76`](https://github.com/Kilo-Org/kilocode/commit/06afc769d29740083027a1caa6195edcfbbb94e2) Thanks [@Thireus](https://github.com/Thireus)! - Increase OpenAI Compatible timeout
+
+## [v4.97.0]
+
+- [#2505](https://github.com/Kilo-Org/kilocode/pull/2505) [`a59e7f5`](https://github.com/Kilo-Org/kilocode/commit/a59e7f565478c7405e62c59448bf7667e4b26c8f) Thanks [@markijbema](https://github.com/markijbema)! - Added option to the Display tab of the settings to disable autocomplete gutter animation
+
+- [#2602](https://github.com/Kilo-Org/kilocode/pull/2602) [`0807e5f`](https://github.com/Kilo-Org/kilocode/commit/0807e5ffdfcef1f90e6469a964d47ec177cca706) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add GPT-5-Codex to OpenAI provider (thanks Roo / @daniel-lxs)
+
+### Patch Changes
+
+- [#2583](https://github.com/Kilo-Org/kilocode/pull/2583) [`0c13d2d`](https://github.com/Kilo-Org/kilocode/commit/0c13d2db8391f194150001a2fc1e247573a95db2) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The rate limiter no longer generates timeouts longer than the configured limit.
+
+- [#2596](https://github.com/Kilo-Org/kilocode/pull/2596) [`38f4547`](https://github.com/Kilo-Org/kilocode/commit/38f45478d4183f375e8a717a3564d3ac91fd6daa) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Reasoning can now be disabled for DeepSeek V3.1 models when using Kilo Code or OpenRouter providers by setting Reasoning Effort to minimal
+
+- [#2586](https://github.com/Kilo-Org/kilocode/pull/2586) [`0b4025d`](https://github.com/Kilo-Org/kilocode/commit/0b4025df4c44d86a0aba20d19d5b32f2eaa214c6) Thanks [@b3nw](https://github.com/b3nw)! - New Chutes AI models added and pricing updated
+
+- [#2603](https://github.com/Kilo-Org/kilocode/pull/2603) [`b5325a8`](https://github.com/Kilo-Org/kilocode/commit/b5325a82abe94e195b580ac27cd0a8bf7f8577a7) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Reasoning can now be disabled for Grok 4 Fast on OpenRouter by setting Reasoning Effort to minimal. Note that Grok 4 Fast does not expose its reasoning tokens.
+
+- [#2570](https://github.com/Kilo-Org/kilocode/pull/2570) [`18963de`](https://github.com/Kilo-Org/kilocode/commit/18963de4dce86be883c03ceeb418e820bd2c0635) Thanks [@snova-jorgep](https://github.com/snova-jorgep)! - Update available SambaNova models
+
+## [v4.96.2]
+
+- [#2521](https://github.com/Kilo-Org/kilocode/pull/2521) [`9304511`](https://github.com/Kilo-Org/kilocode/commit/9304511cb001114886f026744c3492f6a6a839f2) Thanks [@mcowger](https://github.com/mcowger)! - Update loop error message to refer to model instead of Kilo Code as the cause.
+
+- [#2532](https://github.com/Kilo-Org/kilocode/pull/2532) [`8103ad4`](https://github.com/Kilo-Org/kilocode/commit/8103ad4b59135888861b06c2cff7fc35ba965607) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The description of the read_file tool was tweaked to make it more likely a vision-capable model will use it for image reading.
+
+- [#2558](https://github.com/Kilo-Org/kilocode/pull/2558) [`3044c43`](https://github.com/Kilo-Org/kilocode/commit/3044c43479b7d64599af536d3df90251b850ea24) Thanks [@ivanarifin](https://github.com/ivanarifin)! - Fix env path resolution for custom gemini cli oauth path
+
+## [v4.96.1]
+
+- [#2452](https://github.com/Kilo-Org/kilocode/pull/2452) [`d4cfbe9`](https://github.com/Kilo-Org/kilocode/commit/d4cfbe98a7ca4e2ce389fe221875f6158688ff69) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Jetbrains - Fix reload extension when switch project
+
 ## [v4.96.0]
 
 - [#2504](https://github.com/Kilo-Org/kilocode/pull/2504) [`4927414`](https://github.com/Kilo-Org/kilocode/commit/4927414d0737312796a0c5ae9b0e5a9d7629fbbc) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Include changes from Roo Code v3.28.0-v3.28.2:
