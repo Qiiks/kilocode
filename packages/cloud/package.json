@@ -3,12 +3,14 @@
 	"description": "Roo Code Cloud services.",
 	"version": "0.0.0",
 	"type": "module",
-	"exports": "./src/index.ts",
+	"exports": "./dist/src/index.js",
+	"types": "./dist/src/index.d.ts",
 	"scripts": {
 		"lint": "eslint src --ext=ts --max-warnings=0",
 		"check-types": "tsc --noEmit",
 		"test": "vitest run",
-		"clean": "rimraf .turbo"
+		"clean": "rimraf .turbo",
+		"build": "tsc"
 	},
 	"dependencies": {
 		"@roo-code/types": "workspace:^",

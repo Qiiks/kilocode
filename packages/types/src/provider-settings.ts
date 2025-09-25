@@ -376,10 +376,10 @@ const ioIntelligenceSchema = apiModelIdProviderModelSchema.extend({
 	ioIntelligenceModelId: z.string().optional(),
 	ioIntelligenceApiKey: z.string().optional(),
 })
-
 const qwenCodeSchema = apiModelIdProviderModelSchema.extend({
 	qwenCodeOauthPath: z.string().optional(),
 })
+
 const copilotSchema = baseProviderSettingsSchema.extend({
 	copilotModelId: z.string().optional(),
 })
@@ -643,6 +643,7 @@ export const MODELS_BY_PROVIDER: Record<
 	"virtual-quota-fallback": { id: "virtual-quota-fallback", label: "Virtual Quota Fallback", models: [] },
 	// kilocode_change end
 	deepinfra: { id: "deepinfra", label: "DeepInfra", models: [] },
+	copilot: { id: "copilot", label: "Copilot", models: [] },
 	"vercel-ai-gateway": { id: "vercel-ai-gateway", label: "Vercel AI Gateway", models: [] },
 }
 
@@ -657,6 +658,7 @@ export const dynamicProviders = [
 	"kilocode",
 	"virtual-quota-fallback",
 	// kilocode_change end
+	"copilot",
 	"deepinfra",
 	"vercel-ai-gateway",
 ] as const satisfies readonly ProviderName[]

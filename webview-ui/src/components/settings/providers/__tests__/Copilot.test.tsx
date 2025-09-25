@@ -5,7 +5,7 @@ import { useEvent } from "react-use"
 import { vscode } from "@src/utils/vscode"
 import { useAppTranslation } from "@src/i18n/TranslationContext"
 import type { ProviderSettings, ModelInfo } from "@roo-code/types"
-import type { OrganizationAllowList } from "@roo/cloud"
+import type { OrganizationAllowList } from "@roo-code/cloud"
 
 // Mock dependencies
 vi.mock("react-use", () => ({

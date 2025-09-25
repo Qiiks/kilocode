@@ -383,11 +383,10 @@ const ApiOptions = ({
 				openai: { field: "openAiModelId" },
 				ollama: { field: "ollamaModelId" },
 				lmstudio: { field: "lmStudioModelId" },
-<<<<<<< HEAD
+				copilot: { field: "copilotModelId", default: copilotDefaultModelId },
 				// kilocode_change start
 				kilocode: { field: "kilocodeModel", default: kilocodeDefaultModel },
 				"gemini-cli": { field: "apiModelId", default: geminiCliDefaultModelId },
-				copilot: { field: "copilotModelId", default: copilotDefaultModelId },
 				// kilocode_change end
 			}
 

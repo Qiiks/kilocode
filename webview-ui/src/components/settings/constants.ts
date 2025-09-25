@@ -89,9 +89,9 @@ export const PROVIDERS = [
 	{ value: "fireworks", label: "Fireworks AI" },
 	{ value: "featherless", label: "Featherless AI" },
 	{ value: "io-intelligence", label: "IO Intelligence" },
+	{ value: "vercel-ai-gateway", label: "Vercel AI Gateway" },
 	{ value: "copilot", label: "Copilot" },
 	{ value: "roo", label: "Roo Code Cloud" },
-	{ value: "vercel-ai-gateway", label: "Vercel AI Gateway" },
 ].sort((a, b) => a.label.localeCompare(b.label))
 
 PROVIDERS.unshift({ value: "kilocode", label: "Kilo Code" }) // kilocode_change

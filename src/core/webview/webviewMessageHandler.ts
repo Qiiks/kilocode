@@ -4,6 +4,7 @@ import * as os from "os"
 import * as fs from "fs/promises"
 import pWaitFor from "p-wait-for"
 import * as vscode from "vscode"
+
 // kilocode_change start
 import axios from "axios"
 import { getKiloBaseUriFromToken } from "../../shared/kilocode/token"
@@ -89,11 +90,12 @@ export const webviewMessageHandler = async (
 	const getGlobalState = <K extends keyof GlobalState>(key: K) => provider.contextProxy.getValue(key)
 	const updateGlobalState = async <K extends keyof GlobalState>(key: K, value: GlobalState[K]) =>
 		await provider.contextProxy.setValue(key, value)
-	const messageHandler = DefaultMessageHandlerRegistry.getInstance()
 
 	const getCurrentCwd = () => {
 		return provider.getCurrentTask()?.cwd || provider.cwd
 	}
+
+	const messageHandler = DefaultMessageHandlerRegistry.getInstance()
 	/**
 	 * Shared utility to find message indices based on timestamp
 	 */
@@ -3589,6 +3591,7 @@ export const webviewMessageHandler = async (
 			})
 			break
 		}
+
 		default: {
 			// Try to handle the message using the strategy pattern
 			const handler = await messageHandler.getStrategy(message.type)

@@ -9,7 +9,7 @@ import { useAppTranslation } from "@src/i18n/TranslationContext"
 import { VSCodeButtonLink } from "@src/components/common/VSCodeButtonLink"
 import { vscode } from "@src/utils/vscode"
 import { ModelPicker } from "../ModelPicker"
-import { OrganizationAllowList } from "@roo/cloud"
+import { OrganizationAllowList } from "@roo-code/cloud"
 
 type CopilotProps = {
 	apiConfiguration: ProviderSettings
