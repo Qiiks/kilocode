@@ -37,6 +37,6 @@ export default [
 		},
 	},
 	{
-		ignores: ["webview-ui", "out"],
+		ignores: ["webview-ui", "out", "dist", "src/dist", "**/dist/**", "src/src/dist"],
 	},
 ]

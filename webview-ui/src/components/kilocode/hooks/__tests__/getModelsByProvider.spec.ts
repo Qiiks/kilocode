@@ -26,6 +26,7 @@ describe("getModelsByProvider", () => {
 			"io-intelligence": { "test-model": testModel },
 			deepinfra: { "test-model": testModel },
 			"vercel-ai-gateway": { "test-model": testModel },
+			copilot: { "test-model": testModel }, // kilocode_change
 		}
 
 		const exceptions = [
