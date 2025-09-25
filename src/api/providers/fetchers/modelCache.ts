@@ -20,18 +20,16 @@ import { getKiloBaseUriFromToken } from "../../../shared/kilocode/token"
 import { getOllamaModels } from "./ollama"
 import { getLMStudioModels } from "./lmstudio"
 import { getIOIntelligenceModels } from "./io-intelligence"
-
-// kilocode_change start
 import { cerebrasModels } from "@roo-code/types"
-// kilocode_change end
-
 import { getDeepInfraModels } from "./deepinfra"
+import { getCopilotModels } from "./copilot"
 const memoryCache = new NodeCache({ stdTTL: 5 * 60, checkperiod: 5 * 60 })
 
 export /*kilocode_change*/ async function writeModels(router: RouterName, data: ModelRecord) {
 	const filename = `${router}_models.json`
 	const cacheDir = await getCacheDirectoryPath(ContextProxy.instance.globalStorageUri.fsPath)
 	await safeWriteJson(path.join(cacheDir, filename), data)
+import { getCopilotModels } from "./copilot"
 }
 
 export /*kilocode_change*/ async function readModels(router: RouterName): Promise<ModelRecord | undefined> {
@@ -114,6 +112,9 @@ export const getModels = async (options: GetModelsOptions): Promise<ModelRecord>
 				break
 			case "vercel-ai-gateway":
 				models = await getVercelAiGatewayModels()
+				break
+			case "copilot":
+				models = await getCopilotModels()
 				break
 			default: {
 				// Ensures router is exhaustively checked if RouterName is a strict union

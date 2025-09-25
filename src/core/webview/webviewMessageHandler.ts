@@ -70,6 +70,7 @@ import { getCommand } from "../../utils/commands"
 import { toggleWorkflow, toggleRule, createRuleFile, deleteRuleFile } from "./kilorules"
 import { mermaidFixPrompt } from "../prompts/utilities/mermaid" // kilocode_change
 import { editMessageHandler, fetchKilocodeNotificationsHandler } from "../kilocode/webview/webviewMessageHandlerUtils" // kilocode_change
+import { DefaultMessageHandlerRegistry } from "./message-handle"
 
 const ALLOWED_VSCODE_SETTINGS = new Set(["terminal.integrated.inheritEnv"])
 
@@ -88,6 +89,7 @@ export const webviewMessageHandler = async (
 	const getGlobalState = <K extends keyof GlobalState>(key: K) => provider.contextProxy.getValue(key)
 	const updateGlobalState = async <K extends keyof GlobalState>(key: K, value: GlobalState[K]) =>
 		await provider.contextProxy.setValue(key, value)
+	const messageHandler = DefaultMessageHandlerRegistry.getInstance()
 
 	const getCurrentCwd = () => {
 		return provider.getCurrentTask()?.cwd || provider.cwd
@@ -796,6 +798,7 @@ export const webviewMessageHandler = async (
 				ollama: {},
 				lmstudio: {},
 				deepinfra: {},
+				copilot: {},
 			}
 
 			const safeGetModels = async (options: GetModelsOptions): Promise<ModelRecord> => {
@@ -870,6 +873,7 @@ export const webviewMessageHandler = async (
 					options: { provider: "litellm", apiKey: litellmApiKey, baseUrl: litellmBaseUrl },
 				})
 			}
+			modelFetchPromises.push({ key: "copilot", options: { provider: "copilot" } })
 
 			const results = await Promise.allSettled(
 				modelFetchPromises.map(async ({ key, options }) => {
@@ -3583,6 +3587,18 @@ export const webviewMessageHandler = async (
 				type: "dismissedUpsells",
 				list: dismissedUpsells,
 			})
+			break
+		}
+		default: {
+			// Try to handle the message using the strategy pattern
+			const handler = await messageHandler.getStrategy(message.type)
+			if (handler) {
+				await handler.handle({ provider, message, marketplaceManager })
+				break
+			}
+
+			// Message type not recognized
+			console.warn(`Unhandled message type: ${message.type}`)
 			break
 		}
 	}
