@@ -143,34 +143,30 @@ export const getModelMaxOutputTokens = ({
 
 // GetModelsOptions
 
-// Allow callers to always pass apiKey/baseUrl without excess property errors,
-// while still enforcing required fields per provider where applicable.
 type CommonFetchParams = {
-	apiKey?: string
 	baseUrl?: string
+	apiKey?: string
 }
 
-// Exhaustive, value-level map for all dynamic providers.
-// If a new dynamic provider is added in packages/types, this will fail to compile
-// until a corresponding entry is added here.
 const dynamicProviderExtras = {
-	gemini: {} as { apiKey?: string; baseUrl?: string }, // kilocode_change
-	openrouter: {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
-	"vercel-ai-gateway": {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
-	huggingface: {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
+	openrouter: {} as { apiKey?: string; baseUrl?: string },
+	"vercel-ai-gateway": {} as { apiKey?: string; baseUrl?: string },
+	huggingface: {} as {},
 	litellm: {} as { apiKey: string; baseUrl: string },
-	kilocode: {} as { kilocodeToken?: string; kilocodeOrganizationId?: string }, // kilocode_change
+	kilocode: {} as { kilocodeToken?: string; kilocodeOrganizationId?: string },
+	ovhcloud: {} as { apiKey?: string; baseUrl?: string },
+	chutes: {} as { apiKey?: string },
+	gemini: {} as { apiKey?: string; baseUrl?: string },
+	inception: {} as { apiKey?: string; baseUrl?: string },
 	deepinfra: {} as { apiKey?: string; baseUrl?: string },
 	"io-intelligence": {} as { apiKey: string },
 	requesty: {} as { apiKey?: string; baseUrl?: string },
 	unbound: {} as { apiKey?: string },
-	glama: {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
-	ollama: {} as { numCtx?: number }, // kilocode_change
-	lmstudio: {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
-	ovhcloud: {} as { apiKey?: string }, // kilocode_change
-	inception: {} as { apiKey?: string; baseUrl?: string }, // kilocode_change
+	glama: {} as {},
 	roo: {} as { apiKey?: string; baseUrl?: string },
-	chutes: {} as { apiKey?: string },
+	ollama: {} as { numCtx?: number },
+	lmstudio: {} as {},
+	copilot: {} as {},
 } as const satisfies Record<RouterName, object>
 
 // Build the dynamic options union from the map, intersected with CommonFetchParams

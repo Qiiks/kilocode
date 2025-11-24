@@ -24,6 +24,7 @@ export { SambaNova } from "./SambaNova"
 export { Unbound } from "./Unbound"
 export { Vertex } from "./Vertex"
 export { VSCodeLM } from "./VSCodeLM"
+export { Copilot } from "./Copilot"
 export { XAI } from "./XAI"
 // kilocode_change start
 export { OvhCloudAiEndpoints } from "./OvhCloud"

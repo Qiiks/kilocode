@@ -33,7 +33,7 @@ import { getDeepInfraModels } from "./deepinfra"
 import { getHuggingFaceModels } from "./huggingface"
 import { getRooModels } from "./roo"
 import { getChutesModels } from "./chutes"
-
+import { getCopilotModels } from "./copilot"
 const memoryCache = new NodeCache({ stdTTL: 5 * 60, checkperiod: 5 * 60 })
 
 export /*kilocode_change*/ async function writeModels(router: RouterName, data: ModelRecord) {
@@ -149,6 +149,9 @@ export const getModels = async (options: GetModelsOptions): Promise<ModelRecord>
 			}
 			case "chutes":
 				models = await getChutesModels(options.apiKey)
+				break
+			case "copilot":
+				models = await getCopilotModels()
 				break
 			default: {
 				// Ensures router is exhaustively checked if RouterName is a strict union.

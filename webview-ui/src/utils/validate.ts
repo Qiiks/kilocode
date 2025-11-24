@@ -233,6 +233,9 @@ function getModelIdForProvider(apiConfiguration: ProviderSettings, provider: Pro
 	if (provider === "vscode-lm") {
 		return apiConfiguration.vsCodeLmModelSelector?.id
 	}
+	if (provider === "copilot") {
+		return apiConfiguration.copilotModelId
+	}
 
 	if (isCustomProvider(provider) || isFauxProvider(provider)) {
 		return apiConfiguration.apiModelId

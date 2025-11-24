@@ -2792,7 +2792,7 @@ describe("ClineProvider - Router Models", () => {
 			baseUrl: "http://localhost:4000",
 		})
 		expect(getModels).toHaveBeenCalledWith({ provider: "chutes" })
-
+		expect(getModels).toHaveBeenCalledWith({ provider: "copilot" })
 		// Verify response was sent
 		expect(mockPostMessage).toHaveBeenCalledWith({
 			type: "routerModels",
@@ -2814,6 +2814,7 @@ describe("ClineProvider - Router Models", () => {
 				inception: mockModels, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
+				copilot: mockModels,
 			},
 			values: undefined,
 		})
@@ -2863,6 +2864,7 @@ describe("ClineProvider - Router Models", () => {
 			.mockResolvedValueOnce(mockModels) // roo success
 			.mockRejectedValueOnce(new Error("Chutes API error")) // chutes fail
 			.mockRejectedValueOnce(new Error("LiteLLM connection failed")) // litellm fail
+			.mockResolvedValueOnce(mockModels) // copilot success
 
 		await messageHandler({ type: "requestRouterModels" })
 
@@ -2887,6 +2889,7 @@ describe("ClineProvider - Router Models", () => {
 				inception: mockModels, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
+				copilot: mockModels,
 			},
 			values: undefined,
 		})
@@ -3039,6 +3042,7 @@ describe("ClineProvider - Router Models", () => {
 				inception: mockModels, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
+				copilot: mockModels,
 			},
 			values: undefined,
 		})

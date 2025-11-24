@@ -68,6 +68,7 @@ describe("Model Validation Functions", () => {
 		// kilocode_change end
 		roo: {},
 		chutes: {},
+		copilot: {},
 	}
 
 	const allowAllOrganization: OrganizationAllowList = {

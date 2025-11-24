@@ -460,6 +460,11 @@ function getSelectedModel({
 				routerModels["io-intelligence"]?.[id] ?? ioIntelligenceModels[id as keyof typeof ioIntelligenceModels]
 			return { id, info }
 		}
+		case "copilot": {
+			const id = apiConfiguration.copilotModelId ?? "gpt-4.1"
+			const info = routerModels.copilot[id]
+			return { id, info }
+		}
 		case "roo": {
 			// Roo is a dynamic provider - models are loaded from API
 			const id = apiConfiguration.apiModelId ?? rooDefaultModelId

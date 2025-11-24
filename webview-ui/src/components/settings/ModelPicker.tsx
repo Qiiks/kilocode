@@ -36,6 +36,7 @@ type ModelIdKey = keyof Pick<
 	| "unboundModelId"
 	| "requestyModelId"
 	| "openAiModelId"
+	| "copilotModelId"
 	| "litellmModelId"
 	// kilocode_change start
 	| "apiModelId"

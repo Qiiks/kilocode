@@ -61,6 +61,7 @@ export const dynamicProviders = [
 	"glama",
 	"roo",
 	"chutes",
+	"copilot",
 ] as const
 
 export type DynamicProvider = (typeof dynamicProviders)[number]
@@ -145,6 +146,23 @@ export const providerNames = [
 	"minimax",
 	"openai-native",
 	"qwen-code",
+	"deepseek",
+	"doubao",
+	"unbound",
+	"requesty",
+	"human-relay",
+	"fake-ai",
+	"xai",
+	"groq",
+	"chutes",
+	"litellm",
+	"huggingface",
+	"cerebras",
+	"sambanova",
+	"zai",
+	"fireworks",
+	"io-intelligence",
+	"copilot",
 	"roo",
 	// kilocode_change start
 	"kilocode",
@@ -499,6 +517,10 @@ const qwenCodeSchema = apiModelIdProviderModelSchema.extend({
 	qwenCodeOauthPath: z.string().optional(),
 })
 
+const copilotSchema = baseProviderSettingsSchema.extend({
+	copilotModelId: z.string().optional(),
+})
+
 const rooSchema = apiModelIdProviderModelSchema.extend({
 	// No additional fields needed - uses cloud authentication.
 })
@@ -555,6 +577,7 @@ export const providerSettingsSchemaDiscriminated = z.discriminatedUnion("apiProv
 	featherlessSchema.merge(z.object({ apiProvider: z.literal("featherless") })),
 	ioIntelligenceSchema.merge(z.object({ apiProvider: z.literal("io-intelligence") })),
 	qwenCodeSchema.merge(z.object({ apiProvider: z.literal("qwen-code") })),
+	copilotSchema.merge(z.object({ apiProvider: z.literal("copilot") })),
 	rooSchema.merge(z.object({ apiProvider: z.literal("roo") })),
 	vercelAiGatewaySchema.merge(z.object({ apiProvider: z.literal("vercel-ai-gateway") })),
 	defaultSchema,
@@ -604,6 +627,7 @@ export const providerSettingsSchema = z.object({
 	...featherlessSchema.shape,
 	...ioIntelligenceSchema.shape,
 	...qwenCodeSchema.shape,
+	...copilotSchema.shape,
 	...rooSchema.shape,
 	...vercelAiGatewaySchema.shape,
 	...codebaseIndexProviderSchema.shape,
@@ -643,6 +667,7 @@ export const modelIdKeys = [
 	"kilocodeModel",
 	"ovhCloudAiEndpointsModelId", // kilocode_change
 	"inceptionLabsModelId", // kilocode_change
+	"copilotModelId",
 ] as const satisfies readonly (keyof ProviderSettings)[]
 
 export type ModelIdKey = (typeof modelIdKeys)[number]
@@ -702,6 +727,7 @@ export const modelIdKeysByProvider: Record<TypicalProvider, ModelIdKey> = {
 	roo: "apiModelId",
 	"vercel-ai-gateway": "vercelAiGatewayModelId",
 	"virtual-quota-fallback": "apiModelId",
+	copilot: "copilotModelId",
 }
 
 /**
@@ -848,6 +874,7 @@ export const MODELS_BY_PROVIDER: Record<
 	deepinfra: { id: "deepinfra", label: "DeepInfra", models: [] },
 	"vercel-ai-gateway": { id: "vercel-ai-gateway", label: "Vercel AI Gateway", models: [] },
 	chutes: { id: "chutes", label: "Chutes AI", models: [] },
+	copilot: { id: "copilot", label: "GitHub Copilot", models: [] },
 
 	// Local providers; models discovered from localhost endpoints.
 	lmstudio: { id: "lmstudio", label: "LM Studio", models: [] },

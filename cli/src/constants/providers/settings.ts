@@ -452,6 +452,13 @@ export const FIELD_REGISTRY: Record<string, FieldMetadata> = {
 		placeholder: "Enter model ID...",
 	},
 
+	// Copilot fields
+	copilotModelId: {
+		label: "Model ID",
+		type: "text",
+		placeholder: "Enter model ID...",
+	},
+
 	// Vercel AI Gateway fields
 	vercelAiGatewayApiKey: {
 		label: "API Key",
@@ -829,6 +836,9 @@ export const getProviderSettings = (provider: ProviderName, config: ProviderSett
 				createFieldConfig("minimaxApiKey", config),
 			]
 		case "fake-ai":
+		case "copilot":
+			return [createFieldConfig("copilotModelId", config, "gpt-4.1")]
+
 			return [
 				{
 					field: "apiModelId",
@@ -885,6 +895,7 @@ export const PROVIDER_DEFAULT_MODELS: Record<ProviderName, string> = {
 	lmstudio: "local-model",
 	"vscode-lm": "copilot-gpt-4o",
 	openai: "gpt-4o",
+	copilot: "gpt-4.1",
 	glama: "llama-3.1-70b-versatile",
 	huggingface: "meta-llama/Llama-2-70b-chat-hf",
 	litellm: "gpt-4o",

@@ -32,6 +32,7 @@ describe("getModelsByProvider", () => {
 			chutes: { "test-model": testModel },
 			inception: { "test-model": testModel },
 			roo: { "test-model": testModel },
+			copilot: { "test-model": testModel },
 		}
 
 		const exceptions = [

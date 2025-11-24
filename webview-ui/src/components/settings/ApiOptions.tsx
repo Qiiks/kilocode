@@ -41,6 +41,7 @@ import {
 	fireworksDefaultModelId,
 	featherlessDefaultModelId,
 	ioIntelligenceDefaultModelId,
+	copilotDefaultModelId,
 	rooDefaultModelId,
 	vercelAiGatewayDefaultModelId,
 	deepInfraDefaultModelId,
@@ -100,6 +101,7 @@ import {
 	Unbound,
 	Vertex,
 	VSCodeLM,
+	Copilot,
 	XAI,
 	// kilocode_change start
 	GeminiCli,
@@ -422,6 +424,7 @@ const ApiOptions = ({
 				ovhcloud: { field: "ovhCloudAiEndpointsModelId", default: ovhCloudAiEndpointsDefaultModelId },
 				inception: { field: "inceptionLabsModelId", default: inceptionDefaultModelId },
 				// kilocode_change end
+				copilot: { field: "copilotModelId", default: copilotDefaultModelId },
 			}
 
 			const config = PROVIDER_MODEL_CONFIG[value]
@@ -700,6 +703,15 @@ const ApiOptions = ({
 
 			{selectedProvider === "vscode-lm" && (
 				<VSCodeLM apiConfiguration={apiConfiguration} setApiConfigurationField={setApiConfigurationField} />
+			)}
+
+			{selectedProvider === "copilot" && (
+				<Copilot
+					apiConfiguration={apiConfiguration}
+					setApiConfigurationField={setApiConfigurationField}
+					organizationAllowList={organizationAllowList}
+					modelValidationError={modelValidationError}
+				/>
 			)}
 
 			{selectedProvider === "ollama" && (
