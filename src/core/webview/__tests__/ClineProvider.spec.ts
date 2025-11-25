@@ -2802,6 +2802,7 @@ describe("ClineProvider - Router Models", () => {
 				gemini: mockModels, // kilocode_change
 				requesty: mockModels,
 				glama: mockModels,
+				synthetic: mockModels, // kilocode_change
 				unbound: mockModels,
 				roo: mockModels,
 				chutes: mockModels,
@@ -2839,6 +2840,7 @@ describe("ClineProvider - Router Models", () => {
 				ovhCloudAiEndpointsApiKey: "ovhcloud-key",
 				inceptionLabsApiKey: "inception-key",
 				inceptionLabsBaseUrl: "https://api.inceptionlabs.ai/v1/",
+				syntheticApiKey: "synthetic-key",
 				// kilocode_change end
 			},
 		} as any)
@@ -2861,6 +2863,7 @@ describe("ClineProvider - Router Models", () => {
 			.mockResolvedValueOnce(mockModels) // deepinfra success
 			.mockResolvedValueOnce(mockModels) // kilocode_change: ovhcloud
 			.mockResolvedValueOnce(mockModels) // kilocode_change: inception success
+			.mockResolvedValueOnce(mockModels) // kilocode_change: synthetic success
 			.mockResolvedValueOnce(mockModels) // roo success
 			.mockRejectedValueOnce(new Error("Chutes API error")) // chutes fail
 			.mockRejectedValueOnce(new Error("LiteLLM connection failed")) // litellm fail
@@ -2887,6 +2890,7 @@ describe("ClineProvider - Router Models", () => {
 				"vercel-ai-gateway": mockModels,
 				ovhcloud: mockModels, // kilocode_change
 				inception: mockModels, // kilocode_change
+				synthetic: mockModels, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
 				copilot: mockModels,
@@ -3040,6 +3044,7 @@ describe("ClineProvider - Router Models", () => {
 				"vercel-ai-gateway": mockModels,
 				ovhcloud: mockModels, // kilocode_change
 				inception: mockModels, // kilocode_change
+				synthetic: mockModels, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
 				copilot: mockModels,

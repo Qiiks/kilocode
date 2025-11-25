@@ -6,7 +6,7 @@ import pWaitFor from "p-wait-for"
 import * as vscode from "vscode"
 // kilocode_change start
 import axios from "axios"
-import { getKiloUrlFromToken, isGlobalStateKey } from "@roo-code/types"
+import { fastApplyApiProviderSchema, getKiloUrlFromToken, isGlobalStateKey } from "@roo-code/types"
 import { getAppUrl } from "@roo-code/types"
 import {
 	MaybeTypedWebviewMessage,
@@ -96,7 +96,6 @@ export const webviewMessageHandler = async (
 	message: MaybeTypedWebviewMessage, // kilocode_change switch to MaybeTypedWebviewMessage for better type-safety
 	marketplaceManager?: MarketplaceManager,
 ) => {
-	console.log("[webviewMessageHandler]", message)
 	// Utility functions provided for concise get/update of global state via contextProxy API.
 	const getGlobalState = <K extends keyof GlobalState>(key: K) => provider.contextProxy.getValue(key)
 	const updateGlobalState = async <K extends keyof GlobalState>(key: K, value: GlobalState[K]) =>
@@ -830,6 +829,7 @@ export const webviewMessageHandler = async (
 						ollama: {},
 						lmstudio: {},
 						roo: {},
+						synthetic: {}, // kilocode_change
 						chutes: {},
 						copilot: {},
 					}
@@ -909,6 +909,7 @@ export const webviewMessageHandler = async (
 						baseUrl: apiConfiguration.inceptionLabsBaseUrl,
 					},
 				},
+				{ key: "synthetic", options: { provider: "synthetic", apiKey: apiConfiguration.syntheticApiKey } }, // kilocode_change
 				{
 					key: "roo",
 					options: {
@@ -1563,6 +1564,12 @@ export const webviewMessageHandler = async (
 		case "fastApplyModel": {
 			const nextModel = fastApplyModelSchema.safeParse(message.text).data ?? "auto"
 			await updateGlobalState("fastApplyModel", nextModel)
+			await provider.postStateToWebview()
+			break
+		}
+		case "fastApplyApiProvider": {
+			const nextProvider = fastApplyApiProviderSchema.safeParse(message.text).data ?? "current"
+			await updateGlobalState("fastApplyApiProvider", nextProvider)
 			await provider.postStateToWebview()
 			break
 		}
@@ -4025,17 +4032,7 @@ export const webviewMessageHandler = async (
 		// we're going to delete this message at some point and use apiConfiguration
 		// probably. So casting as any as to not define a more permanent type
 		case "requestManagedIndexerEnabled" as any: {
-			try {
-				const managedIndexerEnabled = (await ManagedIndexer.getInstance()?.isEnabled()) || false
-				await provider.postMessageToWebview({
-					type: "managedIndexerEnabled",
-					managedIndexerEnabled,
-				} as any)
-			} catch (error) {
-				provider.log(
-					`Error getting managed indexer state: ${error instanceof Error ? error.message : String(error)}`,
-				)
-			}
+			ManagedIndexer.getInstance()?.sendEnabledStateToWebview()
 			break
 		}
 		// kilocode_change end

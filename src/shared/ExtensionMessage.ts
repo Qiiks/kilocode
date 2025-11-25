@@ -173,8 +173,9 @@ export interface ExtensionMessage {
 		| "insertTextIntoTextarea"
 		| "dismissedUpsells"
 		| "showTimestamps" // kilocode_change
-		| "organizationSwitchResult"
 		| "managedIndexerState" // kilocode_change
+		| "managedIndexerEnabled" // kilocode_change
+		| "organizationSwitchResult"
 	text?: string
 	// kilocode_change start
 	payload?:
@@ -301,6 +302,8 @@ export interface ExtensionMessage {
 	queuedMessages?: QueuedMessage[]
 	list?: string[] // For dismissedUpsells
 	organizationId?: string | null // For organizationSwitchResult
+	// kilocode_change start: Managed Indexer
+	managedIndexerEnabled?: boolean
 	managedIndexerState?: Array<{
 		workspaceFolderPath: string
 		workspaceFolderName: string
@@ -320,7 +323,7 @@ export interface ExtensionMessage {
 				operation?: string
 			}
 		}
-	}> // kilocode_change
+	}> // kilocode_change end: Managed Indexer
 }
 
 export type ExtensionState = Pick<
@@ -389,6 +392,7 @@ export type ExtensionState = Pick<
 	| "fuzzyMatchThreshold"
 	| "morphApiKey" // kilocode_change: Morph fast apply - global setting
 	| "fastApplyModel" // kilocode_change: Fast Apply model selection
+	| "fastApplyApiProvider" // kilocode_change: Fast Apply model api base url
 	// | "experiments" // Optional in GlobalSettings, required here.
 	| "language"
 	// | "telemetrySetting" // Optional in GlobalSettings, required here.
@@ -528,6 +532,7 @@ export interface ClineSayTool {
 		| "generateImage"
 		| "imageGenerated"
 		| "runSlashCommand"
+		| "deleteFile" // kilocode_change: Handles both files and directories
 	path?: string
 	diff?: string
 	content?: string
@@ -540,6 +545,14 @@ export interface ClineSayTool {
 	additionalFileCount?: number // Number of additional files in the same read_file request
 	lineNumber?: number
 	query?: string
+	// kilocode_change start: Directory stats - only present when deleting directories
+	stats?: {
+		files: number
+		directories: number
+		size: number
+		isComplete: boolean
+	}
+	// kilocode_change end
 	batchFiles?: Array<{
 		path: string
 		lineSnippet: string

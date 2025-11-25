@@ -151,22 +151,23 @@ type CommonFetchParams = {
 const dynamicProviderExtras = {
 	openrouter: {} as { apiKey?: string; baseUrl?: string },
 	"vercel-ai-gateway": {} as { apiKey?: string; baseUrl?: string },
-	huggingface: {} as {},
+	huggingface: {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
 	litellm: {} as { apiKey: string; baseUrl: string },
 	kilocode: {} as { kilocodeToken?: string; kilocodeOrganizationId?: string },
-	ovhcloud: {} as { apiKey?: string; baseUrl?: string },
 	chutes: {} as { apiKey?: string },
 	gemini: {} as { apiKey?: string; baseUrl?: string },
-	inception: {} as { apiKey?: string; baseUrl?: string },
 	deepinfra: {} as { apiKey?: string; baseUrl?: string },
 	"io-intelligence": {} as { apiKey: string },
 	requesty: {} as { apiKey?: string; baseUrl?: string },
 	unbound: {} as { apiKey?: string },
-	glama: {} as {},
+	glama: {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
+	ollama: {} as { numCtx?: number }, // kilocode_change
+	lmstudio: {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
+	ovhcloud: {} as { apiKey?: string }, // kilocode_change
+	inception: {} as { apiKey?: string; baseUrl?: string }, // kilocode_change
+	synthetic: {} as { apiKey?: string }, // kilocode_change
 	roo: {} as { apiKey?: string; baseUrl?: string },
-	ollama: {} as { numCtx?: number },
-	lmstudio: {} as {},
-	copilot: {} as {},
+	copilot: {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
 } as const satisfies Record<RouterName, object>
 
 // Build the dynamic options union from the map, intersected with CommonFetchParams

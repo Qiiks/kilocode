@@ -57,6 +57,7 @@ export const modelInfoSchema = z.object({
 	maxThinkingTokens: z.number().nullish(),
 	contextWindow: z.number(),
 	supportsImages: z.boolean().optional(),
+	supportsComputerUse: z.boolean().optional(), // kilocode_change
 	supportsPromptCache: z.boolean(),
 	// Capability flag to indicate whether the model supports executing code or interacting with external systems
 	supportsComputerUse: z.boolean().optional(),
