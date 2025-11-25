@@ -59,8 +59,6 @@ export const modelInfoSchema = z.object({
 	supportsImages: z.boolean().optional(),
 	supportsComputerUse: z.boolean().optional(), // kilocode_change
 	supportsPromptCache: z.boolean(),
-	// Capability flag to indicate whether the model supports executing code or interacting with external systems
-	supportsComputerUse: z.boolean().optional(),
 	// Capability flag to indicate whether the model supports an output verbosity parameter
 	supportsVerbosity: z.boolean().optional(),
 	supportsReasoningBudget: z.boolean().optional(),
