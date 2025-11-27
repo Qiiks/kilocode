@@ -69,6 +69,22 @@ export class CopilotHandler extends BaseProvider implements SingleCompletionHand
 	}
 
 	/**
+	 * Check if messages contain any images
+	 */
+	private hasImages(messages: Anthropic.Messages.MessageParam[]): boolean {
+		for (const message of messages) {
+			if (Array.isArray(message.content)) {
+				for (const block of message.content) {
+					if (block.type === "image") {
+						return true
+					}
+				}
+			}
+		}
+		return false
+	}
+
+	/**
 	 * Determine the X-Initiator header based on message roles
 	 */
 	private determineInitiator(messages: Anthropic.Messages.MessageParam[]): string {
@@ -116,10 +132,19 @@ export class CopilotHandler extends BaseProvider implements SingleCompletionHand
 		}
 		const convertedMessages = [systemMessage, ...convertToOpenAiMessages(messages)]
 
-		// Add X-Initiator header
+		// Check if messages contain images
+		const containsImages = this.hasImages(messages)
+
+		// Add required headers
 		const initiator = this.determineInitiator(messages)
-		const headers = {
+		const headers: Record<string, string> = {
 			"X-Initiator": initiator,
+		}
+
+		// Add Copilot-Vision-Request header when images are present
+		// This header is required by GitHub Copilot API for vision requests
+		if (containsImages) {
+			headers["Copilot-Vision-Request"] = "true"
 		}
 
 		const requestOptions: OpenAI.Chat.Completions.ChatCompletionCreateParamsStreaming = {

@@ -357,8 +357,8 @@ export async function getCopilotModels(): Promise<ModelRecord> {
 				maxTokens: model?.capabilities?.limits?.max_output_tokens,
 				maxThinkingTokens: model?.capabilities?.supports?.max_thinking_budget,
 				contextWindow: model?.capabilities?.limits?.max_context_window_tokens,
-				// supportsImages: !!model?.capabilities?.supports?.vision,
-				supportsImages: false,
+				// Enable image support for models that have the vision capability
+				supportsImages: !!model?.capabilities?.supports?.vision,
 				supportsComputerUse: false,
 				supportsPromptCache: true,
 				supportsVerbosity: false,

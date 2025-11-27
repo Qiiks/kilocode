@@ -456,4 +456,184 @@ describe("CopilotHandler", () => {
 			expect(model.info.description).toContain("Copilot Model (Fallback)")
 		})
 	})
+
+	describe("hasImages", () => {
+		it("should return true when messages contain image blocks", () => {
+			const messagesWithImage: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user",
+					content: [
+						{ type: "text", text: "What is in this image?" },
+						{
+							type: "image",
+							source: {
+								type: "base64",
+								media_type: "image/png",
+								data: "iVBORw0KGgo...",
+							},
+						},
+					],
+				},
+			]
+			const result = (handler as any).hasImages(messagesWithImage)
+			expect(result).toBe(true)
+		})
+
+		it("should return false when messages contain no images", () => {
+			const messagesWithoutImage: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user",
+					content: [{ type: "text", text: "Hello, how are you?" }],
+				},
+			]
+			const result = (handler as any).hasImages(messagesWithoutImage)
+			expect(result).toBe(false)
+		})
+
+		it("should return false for string content messages", () => {
+			const messagesWithString: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user",
+					content: "Hello, how are you?",
+				},
+			]
+			const result = (handler as any).hasImages(messagesWithString)
+			expect(result).toBe(false)
+		})
+
+		it("should return false for empty messages", () => {
+			const emptyMessages: Anthropic.Messages.MessageParam[] = []
+			const result = (handler as any).hasImages(emptyMessages)
+			expect(result).toBe(false)
+		})
+
+		it("should return true when any message in array contains image", () => {
+			const mixedMessages: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user",
+					content: [{ type: "text", text: "First message" }],
+				},
+				{
+					role: "assistant",
+					content: [{ type: "text", text: "Response" }],
+				},
+				{
+					role: "user",
+					content: [
+						{ type: "text", text: "Here is an image" },
+						{
+							type: "image",
+							source: {
+								type: "base64",
+								media_type: "image/jpeg",
+								data: "/9j/4AAQSkZJRg...",
+							},
+						},
+					],
+				},
+			]
+			const result = (handler as any).hasImages(mixedMessages)
+			expect(result).toBe(true)
+		})
+	})
+
+	describe("vision request header", () => {
+		const systemPrompt = "You are a helpful assistant."
+
+		beforeEach(() => {
+			mockAuthenticator.getApiKey.mockResolvedValue({
+				apiKey: "test-api-key",
+				apiBase: GITHUB_COPILOT_API_BASE,
+			})
+		})
+
+		it("should include Copilot-Vision-Request header when images are present", async () => {
+			const messagesWithImage: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user",
+					content: [
+						{ type: "text", text: "What is in this image?" },
+						{
+							type: "image",
+							source: {
+								type: "base64",
+								media_type: "image/png",
+								data: "iVBORw0KGgo...",
+							},
+						},
+					],
+				},
+			]
+
+			const stream = handler.createMessage(systemPrompt, messagesWithImage)
+			const chunks: any[] = []
+			for await (const chunk of stream) {
+				chunks.push(chunk)
+			}
+
+			expect(mockCreate).toHaveBeenCalledWith(
+				expect.any(Object),
+				expect.objectContaining({
+					headers: expect.objectContaining({
+						"Copilot-Vision-Request": "true",
+					}),
+				}),
+			)
+		})
+
+		it("should not include Copilot-Vision-Request header when no images present", async () => {
+			const messagesWithoutImage: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user",
+					content: [{ type: "text", text: "Hello, how are you?" }],
+				},
+			]
+
+			const stream = handler.createMessage(systemPrompt, messagesWithoutImage)
+			const chunks: any[] = []
+			for await (const chunk of stream) {
+				chunks.push(chunk)
+			}
+
+			// Verify headers does NOT contain Copilot-Vision-Request
+			const callArgs = mockCreate.mock.calls[0]
+			const headers = callArgs[1]?.headers || {}
+			expect(headers["Copilot-Vision-Request"]).toBeUndefined()
+		})
+
+		it("should include both X-Initiator and Copilot-Vision-Request headers when images present", async () => {
+			const messagesWithImage: Anthropic.Messages.MessageParam[] = [
+				{
+					role: "user",
+					content: [
+						{ type: "text", text: "<user_message>Describe this image</user_message>" },
+						{
+							type: "image",
+							source: {
+								type: "base64",
+								media_type: "image/png",
+								data: "iVBORw0KGgo...",
+							},
+						},
+					],
+				},
+			]
+
+			const stream = handler.createMessage(systemPrompt, messagesWithImage)
+			const chunks: any[] = []
+			for await (const chunk of stream) {
+				chunks.push(chunk)
+			}
+
+			expect(mockCreate).toHaveBeenCalledWith(
+				expect.any(Object),
+				expect.objectContaining({
+					headers: expect.objectContaining({
+						"X-Initiator": "user",
+						"Copilot-Vision-Request": "true",
+					}),
+				}),
+			)
+		})
+	})
 })
