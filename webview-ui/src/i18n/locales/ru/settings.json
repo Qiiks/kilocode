@@ -95,8 +95,12 @@
 		"modelPlaceholder": "Введите название модели",
 		"selectModel": "Выберите модель",
 		"ollamaBaseUrlLabel": "Базовый URL Ollama",
+		"vectorStoreProviderLabel": "Поставщик векторного хранилища",
 		"qdrantApiKeyLabel": "API-ключ Qdrant",
 		"qdrantApiKeyPlaceholder": "Введите ваш API-ключ Qdrant (необязательно)",
+		"lancedbVectorStoreDirectoryLabel": "Путь LanceDB Vector Store",
+		"lancedbVectorStoreDirectoryPlaceholder": "Введите пользовательский путь векторного хранилища (необязательно)",
+		"lancedbVectorStoreDirectoryDescription": "Путь для хранения базы данных LanceDB. Если пустой, используется местоположение по умолчанию в globalStorageUri/vector.",
 		"setupConfigLabel": "Настройка",
 		"ollamaUrlPlaceholder": "http://localhost:11434",
 		"openAiCompatibleBaseUrlPlaceholder": "https://api.example.com",
@@ -370,6 +374,7 @@
 		"awsSessionToken": "AWS Session Token",
 		"awsRegion": "Регион AWS",
 		"awsCrossRegion": "Использовать кросс-региональный вывод",
+		"awsGlobalInference": "Использовать глобальный вывод (автоматический выбор оптимального региона AWS)",
 		"awsBedrockVpc": {
 			"useCustomVpcEndpoint": "Использовать пользовательскую конечную точку VPC",
 			"vpcEndpointUrlPlaceholder": "Введите URL конечной точки VPC (опционально)",
@@ -425,6 +430,14 @@
 		"getUnboundApiKey": "Получить Unbound API-ключ",
 		"unboundRefreshModelsSuccess": "Список моделей обновлен! Теперь вы можете выбрать из последних моделей.",
 		"unboundInvalidApiKey": "Недействительный API-ключ. Пожалуйста, проверьте ваш API-ключ и попробуйте снова.",
+		"nanoGptApiKey": "API-ключ Nano-GPT",
+		"getNanoGptApiKey": "Получить API-ключ Nano-GPT",
+		"nanoGptModelList": "Список моделей",
+		"nanoGptModelListOptions": {
+			"all": "Все модели",
+			"personalized": "Персонализированные модели",
+			"subscription": "Модели по подписке"
+		},
 		"humanRelay": {
 			"description": "API-ключ не требуется, но пользователю нужно вручную копировать и вставлять информацию в веб-чат ИИ.",
 			"instructions": "Во время использования появится диалоговое окно, и текущее сообщение будет скопировано в буфер обмена автоматически. Вам нужно вставить его в веб-версию ИИ (например, ChatGPT или Claude), затем скопировать ответ ИИ обратно в диалоговое окно и нажать кнопку подтверждения."
@@ -492,7 +505,7 @@
 		},
 		"consecutiveMistakeLimit": {
 			"label": "Лимит ошибок и повторений",
-			"description": "Количество последовательных ошибок или повторных действий перед показом диалогового окна 'У Kilo Code возникли проблемы'",
+			"description": "Количество последовательных ошибок или повторных действий перед показом диалогового окна 'У Kilo возникли проблемы'. Установите 0, чтобы отключить этот механизм безопасности (он никогда не сработает).",
 			"unlimitedDescription": "Включены неограниченные повторные попытки (автоматическое продолжение). Диалоговое окно никогда не появится.",
 			"warning": "⚠️ Установка значения 0 разрешает неограниченные повторные попытки, что может значительно увеличить использование API"
 		},
@@ -540,6 +553,15 @@
 			"description": "Этот провайдер использует OAuth-аутентификацию из сервиса Qwen и не требует API-ключей.",
 			"instructions": "Пожалуйста, следуйте официальной документации для получения файла авторизации и размещения его по указанному пути.",
 			"setupLink": "Официальная документация Qwen"
+		},
+		"profileName": "Имя профиля",
+		"profileType": "Тип профиля",
+		"profileTypeChat": "Чат",
+		"profileTypeAutocomplete": "Автодополнение",
+		"profileTypeDescription": "Профили чата используются для разговоров. Разрешён только один профиль автодополнения.",
+		"autocompleteLabel": "(Автодополнение)",
+		"autocomplete": {
+			"onlyOneAllowed": "Разрешён только один профиль автодополнения. Профиль \"{{existingName}}\" уже настроен для автодополнения. Пожалуйста, сначала измени его тип или удали его."
 		}
 	},
 	"browser": {

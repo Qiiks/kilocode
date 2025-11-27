@@ -90,10 +90,14 @@
 		"selectModelPlaceholder": "Select model",
 		"ollamaUrlLabel": "Ollama URL:",
 		"ollamaBaseUrlLabel": "Ollama Base URL",
+		"vectorStoreProviderLabel": "Vector Store Provider",
 		"qdrantUrlLabel": "Qdrant URL",
 		"qdrantKeyLabel": "Qdrant Key:",
 		"qdrantApiKeyLabel": "Qdrant API Key",
 		"qdrantApiKeyPlaceholder": "Enter your Qdrant API key (optional)",
+		"lancedbVectorStoreDirectoryLabel": "LanceDB Vector Store Path",
+		"lancedbVectorStoreDirectoryPlaceholder": "Enter custom vector store path (optional)",
+		"lancedbVectorStoreDirectoryDescription": "Path to store the lancedb vector database. If empty, uses the default location in the globalStorageUri/vector.",
 		"setupConfigLabel": "Setup",
 		"advancedConfigLabel": "Advanced Configuration",
 		"searchMinScoreLabel": "Search Score Threshold",
@@ -257,6 +261,15 @@
 		"searchProviderPlaceholder": "Search providers",
 		"noProviderMatchFound": "No providers found",
 		"noMatchFound": "No matching profiles found",
+		"profileName": "Profile Name",
+		"profileType": "Profile Type",
+		"profileTypeChat": "Chat",
+		"profileTypeAutocomplete": "Autocomplete",
+		"profileTypeDescription": "Chat profiles are used for conversations. Only one autocomplete profile is allowed.",
+		"autocompleteLabel": "(Autocomplete)",
+		"autocomplete": {
+			"onlyOneAllowed": "Only one autocomplete profile is allowed. Profile \"{{existingName}}\" is already configured for autocomplete. Please change its type first or delete it."
+		},
 		"vscodeLmDescription": " The VS Code Language Model API allows you to run models provided by other VS Code extensions (including but not limited to GitHub Copilot). The easiest way to get started is to install the Copilot and Copilot Chat extensions from the VS Code Marketplace.",
 		"vscodeLmUnavailable": "VS Code Language Model support is only available on Visual Studio Code. Forks such as VSCodium and others may not work. Further, this capability is not available in JetBrains tools.",
 		"vscodeLmUnavailableInstructions": "Ensure you are using a supported tool and that VS Code Chat is installed and enabled",
@@ -329,6 +342,14 @@
 		"geminiApiKey": "Gemini API Key",
 		"getGroqApiKey": "Get Groq API Key",
 		"groqApiKey": "Groq API Key",
+		"nanoGptApiKey": "Nano-GPT API Key",
+		"getNanoGptApiKey": "Get Nano-GPT API Key",
+		"nanoGptModelList": "Model List",
+		"nanoGptModelListOptions": {
+			"all": "All Models",
+			"personalized": "Personalized Models",
+			"subscription": "Subscription Models"
+		},
 		"getSambaNovaApiKey": "Get SambaNova API Key",
 		"sambaNovaApiKey": "SambaNova API Key",
 		"getHuggingFaceApiKey": "Get Hugging Face API Key",
@@ -378,6 +399,7 @@
 		"awsSessionToken": "AWS Session Token",
 		"awsRegion": "AWS Region",
 		"awsCrossRegion": "Use cross-region inference",
+		"awsGlobalInference": "Use Global inference (auto-select optimal AWS Region)",
 		"awsBedrockVpc": {
 			"useCustomVpcEndpoint": "Use custom VPC endpoint",
 			"vpcEndpointUrlPlaceholder": "Enter VPC Endpoint URL (optional)",
@@ -500,7 +522,7 @@
 		},
 		"consecutiveMistakeLimit": {
 			"label": "Error & Repetition Limit",
-			"description": "Number of consecutive errors or repeated actions before showing 'Kilo Code is having trouble' dialog",
+			"description": "Number of consecutive errors or repeated actions before showing 'Kilo is having trouble' dialog. Set to 0 to disable this safety mechanism (it will never trigger).",
 			"unlimitedDescription": "Unlimited retries enabled (auto-proceed). The dialog will never appear.",
 			"warning": "⚠️ Setting to 0 allows unlimited retries which may consume significant API usage"
 		},

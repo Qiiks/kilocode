@@ -97,10 +97,14 @@
 		"selectModelPlaceholder": "Виберіть модель",
 		"ollamaUrlLabel": "URL Ollama:",
 		"ollamaBaseUrlLabel": "Базовий URL Ollama",
+		"vectorStoreProviderLabel": "Постачальник сховища векторів",
 		"qdrantUrlLabel": "URL Qdrant",
 		"qdrantKeyLabel": "Ключ Qdrant:",
 		"qdrantApiKeyLabel": "Ключ API Qdrant",
 		"qdrantApiKeyPlaceholder": "Введіть ваш ключ API Qdrant (необов'язково)",
+		"lancedbVectorStoreDirectoryLabel": "Шлях до LanceDB Vector Store",
+		"lancedbVectorStoreDirectoryPlaceholder": "Введіть власний шлях до сховища векторів (необов'язково)",
+		"lancedbVectorStoreDirectoryDescription": "Шлях для зберігання бази даних LanceDB Vector. Якщо порожньо, використовується стандартне розташування globalStorageUri/vector.",
 		"setupConfigLabel": "Налаштування",
 		"advancedConfigLabel": "Розширена конфігурація",
 		"searchMinScoreLabel": "Поріг оцінки пошуку",
@@ -326,9 +330,6 @@
 		"minimaxBaseUrl": "Точка входу MiniMax",
 		"zaiEntrypoint": "Точка входу Z AI",
 		"zaiEntrypointDescription": "Будь ласка, виберіть відповідну точку входу API залежно від вашого місцезнаходження. Якщо ви в Китаї, виберіть open.bigmodel.cn. Інакше виберіть api.z.ai.",
-		"minimaxApiKey": "Ключ API MiniMax",
-		"getMiniMaxApiKey": "Отримати ключ API MiniMax",
-		"minimaxBaseUrl": "Точка входу MiniMax",
 		"geminiApiKey": "Ключ API Gemini",
 		"geminiUrlContext": "Включати URL у контекст",
 		"geminiUrlContextDescription": "Коли увімкнено, URL будуть включені в контекст при надсиланні запитів до Gemini",
@@ -375,6 +376,7 @@
 		"awsSessionToken": "Токен сесії AWS",
 		"awsRegion": "Регіон AWS",
 		"awsCrossRegion": "Використовувати міжрегіональний висновок",
+		"awsGlobalInference": "Використовувати глобальний висновок (автоматичний вибір оптимального регіону AWS)",
 		"awsBedrockVpc": {
 			"useCustomVpcEndpoint": "Використовувати власний кінцевий пункт VPC",
 			"vpcEndpointUrlPlaceholder": "Введіть URL кінцевого пункту VPC (необов'язково)",
@@ -452,6 +454,14 @@
 		"getZaiApiKey": "Отримати ключ API Z.AI",
 		"sambaNovaApiKey": "Ключ API SambaNova",
 		"getSambaNovaApiKey": "Отримати ключ API SambaNova",
+		"nanoGptApiKey": "Ключ API Nano-GPT",
+		"getNanoGptApiKey": "Отримати ключ API Nano-GPT",
+		"nanoGptModelList": "Список моделей",
+		"nanoGptModelListOptions": {
+			"all": "Усі моделі",
+			"personalized": "Персоналізовані моделі",
+			"subscription": "Підписні моделі"
+		},
 		"customModel": {
 			"capabilities": "Налаштуйте можливості та ціни для вашої власної моделі, сумісної з OpenAI. Будьте обережні при вказуванні можливостей моделі, оскільки вони можуть вплинути на продуктивність Kilo Code.",
 			"maxTokens": {
@@ -563,6 +573,15 @@
 			"description": "Цей провайдер використовує OAuth-аутентифікацію від сервісу Qwen і не потребує API-ключів.",
 			"instructions": "Будь ласка, дотримуйтесь офіційної документації для отримання файлу авторизації та розміщення його за вказаним шляхом.",
 			"setupLink": "Офіційна документація Qwen"
+		},
+		"profileName": "Назва профілю",
+		"profileType": "Тип профілю",
+		"profileTypeChat": "Чат",
+		"profileTypeAutocomplete": "Автодоповнення",
+		"profileTypeDescription": "Профілі чату використовуються для розмов. Дозволено лише один профіль автодоповнення.",
+		"autocompleteLabel": "(Автодоповнення)",
+		"autocomplete": {
+			"onlyOneAllowed": "Дозволено лише один профіль автодоповнення. Профіль \"{{existingName}}\" вже налаштовано для автодоповнення. Будь ласка, спочатку зміни його тип або видали його."
 		}
 	},
 	"contextWindow": {

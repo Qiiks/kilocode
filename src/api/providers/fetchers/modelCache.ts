@@ -35,6 +35,8 @@ import { getHuggingFaceModels } from "./huggingface"
 import { getRooModels } from "./roo"
 import { getChutesModels } from "./chutes"
 import { getCopilotModels } from "./copilot"
+import { getNanoGptModels } from "./nano-gpt" //kilocode_change
+
 const memoryCache = new NodeCache({ stdTTL: 5 * 60, checkperiod: 5 * 60 })
 
 export /*kilocode_change*/ async function writeModels(router: RouterName, data: ModelRecord) {
@@ -157,6 +159,14 @@ export const getModels = async (options: GetModelsOptions): Promise<ModelRecord>
 			case "copilot":
 				models = await getCopilotModels()
 				break
+			//kilocode_change start
+			case "nano-gpt":
+				models = await getNanoGptModels({
+					nanoGptModelList: options.nanoGptModelList,
+					apiKey: options.apiKey,
+				})
+				break
+			//kilocode_change end
 			default: {
 				// Ensures router is exhaustively checked if RouterName is a strict union.
 				const exhaustiveCheck: never = provider

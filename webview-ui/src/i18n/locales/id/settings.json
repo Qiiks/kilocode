@@ -95,8 +95,12 @@
 		"modelPlaceholder": "Masukkan nama model",
 		"selectModel": "Pilih model",
 		"ollamaBaseUrlLabel": "URL Dasar Ollama",
+		"vectorStoreProviderLabel": "Penyedia Penyimpanan Vektor",
 		"qdrantApiKeyLabel": "Kunci API Qdrant",
 		"qdrantApiKeyPlaceholder": "Masukkan kunci API Qdrant kamu (opsional)",
+		"lancedbVectorStoreDirectoryLabel": "Jalur LanceDB Vector Store",
+		"lancedbVectorStoreDirectoryPlaceholder": "Masukkan jalur penyimpanan vektor kustom (opsional)",
+		"lancedbVectorStoreDirectoryDescription": "Jalur untuk menyimpan database vektor LanceDB. Jika kosong, menggunakan lokasi default di globalStorageUri/vector.",
 		"setupConfigLabel": "Pengaturan",
 		"ollamaUrlPlaceholder": "http://localhost:11434",
 		"openAiCompatibleBaseUrlPlaceholder": "https://api.example.com",
@@ -318,6 +322,14 @@
 		"minimaxApiKey": "Kunci API MiniMax",
 		"getMiniMaxApiKey": "Dapatkan Kunci API MiniMax",
 		"minimaxBaseUrl": "Titik Masuk MiniMax",
+		"nanoGptApiKey": "Kunci API Nano-GPT",
+		"getNanoGptApiKey": "Dapatkan Kunci API Nano-GPT",
+		"nanoGptModelList": "Daftar Model",
+		"nanoGptModelListOptions": {
+			"all": "Semua Model",
+			"personalized": "Model Personal",
+			"subscription": "Model Langganan"
+		},
 		"geminiApiKey": "Gemini API Key",
 		"getGroqApiKey": "Dapatkan Groq API Key",
 		"groqApiKey": "Groq API Key",
@@ -370,6 +382,7 @@
 		"awsSessionToken": "AWS Session Token",
 		"awsRegion": "AWS Region",
 		"awsCrossRegion": "Gunakan cross-region inference",
+		"awsGlobalInference": "Gunakan inferensi Global (pilih Wilayah AWS optimal secara otomatis)",
 		"awsBedrockVpc": {
 			"useCustomVpcEndpoint": "Gunakan VPC endpoint kustom",
 			"vpcEndpointUrlPlaceholder": "Masukkan VPC Endpoint URL (opsional)",
@@ -492,7 +505,7 @@
 		},
 		"consecutiveMistakeLimit": {
 			"label": "Batas Kesalahan & Pengulangan",
-			"description": "Jumlah kesalahan berturut-turut atau tindakan berulang sebelum menampilkan dialog 'Kilo Code mengalami masalah'",
+			"description": "Jumlah kesalahan berturut-turut atau tindakan berulang sebelum menampilkan dialog 'Kilo mengalami masalah'. Atur ke 0 untuk menonaktifkan mekanisme keamanan ini (tidak akan pernah terpicu).",
 			"unlimitedDescription": "Percobaan ulang tak terbatas diaktifkan (lanjut otomatis). Dialog tidak akan pernah muncul.",
 			"warning": "⚠️ Mengatur ke 0 memungkinkan percobaan ulang tak terbatas yang dapat menghabiskan penggunaan API yang signifikan"
 		},
@@ -540,6 +553,15 @@
 			"description": "Provider ini menggunakan autentikasi OAuth dari layanan Qwen dan tidak memerlukan kunci API.",
 			"instructions": "Silakan ikuti dokumentasi resmi untuk mendapatkan file otorisasi dan tempatkan di jalur yang ditentukan.",
 			"setupLink": "Dokumentasi Resmi Qwen"
+		},
+		"profileName": "Nama Profil",
+		"profileType": "Jenis Profil",
+		"profileTypeChat": "Chat",
+		"profileTypeAutocomplete": "Pelengkapan Otomatis",
+		"profileTypeDescription": "Profil chat digunakan untuk percakapan. Hanya satu profil pelengkapan otomatis yang diizinkan.",
+		"autocompleteLabel": "(Pelengkapan Otomatis)",
+		"autocomplete": {
+			"onlyOneAllowed": "Hanya satu profil pelengkapan otomatis yang diizinkan. Profil \"{{existingName}}\" sudah dikonfigurasi untuk pelengkapan otomatis. Silakan ubah jenisnya terlebih dahulu atau hapus."
 		}
 	},
 	"browser": {

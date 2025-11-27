@@ -201,6 +201,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				chutesApiKey: "chutes-key",
 				geminiApiKey: "gemini-key",
 				googleGeminiBaseUrl: "https://gemini.example.com",
+				nanoGptApiKey: "nano-gpt-key",
 				ovhCloudAiEndpointsApiKey: "ovhcloud-key",
 				inceptionLabsApiKey: "inception-key",
 				inceptionLabsBaseUrl: "https://api.inceptionlabs.ai/v1/",
@@ -248,6 +249,11 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 			apiKey: "inception-key",
 			baseUrl: "https://api.inceptionlabs.ai/v1/",
 		})
+		expect(mockGetModels).toHaveBeenCalledWith({
+			provider: "nano-gpt",
+			apiKey: "nano-gpt-key",
+			nanoGptModelList: undefined,
+		})
 		// kilocode_change end
 		expect(mockGetModels).toHaveBeenCalledWith({ provider: "vercel-ai-gateway" })
 		expect(mockGetModels).toHaveBeenCalledWith({ provider: "deepinfra" })
@@ -279,6 +285,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				unbound: mockModels,
 				litellm: mockModels,
 				kilocode: mockModels,
+				"nano-gpt": mockModels, // kilocode_change
 				roo: mockModels,
 				chutes: mockModels,
 				ollama: mockModels, // kilocode_change
@@ -343,6 +350,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				// kilocode_change start
 				ovhCloudAiEndpointsApiKey: "ovhcloud-key",
 				chutesApiKey: "chutes-key",
+				nanoGptApiKey: "nano-gpt-key",
 				// kilocode_change end
 				// Missing litellm config
 			},
@@ -386,6 +394,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				chutes: mockModels,
 				litellm: {},
 				kilocode: mockModels,
+				"nano-gpt": mockModels, // kilocode_change
 				ollama: mockModels, // kilocode_change
 				lmstudio: {},
 				"vercel-ai-gateway": mockModels,
@@ -420,6 +429,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 			.mockRejectedValueOnce(new Error("Ollama API error")) // kilocode_change
 			.mockResolvedValueOnce(mockModels) // vercel-ai-gateway
 			.mockResolvedValueOnce(mockModels) // deepinfra
+			.mockResolvedValueOnce(mockModels) // nano-gpt // kilocode_change
 			.mockResolvedValueOnce(mockModels) // kilocode_change ovhcloud
 			.mockRejectedValueOnce(new Error("Inception API error")) // kilocode_change
 			.mockRejectedValueOnce(new Error("Synthetic API error")) // kilocode_change
@@ -496,6 +506,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				"io-intelligence": {},
 				// kilocode_change start
 				kilocode: mockModels,
+				"nano-gpt": mockModels,
 				inception: {},
 				synthetic: {},
 				gemini: mockModels,
@@ -519,6 +530,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 			.mockRejectedValueOnce(new Error("Ollama API error")) // ollama
 			.mockRejectedValueOnce(new Error("Vercel AI Gateway error")) // vercel-ai-gateway
 			.mockRejectedValueOnce(new Error("DeepInfra API error")) // deepinfra
+			.mockRejectedValueOnce(new Error("Nano-GPT API error")) // nano-gpt // kilocode_change
 			.mockRejectedValueOnce(new Error("OVHcloud AI Endpoints error")) // ovhcloud // kilocode_change
 			.mockRejectedValueOnce(new Error("Inception API error")) // kilocode_change inception
 			.mockRejectedValueOnce(new Error("Synthetic API error")) // kilocode_change synthetic
@@ -597,6 +609,15 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 			error: "DeepInfra API error",
 			values: { provider: "deepinfra" },
 		})
+
+		// kilocode_change start
+		expect(mockClineProvider.postMessageToWebview).toHaveBeenCalledWith({
+			type: "singleRouterModelFetchResponse",
+			success: false,
+			error: "Nano-GPT API error",
+			values: { provider: "nano-gpt" },
+		})
+		// kilocode_change end
 
 		expect(mockClineProvider.postMessageToWebview).toHaveBeenCalledWith({
 			type: "singleRouterModelFetchResponse",
@@ -1122,8 +1143,8 @@ describe("webviewMessageHandler - mcpEnabled", () => {
 
 	it("delegates enable=true to McpHub and posts updated state", async () => {
 		await webviewMessageHandler(mockClineProvider, {
-			type: "mcpEnabled",
-			bool: true,
+			type: "updateSettings",
+			updatedSettings: { mcpEnabled: true },
 		})
 
 		expect((mockClineProvider as any).getMcpHub).toHaveBeenCalledTimes(1)
@@ -1134,8 +1155,8 @@ describe("webviewMessageHandler - mcpEnabled", () => {
 
 	it("delegates enable=false to McpHub and posts updated state", async () => {
 		await webviewMessageHandler(mockClineProvider, {
-			type: "mcpEnabled",
-			bool: false,
+			type: "updateSettings",
+			updatedSettings: { mcpEnabled: false },
 		})
 
 		expect((mockClineProvider as any).getMcpHub).toHaveBeenCalledTimes(1)
@@ -1148,8 +1169,8 @@ describe("webviewMessageHandler - mcpEnabled", () => {
 		;(mockClineProvider as any).getMcpHub = vi.fn().mockReturnValue(undefined)
 
 		await webviewMessageHandler(mockClineProvider, {
-			type: "mcpEnabled",
-			bool: true,
+			type: "updateSettings",
+			updatedSettings: { mcpEnabled: true },
 		})
 
 		expect((mockClineProvider as any).getMcpHub).toHaveBeenCalledTimes(1)

@@ -90,10 +90,14 @@
 		"selectModelPlaceholder": "Vyberte model",
 		"ollamaUrlLabel": "URL Ollama:",
 		"ollamaBaseUrlLabel": "Základní URL Ollama",
+		"vectorStoreProviderLabel": "Poskytovatel úložiště vektorů",
 		"qdrantUrlLabel": "URL Qdrant",
 		"qdrantKeyLabel": "Klíč Qdrant:",
 		"qdrantApiKeyLabel": "Klíč API Qdrant",
 		"qdrantApiKeyPlaceholder": "Zadejte svůj klíč API Qdrant (volitelné)",
+		"lancedbVectorStoreDirectoryLabel": "Cesta k LanceDB úložišti vektorů",
+		"lancedbVectorStoreDirectoryPlaceholder": "Zadejte vlastní cestu k úložišti vektorů (volitelné)",
+		"lancedbVectorStoreDirectoryDescription": "Cesta pro uložení LanceDB databáze vektorů. Pokud je prázdná, použije se výchozí umístění v globalStorageUri/vector.",
 		"setupConfigLabel": "Nastavení",
 		"advancedConfigLabel": "Pokročilá konfigurace",
 		"searchMinScoreLabel": "Prahová hodnota skóre vyhledávání",
@@ -327,10 +331,15 @@
 		"minimaxBaseUrl": "Vstupní bod MiniMax",
 		"zaiEntrypoint": "Vstupní bod Z AI",
 		"zaiEntrypointDescription": "Vyberte prosím vhodný vstupní bod API podle vaší polohy. Pokud jste v Číně, vyberte open.bigmodel.cn. Jinak vyberte api.z.ai.",
-		"minimaxApiKey": "Klíč API MiniMax",
-		"getMiniMaxApiKey": "Získat klíč API MiniMax",
-		"minimaxBaseUrl": "Vstupní bod MiniMax",
 		"geminiApiKey": "Klíč API Gemini",
+		"nanoGptApiKey": "Klíč API Nano-GPT",
+		"getNanoGptApiKey": "Získat klíč API Nano-GPT",
+		"nanoGptModelList": "Seznam modelů",
+		"nanoGptModelListOptions": {
+			"all": "Všechny modely",
+			"personalized": "Personalizované modely",
+			"subscription": "Modely předplatného"
+		},
 		"getGroqApiKey": "Získat klíč API Groq",
 		"groqApiKey": "Klíč API Groq",
 		"getSambaNovaApiKey": "Získat klíč API SambaNova",
@@ -386,6 +395,7 @@
 		"awsSessionToken": "Token relace AWS",
 		"awsRegion": "Region AWS",
 		"awsCrossRegion": "Použít meziregionální odvozování",
+		"awsGlobalInference": "Použít globální odvozování (automatický výběr optimálního regionu AWS)",
 		"awsBedrockVpc": {
 			"useCustomVpcEndpoint": "Použít vlastní koncový bod VPC",
 			"vpcEndpointUrlPlaceholder": "Zadejte URL koncového bodu VPC (volitelné)",
@@ -568,6 +578,15 @@
 			"description": "Tento poskytovatel používá OAuth autentizaci ze služby Qwen a nevyžaduje klíče API.",
 			"instructions": "Postupujte prosím podle oficiální dokumentace pro získání autorizačního souboru a umístěte jej do zadané cesty.",
 			"setupLink": "Oficiální dokumentace Qwen"
+		},
+		"profileName": "Název profilu",
+		"profileType": "Typ profilu",
+		"profileTypeChat": "Chat",
+		"profileTypeAutocomplete": "Automatické dokončování",
+		"profileTypeDescription": "Profily chatu se používají pro konverzace. Je povolen pouze jeden profil automatického dokončování.",
+		"autocompleteLabel": "(Automatické dokončování)",
+		"autocomplete": {
+			"onlyOneAllowed": "Je povolen pouze jeden profil automatického dokončování. Profil \"{{existingName}}\" je již nakonfigurován pro automatické dokončování. Nejprve změň jeho typ nebo ho smaž."
 		}
 	},
 	"contextWindow": {

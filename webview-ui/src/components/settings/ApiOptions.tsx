@@ -27,6 +27,7 @@ import {
 	ovhCloudAiEndpointsDefaultModelId,
 	inceptionDefaultModelId,
 	nativeFunctionCallingProviders,
+	MODEL_SELECTION_ENABLED,
 	// kilocode_change end
 	mistralDefaultModelId,
 	xaiDefaultModelId,
@@ -46,6 +47,7 @@ import {
 	vercelAiGatewayDefaultModelId,
 	deepInfraDefaultModelId,
 	minimaxDefaultModelId,
+	nanoGptDefaultModelId, //kilocode_change
 } from "@roo-code/types"
 
 import { vscode } from "@src/utils/vscode"
@@ -90,6 +92,7 @@ import {
 	LiteLLM,
 	Mistral,
 	Moonshot,
+	NanoGpt, // kilocode_change
 	Ollama,
 	OpenAI,
 	OpenAICompatible,
@@ -387,6 +390,7 @@ const ApiOptions = ({
 				unbound: { field: "unboundModelId", default: unboundDefaultModelId },
 				requesty: { field: "requestyModelId", default: requestyDefaultModelId },
 				litellm: { field: "litellmModelId", default: litellmDefaultModelId },
+				"nano-gpt": { field: "nanoGptModelId", default: nanoGptDefaultModelId }, // kilocode_change
 				anthropic: { field: "apiModelId", default: anthropicDefaultModelId },
 				cerebras: { field: "apiModelId", default: cerebrasDefaultModelId },
 				"claude-code": { field: "apiModelId", default: claudeCodeDefaultModelId },
@@ -498,6 +502,28 @@ const ApiOptions = ({
 
 	return (
 		<div className="flex flex-col gap-3">
+			{/* kilocode_change start - autocomplete profile type system */}
+			{/* Profile Type Display (read-only for existing profiles) */}
+			{MODEL_SELECTION_ENABLED && (
+				<div className="flex flex-col gap-1">
+					<label className="block font-medium mb-1">{t("settings:providers.profileType")}</label>
+					<div className="px-3 py-2 bg-vscode-input-background border border-vscode-input-border rounded text-vscode-input-foreground">
+						{apiConfiguration.profileType === "autocomplete"
+							? t("settings:providers.profileTypeAutocomplete")
+							: t("settings:providers.profileTypeChat")}
+						{apiConfiguration.profileType === "autocomplete" && (
+							<span className="ml-2 text-vscode-descriptionForeground">
+								{t("settings:providers.autocompleteLabel")}
+							</span>
+						)}
+					</div>
+					<div className="text-vscode-descriptionForeground text-sm mt-1">
+						{t("settings:providers.profileTypeDescription")}
+					</div>
+				</div>
+			)}
+			{/* kilocode_change end */}
+
 			<div className="flex flex-col gap-1 relative">
 				<div className="flex justify-between items-center">
 					<label className="block font-medium mb-1">{t("settings:providers.apiProvider")}</label>
@@ -702,6 +728,18 @@ const ApiOptions = ({
 			{selectedProvider === "minimax" && (
 				<MiniMax apiConfiguration={apiConfiguration} setApiConfigurationField={setApiConfigurationField} />
 			)}
+
+			{/* kilocode_change start */}
+			{selectedProvider === "nano-gpt" && (
+				<NanoGpt
+					apiConfiguration={apiConfiguration}
+					setApiConfigurationField={setApiConfigurationField}
+					routerModels={routerModels}
+					organizationAllowList={organizationAllowList}
+					modelValidationError={modelValidationError}
+				/>
+			)}
+			{/* kilocode_change end */}
 
 			{selectedProvider === "vscode-lm" && (
 				<VSCodeLM apiConfiguration={apiConfiguration} setApiConfigurationField={setApiConfigurationField} />
@@ -956,8 +994,19 @@ const ApiOptions = ({
 							// kilocode_change start
 							nativeFunctionCallingProviders.includes(selectedProvider) && (
 								<ToolUseControl
-									toolStyle={apiConfiguration.toolStyle}
-									onChange={(field, value) => setApiConfigurationField(field, value)}
+									toolStyle={
+										apiConfiguration.toolStyle === "json"
+											? "native"
+											: apiConfiguration.toolStyle === "xml"
+												? "xml"
+												: undefined
+									}
+									onChange={(field, value) =>
+										setApiConfigurationField(
+											field,
+											value === "native" ? "json" : value === "xml" ? "xml" : undefined,
+										)
+									}
 								/>
 							)
 							// kilocode_change end
@@ -972,6 +1021,7 @@ const ApiOptions = ({
 								value={apiConfiguration.modelTemperature}
 								onChange={handleInputChange("modelTemperature", noTransform)}
 								maxValue={2}
+								defaultValue={selectedModelInfo?.defaultTemperature}
 							/>
 						)}
 						{

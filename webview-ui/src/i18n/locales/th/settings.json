@@ -91,10 +91,14 @@
 		"selectModelPlaceholder": "เลือกโมเดล",
 		"ollamaUrlLabel": "URL ของ Ollama:",
 		"ollamaBaseUrlLabel": "URL พื้นฐาน Ollama",
+		"vectorStoreProviderLabel": "ผู้ให้บริการ Vector Store",
 		"qdrantUrlLabel": "URL ของ Qdrant",
 		"qdrantKeyLabel": "คีย์ Qdrant:",
 		"qdrantApiKeyLabel": "คีย์ API Qdrant",
 		"qdrantApiKeyPlaceholder": "ป้อนคีย์ API Qdrant ของคุณ (ไม่บังคับ)",
+		"lancedbVectorStoreDirectoryLabel": "เส้นทาง LanceDB Vector Store",
+		"lancedbVectorStoreDirectoryPlaceholder": "กรอกเส้นทาง Vector Store (ถ้ามี)",
+		"lancedbVectorStoreDirectoryDescription": "เส้นทางสำหรับจัดเก็บฐานข้อมูล LanceDB Vector หากเว้นว่างจะใช้ตำแหน่งเริ่มต้นใน globalStorageUri/vector",
 		"setupConfigLabel": "การตั้งค่า",
 		"advancedConfigLabel": "การกำหนดค่าขั้นสูง",
 		"searchMinScoreLabel": "เกณฑ์คะแนนการค้นหา",
@@ -320,9 +324,6 @@
 		"minimaxBaseUrl": "จุดเข้าใช้งาน MiniMax",
 		"zaiEntrypoint": "จุดเข้าใช้งาน Z AI",
 		"zaiEntrypointDescription": "โปรดเลือกจุดเข้าใช้งาน API ที่เหมาะสมตามตำแหน่งของคุณ หากคุณอยู่ในจีน ให้เลือก open.bigmodel.cn มิฉะนั้น ให้เลือก api.z.ai",
-		"minimaxApiKey": "คีย์ API ของ MiniMax",
-		"getMiniMaxApiKey": "รับคีย์ API ของ MiniMax",
-		"minimaxBaseUrl": "จุดเข้าใช้งาน MiniMax",
 		"geminiApiKey": "คีย์ API ของ Gemini",
 		"geminiParameters": {
 			"urlContext": {
@@ -375,6 +376,7 @@
 		"awsSessionToken": "โทเค็นเซสชัน AWS",
 		"awsRegion": "ภูมิภาค AWS",
 		"awsCrossRegion": "ใช้การอนุมานข้ามภูมิภาค",
+		"awsGlobalInference": "ใช้การอนุมานแบบ Global (เลือกภูมิภาค AWS ที่เหมาะสมโดยอัตโนมัติ)",
 		"awsBedrockVpc": {
 			"useCustomVpcEndpoint": "ใช้ปลายทาง VPC ที่กำหนดเอง",
 			"vpcEndpointUrlPlaceholder": "ป้อน URL ปลายทาง VPC (ไม่บังคับ)",
@@ -434,6 +436,14 @@
 		},
 		"doubaoApiKey": "คีย์ API ของ Doubao",
 		"getDoubaoApiKey": "รับคีย์ API ของ Doubao",
+		"nanoGptApiKey": "คีย์ API ของ Nano-GPT",
+		"getNanoGptApiKey": "รับคีย์ API ของ Nano-GPT",
+		"nanoGptModelList": "รายการโมเดล",
+		"nanoGptModelListOptions": {
+			"all": "โมเดลทั้งหมด",
+			"personalized": "โมเดลส่วนตัว",
+			"subscription": "โมเดลตามการสมัครสมาชิก"
+		},
 		"zaiApiKey": "คีย์ API ของ Z.AI",
 		"getZaiApiKey": "รับคีย์ API ของ Z.AI",
 		"sambaNovaApiKey": "คีย์ API ของ SambaNova",
@@ -553,6 +563,15 @@
 		"roo": {
 			"authenticatedMessage": "ยืนยันตัวตนอย่างปลอดภัยผ่านบัญชี Roo Code Cloud ของคุณ",
 			"connectButton": "เชื่อมต่อกับ Roo Code Cloud"
+		},
+		"profileName": "ชื่อโปรไฟล์",
+		"profileType": "ประเภทโปรไฟล์",
+		"profileTypeChat": "แชท",
+		"profileTypeAutocomplete": "เติมข้อความอัตโนมัติ",
+		"profileTypeDescription": "โปรไฟล์แชทใช้สำหรับการสนทนา อนุญาตให้มีโปรไฟล์เติมข้อความอัตโนมัติเพียงหนึ่งโปรไฟล์เท่านั้น",
+		"autocompleteLabel": "(เติมข้อความอัตโนมัติ)",
+		"autocomplete": {
+			"onlyOneAllowed": "อนุญาตให้มีโปรไฟล์เติมข้อความอัตโนมัติเพียงหนึ่งโปรไฟล์เท่านั้น โปรไฟล์ \"{{existingName}}\" ถูกกำหนดค่าสำหรับเติมข้อความอัตโนมัติแล้ว กรุณาเปลี่ยนประเภทก่อนหรือลบออก"
 		}
 	},
 	"contextWindow": {
