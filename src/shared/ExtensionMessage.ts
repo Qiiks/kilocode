@@ -32,6 +32,7 @@ import {
 } from "./WebviewMessage"
 import { ClineRulesToggles } from "./cline-rules"
 import { KiloCodeWrapperProperties } from "./kilocode/wrapper"
+import { DeploymentRecord } from "../api/providers/fetchers/sap-ai-core"
 // kilocode_change end
 
 // Command interface for frontend/backend communication
@@ -103,6 +104,8 @@ export interface ExtensionMessage {
 		| "copilotAuthError"
 		| "copilotDeviceCode"
 		| "huggingFaceModels"
+		| "sapAiCoreModels" // kilocode_change
+		| "sapAiCoreDeployments" // kilocode_change
 		| "vsCodeLmApiAvailable"
 		| "updatePrompt"
 		| "systemPrompt"
@@ -172,19 +175,27 @@ export interface ExtensionMessage {
 		| "commands"
 		| "insertTextIntoTextarea"
 		| "dismissedUpsells"
-		| "showTimestamps" // kilocode_change
-		| "organizationSwitchResult"
 		| "interactionRequired"
+		| "organizationSwitchResult"
+		| "showTimestamps" // kilocode_change
+		| "apiMessagesSaved" // kilocode_change: File save event for API messages
+		| "taskMessagesSaved" // kilocode_change: File save event for task messages
+		| "taskMetadataSaved" // kilocode_change: File save event for task metadata
+		| "managedIndexerState" // kilocode_change
+		| "singleCompletionResult" // kilocode_change
 		| "managedIndexerState" // kilocode_change
 		| "managedIndexerEnabled" // kilocode_change
-		| "organizationSwitchResult"
 	text?: string
 	// kilocode_change start
+	completionRequestId?: string // Correlation ID from request
+	completionText?: string // The completed text
+	completionError?: string // Error message if failed
 	payload?:
 		| ProfileDataResponsePayload
 		| BalanceDataResponsePayload
 		| TasksByIdResponsePayload
 		| TaskHistoryResponsePayload
+		| [string, string] // For file save events [taskId, filePath]
 	// kilocode_change end
 	// Checkpoint warning message
 	checkpointWarning?: {
@@ -244,6 +255,8 @@ export interface ExtensionMessage {
 			}
 		}>
 	}>
+	sapAiCoreModels?: ModelRecord // kilocode_change
+	sapAiCoreDeployments?: DeploymentRecord // kilocode_change
 	mcpServers?: McpServer[]
 	commits?: GitCommit[]
 	listApiConfig?: ProviderSettingsEntry[]

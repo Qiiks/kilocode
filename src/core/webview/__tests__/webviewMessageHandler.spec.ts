@@ -296,6 +296,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				ovhcloud: mockModels, // kilocode_change
 				inception: mockModels, // kilocode_change
 				copilot: mockModels,
+				"sap-ai-core": {}, // kilocode_change
 			},
 			values: undefined,
 		})
@@ -403,6 +404,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				ovhcloud: mockModels, // kilocode_change
 				inception: mockModels, // kilocode_change
 				copilot: mockModels,
+				"sap-ai-core": {}, // kilocode_change
 			},
 			values: undefined,
 		})
@@ -511,6 +513,7 @@ describe("webviewMessageHandler - requestRouterModels", () => {
 				synthetic: {},
 				gemini: mockModels,
 				ovhcloud: mockModels,
+				"sap-ai-core": {},
 				// kilocode_change end
 				copilot: mockModels,
 			},

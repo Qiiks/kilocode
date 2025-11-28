@@ -198,6 +198,13 @@ const dynamicProviderExtras = {
 	synthetic: {} as { apiKey?: string }, // kilocode_change
 	roo: {} as { apiKey?: string; baseUrl?: string },
 	copilot: {} as {}, // eslint-disable-line @typescript-eslint/no-empty-object-type
+	// kilocode_change start
+	"sap-ai-core": {} as {
+		sapAiCoreServiceKey?: string
+		sapAiCoreResourceGroup?: string
+		sapAiCoreUseOrchestration?: boolean
+	},
+	// kilocode_change end
 } as const satisfies Record<RouterName, object>
 
 // Build the dynamic options union from the map, intersected with CommonFetchParams

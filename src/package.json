@@ -3,7 +3,7 @@
 	"displayName": "%extension.displayName%",
 	"description": "%extension.description%",
 	"publisher": "kilocode",
-	"version": "4.124.0",
+	"version": "4.125.0",
 	"icon": "assets/icons/logo-outline-black.png",
 	"galleryBanner": {
 		"color": "#FFFFFF",
@@ -592,6 +592,11 @@
 					"default": false,
 					"description": "%settings.newTaskRequireTodos.description%"
 				},
+				"kilo-code.enableSettingsSync": {
+					"type": "boolean",
+					"default": true,
+					"description": "%settings.enableSettingsSync.description%"
+				},
 				"kilo-code.codeIndex.embeddingBatchSize": {
 					"type": "number",
 					"default": 60,
@@ -663,6 +668,8 @@
 		"@roo-code/ipc": "workspace:^",
 		"@roo-code/telemetry": "workspace:^",
 		"@roo-code/types": "workspace:^",
+		"@sap-ai-sdk/foundation-models": "^2.2.0",
+		"@sap-ai-sdk/orchestration": "^2.2.0",
 		"@vscode/codicons": "^0.0.36",
 		"async-mutex": "^0.5.0",
 		"axios": "^1.12.0",

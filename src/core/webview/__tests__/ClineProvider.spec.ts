@@ -2815,6 +2815,7 @@ describe("ClineProvider - Router Models", () => {
 				"vercel-ai-gateway": mockModels,
 				ovhcloud: mockModels, // kilocode_change
 				inception: mockModels, // kilocode_change
+				"sap-ai-core": {}, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
 				copilot: mockModels,
@@ -2896,6 +2897,7 @@ describe("ClineProvider - Router Models", () => {
 				ovhcloud: mockModels, // kilocode_change
 				inception: mockModels, // kilocode_change
 				synthetic: mockModels, // kilocode_change
+				"sap-ai-core": {}, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
 				copilot: mockModels,
@@ -3052,6 +3054,7 @@ describe("ClineProvider - Router Models", () => {
 				ovhcloud: mockModels, // kilocode_change
 				inception: mockModels, // kilocode_change
 				synthetic: mockModels, // kilocode_change
+				"sap-ai-core": {}, // kilocode_change
 				huggingface: {},
 				"io-intelligence": {},
 				copilot: mockModels,
