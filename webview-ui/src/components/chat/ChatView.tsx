@@ -83,6 +83,7 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 		currentTaskItem,
 		currentTaskTodos,
 		taskHistory,
+		taskHistoryVersion, // kilocode_change
 		apiConfiguration,
 		organizationAllowList,
 		mode,
@@ -1420,7 +1421,7 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 							{/* Show RooTips when authenticated or when user is new */}
 							{taskHistory.length < 6 && <RooTips />}
 							{/* Everyone should see their task history if any */}
-							{taskHistory.length > 0 && <HistoryPreview />}
+							{taskHistory.length > 0 && <HistoryPreview taskHistoryVersion={taskHistoryVersion ?? 0} />}
 						</div>
 						{/* Logged out users should see a one-time upsell, but not for brand new users */}
 						{!cloudIsAuthenticated && taskHistory.length >= 6 && (

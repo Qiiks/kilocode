@@ -17,20 +17,23 @@ const getKiloCodeSource = (uriScheme: string = "vscode", kiloCodeWrapperProperti
 	return `${getJetbrainsUrlScheme(kiloCodeWrapperProperties.kiloCodeWrapperCode)}`
 }
 
+// VSCode UIKind enum: Desktop = 1, Web = 2
+const isWebUI = (uiKind: number | undefined): boolean => uiKind === 2
+
 export function getKiloCodeBackendSignInUrl(
 	uriScheme: string = "vscode",
-	uiKind: string = "Desktop",
+	uiKind?: number, // VSCode UIKind enum: Desktop = 1, Web = 2
 	kiloCodeWrapperProperties?: KiloCodeWrapperProperties,
 ) {
-	const source = uiKind === "Web" ? "web" : getKiloCodeSource(uriScheme, kiloCodeWrapperProperties)
+	const source = isWebUI(uiKind) ? "web" : getKiloCodeSource(uriScheme, kiloCodeWrapperProperties)
 	return getAppUrl(`/sign-in-to-editor?source=${source}`)
 }
 
 export function getKiloCodeBackendSignUpUrl(
 	uriScheme: string = "vscode",
-	uiKind: string = "Desktop",
+	uiKind?: number, // VSCode UIKind enum: Desktop = 1, Web = 2
 	kiloCodeWrapperProperties?: KiloCodeWrapperProperties,
 ) {
-	const source = uiKind === "Web" ? "web" : getKiloCodeSource(uriScheme, kiloCodeWrapperProperties)
+	const source = isWebUI(uiKind) ? "web" : getKiloCodeSource(uriScheme, kiloCodeWrapperProperties)
 	return getAppUrl(`/users/sign_up?source=${source}`)
 }

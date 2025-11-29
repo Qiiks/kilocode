@@ -229,6 +229,10 @@ const baseProviderSettingsSchema = z.object({
 
 	// Tool protocol override for this profile.
 	toolProtocol: z.enum(["xml", "native"]).optional(),
+
+	// kilocode_change start: add tool style setting
+	toolStyle: z.enum(["default", "separate"]).optional(),
+	// kilocode_change end
 })
 
 // Several of the providers share common model config properties.
@@ -475,6 +479,7 @@ const kilocodeSchema = baseProviderSettingsSchema.extend({
 	openRouterProviderSort: openRouterProviderSortSchema.optional(),
 	openRouterZdr: z.boolean().optional(),
 	kilocodeTesterWarningsDisabledUntil: z.number().optional(), // Timestamp for disabling KILOCODE-TESTER warnings
+	kiloCodeImageApiKey: z.string().optional(), // kilocode_change: API key for image generation
 })
 
 export const virtualQuotaFallbackProfileDataSchema = z.object({
@@ -531,6 +536,7 @@ const qwenCodeSchema = apiModelIdProviderModelSchema.extend({
 
 const copilotSchema = baseProviderSettingsSchema.extend({
 	copilotModelId: z.string().optional(),
+	copilotApiKey: z.string().optional(), // kilocode_change
 })
 
 const rooSchema = apiModelIdProviderModelSchema.extend({
@@ -544,6 +550,7 @@ const vercelAiGatewaySchema = baseProviderSettingsSchema.extend({
 
 // kilocode_change start
 const sapAiCoreSchema = baseProviderSettingsSchema.extend({
+	sapAiCoreApiKey: z.string().optional(),
 	sapAiCoreServiceKey: z.string().optional(),
 	sapAiCoreResourceGroup: z.string().optional(),
 	sapAiCoreUseOrchestration: z.boolean().optional(),

@@ -108,6 +108,10 @@ export type ClineProviderEvents = {
 	clineCreated: [cline: Task]
 }
 
+// kilocode_change start: Export ClineProviderState type for use in prompts and tools
+export type ClineProviderState = Awaited<ReturnType<ClineProvider["getState"]>>
+// kilocode_change end
+
 interface PendingEditOperation {
 	messageTs: number
 	editedContent: string
@@ -1558,6 +1562,20 @@ export class ClineProvider
 		await this.upsertProviderProfile(currentApiConfigName, newConfiguration)
 	}
 
+	// kilocode_change start: add KiloCode callback handler
+	async handleKiloCodeCallback(token: string) {
+		const { apiConfiguration, currentApiConfigName = "default" } = await this.getState()
+
+		const newConfiguration: ProviderSettings = {
+			...apiConfiguration,
+			apiProvider: "kilocode",
+			kilocodeToken: token,
+		}
+
+		await this.upsertProviderProfile(currentApiConfigName, newConfiguration)
+	}
+	// kilocode_change end
+
 	// Requesty
 
 	async handleRequestyCallback(code: string, baseUrl: string | null) {
@@ -1767,6 +1785,43 @@ export class ClineProvider
 			}
 		}
 	}
+
+	// kilocode_change start: add postRulesDataToWebview method
+	/**
+	 * Posts rules and workflows data to the webview
+	 */
+	async postRulesDataToWebview() {
+		try {
+			// TODO: Implement actual rules and workflows fetching
+			// For now, send empty data to avoid type errors
+			this.postMessageToWebview({
+				type: "rulesData",
+				globalRules: {},
+				localRules: {},
+				globalWorkflows: {},
+				localWorkflows: {},
+			})
+		} catch (error) {
+			console.error("Failed to post rules data to webview:", error)
+		}
+	}
+
+	/**
+	 * Fetches MCP marketplace catalog
+	 */
+	async fetchMcpMarketplace(refresh?: boolean) {
+		try {
+			// TODO: Implement actual MCP marketplace fetching
+			// For now, send empty data to avoid type errors
+			this.postMessageToWebview({
+				type: "mcpMarketplaceCatalog",
+				mcpMarketplaceCatalog: [],
+			})
+		} catch (error) {
+			console.error("Failed to fetch MCP marketplace:", error)
+		}
+	}
+	// kilocode_change end
 
 	/**
 	 * Checks if there is a file-based system prompt override for the given mode
@@ -2874,6 +2929,16 @@ export class ClineProvider
 	private getAppProperties(): StaticAppProperties {
 		if (!this._appProperties) {
 			const packageJSON = this.context.extension?.packageJSON
+			// kilocode_change start: add wrapper properties
+			const wrapperProps = this.getGlobalState("kiloCodeWrapperProperties") as
+				| {
+						wrapped?: boolean
+						wrapper?: string
+						wrapperTitle?: string
+						wrapperCode?: string
+						wrapperVersion?: string
+				  }
+				| undefined
 
 			this._appProperties = {
 				appName: packageJSON?.name ?? Package.name,
@@ -2881,10 +2946,16 @@ export class ClineProvider
 				vscodeVersion: vscode.version,
 				platform: process.platform,
 				editorName: vscode.env.appName,
+				wrapped: wrapperProps?.wrapped ?? false,
+				wrapper: wrapperProps?.wrapper ?? null,
+				wrapperTitle: wrapperProps?.wrapperTitle ?? null,
+				wrapperCode: wrapperProps?.wrapperCode ?? null,
+				wrapperVersion: wrapperProps?.wrapperVersion ?? null,
 			}
+			// kilocode_change end
 		}
 
-		return this._appProperties
+		return this._appProperties!
 	}
 
 	public get appProperties(): StaticAppProperties {

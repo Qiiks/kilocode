@@ -678,7 +678,7 @@ export const ChatRowContent = ({
 											</span>
 											<span className="flex items-center gap-1">
 												<span>💾</span>
-												<span>{formatFileSize(tool.stats.size)}</span>
+												<span>{formatFileSize(tool.stats.size ?? 0)}</span>
 											</span>
 										</div>
 									</div>
@@ -1563,7 +1563,6 @@ export const ChatRowContent = ({
 						</div>
 					)
 				case "browser_action":
-				case "browser_action_result":
 					// Handled by BrowserSessionRow; prevent raw JSON (action/result) from rendering here
 					return null
 				default:

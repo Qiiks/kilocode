@@ -29,7 +29,7 @@ export const useTaskSearch = () => {
 			pageIndex: requestedPageIndex,
 			search: searchQuery,
 		},
-		taskHistoryVersion,
+		taskHistoryVersion ?? 0,
 	)
 	// kilocode_change end
 

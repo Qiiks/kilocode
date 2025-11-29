@@ -21,6 +21,7 @@ import { GitCommit } from "../utils/git"
 import { McpServer } from "./mcp"
 import { Mode } from "./modes"
 import { ModelRecord, RouterModels } from "./api"
+import { ClineRulesToggles } from "./cline-rules" // kilocode_change
 
 // Command interface for frontend/backend communication
 export interface Command {
@@ -45,6 +46,7 @@ export interface IndexingStatus {
 	totalItems: number
 	currentItemUnit?: string
 	workspacePath?: string
+	gitBranch?: string // kilocode_change
 }
 
 export interface IndexingStatusUpdateMessage {
@@ -131,8 +133,52 @@ export interface ExtensionMessage {
 		| "interactionRequired"
 		| "browserSessionUpdate"
 		| "browserSessionNavigate"
+		// kilocode_change start: add kilocode-specific message types
+		| "copilotModels"
+		| "copilotAuthStatus"
+		| "copilotDeviceCode"
+		| "copilotAuthError"
+		| "sapAiCoreModels"
+		| "sapAiCoreDeployments"
+		| "mcpMarketplaceCatalog"
+		| "rulesData"
+		| "profileDataResponse"
+		| "balanceDataResponse"
+		| "updateProfileData"
+		| "taskHistoryResponse"
+		| "tasksByIdResponse"
+		| "profileConfigurationForEditing"
+		| "usageDataResponse"
+		| "mermaidFixResponse"
+		| "insertTextToChatArea"
+		| "keybindingsResponse"
+		| "singleCompletionResult"
+		| "managedIndexerState"
+		| "kilocodeNotificationsResponse"
+		| "taskMetadataSaved"
+	// kilocode_change end
 	text?: string
 	payload?: any // Add a generic payload for now, can refine later
+	// kilocode_change start: add kilocode-specific message properties
+	sapAiCoreModels?: ModelRecord
+	sapAiCoreDeployments?: Record<string, any>
+	copilotModels?: string[]
+	copilotAuthenticated?: boolean
+	copilotDeviceCode?: any
+	globalRules?: ClineRulesToggles
+	localRules?: ClineRulesToggles
+	globalWorkflows?: ClineRulesToggles
+	localWorkflows?: ClineRulesToggles
+	mcpMarketplaceCatalog?: any
+	keybindings?: Record<string, any>
+	apiConfiguration?: ProviderSettings
+	fixedCode?: string | null
+	completionRequestId?: string
+	completionText?: string
+	completionError?: string
+	managedIndexerState?: any
+	notifications?: any[]
+	// kilocode_change end
 	// Checkpoint warning message
 	checkpointWarning?: {
 		type: "WAIT_TIMEOUT" | "INIT_TIMEOUT"
@@ -148,8 +194,12 @@ export interface ExtensionMessage {
 		| "cloudButtonClicked"
 		| "didBecomeVisible"
 		| "focusInput"
+		| "focusChatInput"
 		| "switchTab"
 		| "toggleAutoApprove"
+		// kilocode_change start: add kilocode-specific actions
+		| "profileButtonClicked"
+	// kilocode_change end
 	invoke?: "newChat" | "sendMessage" | "primaryButtonClick" | "secondaryButtonClick" | "setChatBoxMessage"
 	state?: ExtensionState
 	images?: string[]
@@ -290,6 +340,37 @@ export type ExtensionState = Pick<
 	| "includeCurrentTime"
 	| "includeCurrentCost"
 	| "maxGitStatusFiles"
+	// kilocode_change start: add kilocode-specific global settings to ExtensionState
+	| "systemNotificationsEnabled"
+	| "morphApiKey"
+	| "fastApplyModel"
+	| "fastApplyApiProvider"
+	| "showAutoApproveMenu"
+	| "showTaskTimeline"
+	| "sendMessageOnEnter"
+	| "showTimestamps"
+	| "hideCostBelowThreshold"
+	| "allowVeryLargeReads"
+	| "commitMessageApiConfigId"
+	| "terminalCommandApiConfigId"
+	| "ghostServiceSettings"
+	| "yoloGatekeeperApiConfigId"
+	| "yoloMode"
+	| "hasPerformedOrganizationAutoSwitch"
+	| "dismissedNotificationIds"
+	| "autoPurgeEnabled"
+	| "autoPurgeDefaultRetentionDays"
+	| "autoPurgeFavoritedTaskRetentionDays"
+	| "autoPurgeCompletedTaskRetentionDays"
+	| "autoPurgeIncompleteTaskRetentionDays"
+	| "autoPurgeLastRunTimestamp"
+	| "taskHistoryFullLength"
+	| "taskHistoryVersion"
+	| "uiKind"
+	| "kiloCodeWrapperProperties"
+	| "kilocodeDefaultModel"
+	| "virtualQuotaActiveModel"
+	// kilocode_change end
 > & {
 	version: string
 	clineMessages: ClineMessage[]
@@ -349,6 +430,7 @@ export type ExtensionState = Pick<
 	hasOpenedModeSelector: boolean
 	openRouterImageApiKey?: string
 	openRouterUseMiddleOutTransform?: boolean
+	kiloCodeImageApiKey?: string // kilocode_change
 	messageQueue?: QueuedMessage[]
 	lastShownAnnouncementId?: string
 	apiModelId?: string
@@ -381,6 +463,7 @@ export interface ClineSayTool {
 		| "imageGenerated"
 		| "runSlashCommand"
 		| "updateTodoList"
+		| "deleteFile" // kilocode_change
 	path?: string
 	diff?: string
 	content?: string
@@ -421,6 +504,26 @@ export interface ClineSayTool {
 	args?: string
 	source?: string
 	description?: string
+	// kilocode_change start: add kilocode-specific properties
+	fastApplyResult?: {
+		success: boolean
+		error?: string
+		tokensIn?: number
+		tokensOut?: number
+		cost?: number
+		description?: string
+	}
+	stats?: {
+		tokensIn?: number
+		tokensOut?: number
+		cost?: number
+		duration?: number
+		isComplete?: boolean
+		directories?: number
+		files?: number
+		size?: number
+	}
+	// kilocode_change end
 }
 
 // Must keep in sync with system prompt.
@@ -474,6 +577,10 @@ export interface ClineApiReqInfo {
 	cancelReason?: ClineApiReqCancelReason
 	streamingFailedMessage?: string
 	apiProtocol?: "anthropic" | "openai"
+	// kilocode_change start: add kilocode-specific properties
+	usageMissing?: boolean
+	inferenceProvider?: string
+	// kilocode_change end
 }
 
 export type ClineApiReqCancelReason = "streaming_failed" | "user_cancelled"

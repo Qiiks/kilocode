@@ -14,7 +14,12 @@ import {
 
 import { Mode } from "./modes"
 
-export type ClineAskResponse = "yesButtonClicked" | "noButtonClicked" | "messageResponse" | "objectResponse"
+export type ClineAskResponse =
+	| "yesButtonClicked"
+	| "noButtonClicked"
+	| "messageResponse"
+	| "objectResponse"
+	| "retry_clicked" // kilocode_change
 
 export type PromptMode = Mode | "enhance"
 
@@ -25,6 +30,80 @@ export interface UpdateTodoListPayload {
 }
 
 export type EditQueuedMessagePayload = Pick<QueuedMessage, "id" | "text" | "images">
+
+// kilocode_change start: add kilocode-specific payload types
+export interface TaskHistoryRequestPayload {
+	requestId?: string
+	page?: number
+	pageSize?: number
+	pageIndex?: number
+	searchQuery?: string
+	workspace?: string
+	favoritesOnly?: boolean
+	search?: string
+	sort?: string
+}
+
+export interface TaskHistoryResponsePayload {
+	requestId?: string
+	tasks?: any[]
+	historyItems?: any[]
+	totalCount?: number
+	page?: number
+	pageSize?: number
+	pageIndex?: number
+	pageCount?: number
+}
+
+export interface TasksByIdRequestPayload {
+	requestId: string
+	taskIds: string[]
+}
+
+export interface TasksByIdResponsePayload {
+	requestId?: string
+	tasks: any[]
+}
+
+export interface ProfileDataResponsePayload {
+	success?: boolean
+	data?: ProfileData
+	profile?: ProfileData | null
+	organizations?: UserOrganizationWithApiKey[]
+	error?: string
+}
+
+export interface ProfileData {
+	id: string
+	email: string
+	name?: string
+	avatar?: string
+	user?: any
+	organizations?: UserOrganizationWithApiKey[]
+	kilocodeToken?: string
+}
+
+export interface UserOrganizationWithApiKey {
+	id: string
+	name: string
+	apiKey?: string
+	role?: string
+}
+
+export interface BalanceDataResponsePayload {
+	success?: boolean
+	data?: number
+	balance?: number
+	currency?: string
+	error?: string
+}
+
+export type GlobalStateValue = string | number | boolean | object | null | undefined
+
+// MaybeTypedWebviewMessage is used in webviewMessageHandler for kilocode extensions
+// It allows for additional message types that aren't strictly typed in WebviewMessage
+export type MaybeTypedWebviewMessage = WebviewMessage
+// kilocode_change end
 
 export interface WebviewMessage {
 	type:
@@ -175,6 +254,86 @@ export interface WebviewMessage {
 		| "browserPanelDidLaunch"
 		| "openDebugApiHistory"
 		| "openDebugUiHistory"
+		// kilocode_change start: add kilocode-specific message types
+		| "condense"
+		| "requestSapAiCoreModels"
+		| "requestSapAiCoreDeployments"
+		| "seeNewChanges"
+		| "tasksByIdRequest"
+		| "taskHistoryRequest"
+		| "requestCheckpointRestoreApproval"
+		| "openGlobalKeybindings"
+		| "showSystemNotification"
+		| "systemNotificationsEnabled"
+		| "openInBrowser"
+		| "morphApiKey"
+		| "fastApplyModel"
+		| "fastApplyApiProvider"
+		| "kiloCodeImageApiKey"
+		| "showAutoApproveMenu"
+		| "showTaskTimeline"
+		| "sendMessageOnEnter"
+		| "showTimestamps"
+		| "hideCostBelowThreshold"
+		| "allowVeryLargeReads"
+		| "setReasoningBlockCollapsed"
+		| "setHistoryPreviewCollapsed"
+		| "commitMessageApiConfigId"
+		| "terminalCommandApiConfigId"
+		| "ghostServiceSettings"
+		| "yoloGatekeeperApiConfigId"
+		| "yoloMode"
+		| "showFeedbackOptions"
+		| "getProfileConfigurationForEditing"
+		| "fetchProfileDataRequest"
+		| "fetchBalanceDataRequest"
+		| "shopBuyCredits"
+		| "fetchMcpMarketplace"
+		| "downloadMcp"
+		| "silentlyRefreshMcpMarketplace"
+		| "toggleWorkflow"
+		| "refreshRules"
+		| "toggleRule"
+		| "requestCopilotModels"
+		| "copilotLogin"
+		| "copilotLogout"
+		| "copilotLoginWithDeviceCode"
+		| "authenticateCopilot"
+		| "clearCopilotAuth"
+		| "checkCopilotAuth"
+		| "autoPurgeEnabled"
+		| "autoPurgeDefaultRetentionDays"
+		| "autoPurgeFavoritedTaskRetentionDays"
+		| "autoPurgeCompletedTaskRetentionDays"
+		| "autoPurgeIncompleteTaskRetentionDays"
+		| "markNotificationDismissed"
+		| "generateCommitMessage"
+		| "insertCommitMessage"
+		| "requestUsageData"
+		| "openRulesFile"
+		| "openWorkflowFile"
+		| "requestMermaidFix"
+		| "insertMermaidFix"
+		| "requestSingleCompletion"
+		| "createRuleFile"
+		| "deleteRuleFile"
+		| "reportBug"
+		| "cancelIndexing"
+		| "clearUsageData"
+		| "getUsageData"
+		| "toggleTaskFavorite"
+		| "fixMermaidSyntax"
+		| "editMessage"
+		| "fetchKilocodeNotifications"
+		| "dismissNotificationId"
+		| "updateGlobalState"
+		| "insertTextToChatArea"
+		| "getKeybindings"
+		| "manualPurge"
+		| "addTaskToHistory"
+		| "singleCompletion"
+		| "requestManagedIndexerState"
+	// kilocode_change end
 	text?: string
 	editedMessageContent?: string
 	tab?: "settings" | "history" | "mcp" | "modes" | "chat" | "marketplace" | "cloud"
@@ -227,6 +386,21 @@ export interface WebviewMessage {
 	list?: string[] // For dismissedUpsells response
 	organizationId?: string | null // For organization switching
 	useProviderSignup?: boolean // For rooCloudSignIn to use provider signup flow
+	// kilocode_change start: add kilocode-specific message properties
+	notificationOptions?: any // For showSystemNotification
+	mcpId?: string // For downloadMcp
+	workflowPath?: string // For toggleWorkflow
+	enabled?: boolean // For toggleWorkflow, toggleRule
+	isGlobal?: boolean // For toggleWorkflow, toggleRule
+	rulePath?: string // For toggleRule
+	commandIds?: string[] // For getKeybindings
+	notificationId?: string // For dismissNotificationId
+	stateKey?: string // For updateGlobalState
+	stateValue?: GlobalStateValue // For updateGlobalState
+	filename?: string // For createRuleFile
+	commitRange?: any // For seeNewChanges
+	ruleType?: string // For createRuleFile
+	// kilocode_change end
 	codeIndexSettings?: {
 		// Global state settings
 		codebaseIndexEnabled: boolean
@@ -278,6 +452,15 @@ export const checkoutRestorePayloadSchema = z.object({
 
 export type CheckpointRestorePayload = z.infer<typeof checkoutRestorePayloadSchema>
 
+export const requestCheckpointRestoreApprovalPayloadSchema = z.object({
+	commitHash: z.string(),
+	checkpointTs: z.number(),
+	messagesToRemove: z.number(),
+	confirmationText: z.string().optional(),
+})
+
+export type RequestCheckpointRestoreApprovalPayload = z.infer<typeof requestCheckpointRestoreApprovalPayloadSchema>
+
 export interface IndexingStatusPayload {
 	state: "Standby" | "Indexing" | "Indexed" | "Error"
 	message: string
@@ -297,6 +480,12 @@ export type InstallMarketplaceItemWithParametersPayload = z.infer<
 	typeof installMarketplaceItemWithParametersPayloadSchema
 >
 
+// kilocode_change start: add SeeNewChangesPayload
+export interface SeeNewChangesPayload {
+	commitRange?: any
+}
+// kilocode_change end
+
 export type WebViewMessagePayload =
 	| CheckpointDiffPayload
 	| CheckpointRestorePayload
@@ -305,3 +494,8 @@ export type WebViewMessagePayload =
 	| InstallMarketplaceItemWithParametersPayload
 	| UpdateTodoListPayload
 	| EditQueuedMessagePayload
+	// kilocode_change start: add kilocode-specific payload types
+	| TaskHistoryRequestPayload
+	| TasksByIdRequestPayload
+	| SeeNewChangesPayload
+// kilocode_change end

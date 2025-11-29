@@ -23,12 +23,9 @@ import { streamSse } from "../../services/continuedev/core/fetch/stream"
  */
 export class KilocodeOpenrouterHandler extends OpenRouterHandler {
 	protected override models: ModelRecord = {}
+	protected override readonly providerName: string = "KiloCode"
 	defaultModel: string = openRouterDefaultModelId
 	private apiFIMBase: string
-
-	protected override get providerName() {
-		return "KiloCode" as const
-	}
 
 	constructor(options: ApiHandlerOptions) {
 		const baseApiUrl = getKiloUrlFromToken("https://api.kilocode.ai/api/", options.kilocodeToken ?? "")
@@ -49,7 +46,7 @@ export class KilocodeOpenrouterHandler extends OpenRouterHandler {
 		return !token ? undefined : crypto.createHash("sha256").update(token).digest().readUInt32BE(0)
 	}
 
-	override customRequestOptions(metadata?: ApiHandlerCreateMessageMetadata) {
+	customRequestOptions(metadata?: ApiHandlerCreateMessageMetadata) {
 		const headers: Record<string, string> = {}
 
 		if (metadata?.taskId) {
@@ -77,7 +74,7 @@ export class KilocodeOpenrouterHandler extends OpenRouterHandler {
 		return Object.keys(headers).length > 0 ? { headers } : undefined
 	}
 
-	override getTotalCost(lastUsage: CompletionUsage): number {
+	getTotalCost(lastUsage: CompletionUsage): number {
 		const model = this.getModel().info
 		if (!model.inputPrice && !model.outputPrice) {
 			return 0

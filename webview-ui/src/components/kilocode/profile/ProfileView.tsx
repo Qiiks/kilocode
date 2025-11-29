@@ -1,11 +1,7 @@
 import React, { useEffect } from "react"
 import { vscode } from "@/utils/vscode"
-import {
-	BalanceDataResponsePayload,
-	ProfileData,
-	ProfileDataResponsePayload,
-	WebviewMessage,
-} from "@roo/WebviewMessage"
+import { BalanceDataResponsePayload, ProfileData, ProfileDataResponsePayload } from "@roo/WebviewMessage"
+import { ExtensionMessage } from "@roo/ExtensionMessage"
 import { VSCodeButtonLink } from "@/components/common/VSCodeButtonLink"
 import { VSCodeButton, VSCodeDivider } from "@vscode/webview-ui-toolkit/react"
 import CountUp from "react-countup"
@@ -37,7 +33,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onDone }) => {
 	}, [apiConfiguration?.kilocodeToken, organizationId])
 
 	useEffect(() => {
-		const handleMessage = (event: MessageEvent<WebviewMessage>) => {
+		const handleMessage = (event: MessageEvent<ExtensionMessage>) => {
 			const message = event.data
 			if (message.type === "profileDataResponse") {
 				const payload = message.payload as ProfileDataResponsePayload
@@ -51,7 +47,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onDone }) => {
 			} else if (message.type === "balanceDataResponse") {
 				const payload = message.payload as BalanceDataResponsePayload
 				if (payload.success) {
-					setBalance(payload.data?.balance || 0)
+					setBalance(payload.data ?? payload.balance ?? 0)
 				} else {
 					console.error("Error fetching balance data:", payload.error)
 					setBalance(null)

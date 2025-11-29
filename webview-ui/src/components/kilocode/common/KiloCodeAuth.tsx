@@ -29,7 +29,8 @@ const KiloCodeAuth: React.FC<KiloCodeAuthProps> = ({ onManualConfigClick, classN
 				<ButtonLink
 					href={getKiloCodeBackendSignUpUrl(uriScheme, uiKind, kiloCodeWrapperProperties)}
 					onClick={() => {
-						if (uiKind === "Web" && onManualConfigClick) {
+						// VSCode UIKind enum: Web = 2
+						if (uiKind === 2 && onManualConfigClick) {
 							onManualConfigClick()
 						}
 					}}>

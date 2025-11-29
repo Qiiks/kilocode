@@ -23,8 +23,8 @@ type KiloCodeProps = {
 	organizationAllowList: OrganizationAllowList
 	uriScheme: string | undefined
 	kiloCodeWrapperProperties: KiloCodeWrapperProperties | undefined
-	uiKind: string | undefined
-	kilocodeDefaultModel: string
+	uiKind: number | undefined
+	kilocodeDefaultModel?: string
 }
 
 export const KiloCode = ({
@@ -115,7 +115,7 @@ export const KiloCode = ({
 			<ModelPicker
 				apiConfiguration={apiConfiguration}
 				setApiConfigurationField={setApiConfigurationField}
-				defaultModelId={kilocodeDefaultModel}
+				defaultModelId={kilocodeDefaultModel ?? ""}
 				models={routerModels?.kilocode ?? {}}
 				modelIdKey="kilocodeModel"
 				serviceName="Kilo Code"

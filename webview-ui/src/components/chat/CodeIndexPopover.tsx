@@ -50,10 +50,16 @@ import { useEscapeKey } from "@src/hooks/useEscapeKey"
 const DEFAULT_QDRANT_URL = "http://localhost:6333"
 const DEFAULT_OLLAMA_URL = "http://localhost:11434"
 
-interface CodeIndexPopoverProps {
+// kilocode_change start: Add optional props for embedded mode
+export interface CodeIndexPopoverProps {
 	children: React.ReactNode
 	indexingStatus: IndexingStatus
+	contentOnly?: boolean
+	open?: boolean
+	onOpenChange?: (open: boolean) => void
+	onRegisterCloseHandler?: (handler: () => void) => void
 }
+// kilocode_change end
 
 interface LocalCodeIndexSettings {
 	// Global state settings

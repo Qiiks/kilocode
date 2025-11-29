@@ -25,8 +25,11 @@
 	"command.terminal.addToContext.title": "Add Terminal Content to Context",
 	"command.terminal.fixCommand.title": "Fix This Command",
 	"command.terminal.explainCommand.title": "Explain This Command",
+	"command.terminal.generateCommand.title": "Roo Code: Generate Terminal Command",
 	"command.acceptInput.title": "Accept Input/Suggestion",
 	"command.toggleAutoApprove.title": "Toggle Auto-Approve",
+	"command.profile.title": "Profile",
+	"command.generateCommitMessage.title": "Generate Commit Message",
 	"configuration.title": "Roo Code",
 	"commands.allowedCommands.description": "Commands that can be auto-executed when 'Always approve execute operations' is enabled",
 	"commands.deniedCommands.description": "Command prefixes that will be automatically denied without asking for approval. In case of conflicts with allowed commands, the longest prefix match takes precedence. Add * to deny all commands.",
@@ -44,5 +47,13 @@
 	"settings.apiRequestTimeout.description": "Maximum time in seconds to wait for API responses (0 = no timeout, 1-3600s, default: 600s). Higher values are recommended for local providers like LM Studio and Ollama that may need more processing time.",
 	"settings.newTaskRequireTodos.description": "Require todos parameter when creating new tasks with the new_task tool",
 	"settings.codeIndex.embeddingBatchSize.description": "The batch size for embedding operations during code indexing. Adjust this based on your API provider's limits. Default is 60.",
-	"settings.debug.description": "Enable debug mode to show additional buttons for viewing API conversation history and UI messages as prettified JSON in temporary files."
+	"settings.debug.description": "Enable debug mode to show additional buttons for viewing API conversation history and UI messages as prettified JSON in temporary files.",
+	"settings.enableSettingsSync.description": "Enable synchronization of settings across devices.",
+	"settings.toolProtocol.description": "The protocol to use for tool communication.",
+	"ghost.commands.generateSuggestions": "Generate Suggestions",
+	"ghost.commands.applyCurrentSuggestion": "Apply Current Suggestion",
+	"ghost.commands.applyAllSuggestions": "Apply All Suggestions",
+	"ghost.commands.cancelSuggestions": "Cancel Suggestions",
+	"ghost.commands.goToNextSuggestion": "Go To Next Suggestion",
+	"ghost.commands.goToPreviousSuggestion": "Go To Previous Suggestion"
 }

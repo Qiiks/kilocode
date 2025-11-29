@@ -837,6 +837,7 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 							setImageGenerationProvider={setImageGenerationProvider}
 							setOpenRouterImageApiKey={setOpenRouterImageApiKey}
 							setImageGenerationSelectedModel={setImageGenerationSelectedModel}
+							setCachedStateField={setCachedStateField}
 						/>
 					)}
 

@@ -65,7 +65,7 @@ import { useExtensionState } from "@src/context/ExtensionStateContext"
 //	OPENROUTER_DEFAULT_PROVIDER_NAME,
 //} from "@src/components/ui/hooks/useOpenRouterModelProviders"
 // kilocode_change start
-import { filterModels } from "./utils/organizationFilters"
+import { filterModels, filterProviders } from "./utils/organizationFilters"
 import {
 	Select,
 	SelectTrigger,
@@ -1060,19 +1060,8 @@ const ApiOptions = ({
 							// kilocode_change start
 							nativeFunctionCallingProviders.includes(selectedProvider) && (
 								<ToolUseControl
-									toolStyle={
-										apiConfiguration.toolStyle === "json"
-											? "native"
-											: apiConfiguration.toolStyle === "xml"
-												? "xml"
-												: undefined
-									}
-									onChange={(field, value) =>
-										setApiConfigurationField(
-											field,
-											value === "native" ? "json" : value === "xml" ? "xml" : undefined,
-										)
-									}
+									toolStyle={apiConfiguration.toolProtocol}
+									onChange={(_field, value) => setApiConfigurationField("toolProtocol", value)}
 								/>
 							)
 							// kilocode_change end

@@ -191,6 +191,39 @@ export const globalSettingsSchema = z.object({
 	hasOpenedModeSelector: z.boolean().optional(),
 	lastModeExportPath: z.string().optional(),
 	lastModeImportPath: z.string().optional(),
+
+	// kilocode_change start: add kilocode-specific global settings
+	systemNotificationsEnabled: z.boolean().optional(),
+	morphApiKey: z.string().optional(),
+	fastApplyModel: z.string().optional(),
+	fastApplyApiProvider: z.string().optional(),
+	showAutoApproveMenu: z.boolean().optional(),
+	showTaskTimeline: z.boolean().optional(),
+	sendMessageOnEnter: z.boolean().optional(),
+	showTimestamps: z.boolean().optional(),
+	hideCostBelowThreshold: z.number().optional(),
+	allowVeryLargeReads: z.boolean().optional(),
+	commitMessageApiConfigId: z.string().optional(),
+	terminalCommandApiConfigId: z.string().optional(),
+	ghostServiceSettings: z.any().optional(),
+	yoloGatekeeperApiConfigId: z.string().optional(),
+	yoloMode: z.boolean().optional(),
+	hasPerformedOrganizationAutoSwitch: z.boolean().optional(),
+	dismissedNotificationIds: z.array(z.string()).optional(),
+	autoPurgeEnabled: z.boolean().optional(),
+	autoPurgeDefaultRetentionDays: z.number().optional(),
+	autoPurgeFavoritedTaskRetentionDays: z.number().nullable().optional(),
+	autoPurgeCompletedTaskRetentionDays: z.number().optional(),
+	autoPurgeIncompleteTaskRetentionDays: z.number().optional(),
+	autoPurgeLastRunTimestamp: z.number().optional(),
+	taskHistoryFullLength: z.number().optional(),
+	taskHistoryVersion: z.number().optional(),
+	uiKind: z.number().optional(),
+	kiloCodeWrapperProperties: z.any().optional(),
+	kilocodeDefaultModel: z.string().optional(),
+	virtualQuotaActiveModel: z.string().optional(),
+	globalWorkflowToggles: z.record(z.string(), z.boolean()).optional(),
+	// kilocode_change end
 })
 
 export type GlobalSettings = z.infer<typeof globalSettingsSchema>
@@ -248,6 +281,11 @@ export const SECRET_STATE_KEYS = [
 	"ioIntelligenceApiKey",
 	"vercelAiGatewayApiKey",
 	"basetenApiKey",
+	// kilocode_change start: add kilocode-specific secret keys
+	"kilocodeToken",
+	"copilotApiKey",
+	"sapAiCoreApiKey",
+	// kilocode_change end
 ] as const
 
 // Global secrets that are part of GlobalSettings (not ProviderSettings)

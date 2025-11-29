@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react"
 import { vscode } from "@/utils/vscode"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { useAppTranslation } from "@/i18n/TranslationContext"
-import { ProfileDataResponsePayload, WebviewMessage, UserOrganizationWithApiKey } from "@roo/WebviewMessage"
+import { ProfileDataResponsePayload, UserOrganizationWithApiKey } from "@roo/WebviewMessage"
+import { ExtensionMessage } from "@roo/ExtensionMessage"
 
 export const OrganizationSelector = ({ className, showLabel = false }: { className?: string; showLabel?: boolean }) => {
 	const [organizations, setOrganizations] = useState<UserOrganizationWithApiKey[]>([])
@@ -12,7 +13,7 @@ export const OrganizationSelector = ({ className, showLabel = false }: { classNa
 	const selectedOrg = organizations.find((o) => o.id === apiConfiguration?.kilocodeOrganizationId)
 	const containerRef = useRef<HTMLDivElement>(null)
 
-	const handleMessage = (event: MessageEvent<WebviewMessage>) => {
+	const handleMessage = (event: MessageEvent<ExtensionMessage>) => {
 		const message = event.data
 		if (message.type === "profileDataResponse") {
 			const payload = message.payload as ProfileDataResponsePayload
@@ -109,7 +110,7 @@ export const OrganizationSelector = ({ className, showLabel = false }: { classNa
 					aria-expanded={isOpen}
 					title={
 						selectedOrg
-							? `${selectedOrg.name} – ${selectedOrg.role.toUpperCase()}`
+							? `${selectedOrg.name} – ${(selectedOrg.role ?? "member").toUpperCase()}`
 							: t("kilocode:profile.personal")
 					}
 					className="w-full cursor-pointer border border-[var(--vscode-dropdown-border)] bg-[var(--vscode-dropdown-background)] text-[var(--vscode-dropdown-foreground)] rounded px-3 py-1.5 flex items-center justify-between gap-2 focus:outline-none focus:ring-1 focus:ring-[var(--vscode-focusBorder)] opacity-90 hover:opacity-100 hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)] transition-all duration-150">
@@ -117,7 +118,7 @@ export const OrganizationSelector = ({ className, showLabel = false }: { classNa
 					<span className="flex items-center gap-2 shrink-0">
 						{selectedOrg && (
 							<span className="ml-2 shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide bg-[var(--vscode-badge-background)] text-[var(--vscode-badge-foreground)]">
-								{selectedOrg.role.toUpperCase()}
+								{(selectedOrg.role ?? "member").toUpperCase()}
 							</span>
 						)}
 						<svg
@@ -164,7 +165,7 @@ export const OrganizationSelector = ({ className, showLabel = false }: { classNa
 									className="flex w-full cursor-pointer items-center justify-between gap-2 px-3 py-1.5 text-left hover:bg-[var(--vscode-list-hoverBackground)] text-[var(--vscode-foreground)]">
 									<span className="truncate">{org.name}</span>
 									<span className="ml-2 shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide bg-[var(--vscode-badge-background)] text-[var(--vscode-badge-foreground)]">
-										{org.role.toUpperCase()}
+										{(org.role ?? "member").toUpperCase()}
 									</span>
 								</button>
 							))}

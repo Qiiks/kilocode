@@ -73,6 +73,13 @@ export const toolParamNames = [
 	"files", // Native protocol parameter for read_file
 	"operations", // search_and_replace parameter for multiple operations
 	"patch", // apply_patch parameter
+	// kilocode_change start: Add kilocode-specific tool params
+	"target_file", // edit_file param
+	"instructions", // edit_file param
+	"code_edit", // edit_file param
+	"title", // report_bug param
+	"description", // report_bug, condense param
+	// kilocode_change end
 ] as const
 
 export type ToolParamName = (typeof toolParamNames)[number]
@@ -267,6 +274,13 @@ export const TOOL_DISPLAY_NAMES: Record<ToolName, string> = {
 	update_todo_list: "update todo list",
 	run_slash_command: "run slash command",
 	generate_image: "generate images",
+	// kilocode_change start
+	report_bug: "report bugs",
+	condense: "condense context",
+	edit_file: "edit files",
+	new_rule: "create new rules",
+	delete_file: "delete files",
+	// kilocode_change end
 } as const
 
 // Define available tool groups.

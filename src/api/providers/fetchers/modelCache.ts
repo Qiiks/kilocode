@@ -112,6 +112,18 @@ async function fetchModelsFromProvider(options: GetModelsOptions): Promise<Model
 		case "chutes":
 			models = await getChutesModels(options.apiKey)
 			break
+		// kilocode_change start - these providers don't have dynamic model fetching
+		case "kilocode":
+		case "gemini":
+		case "ovhcloud":
+		case "inception":
+		case "synthetic":
+		case "sap-ai-core":
+		case "copilot":
+		case "nano-gpt":
+			models = {}
+			break
+		// kilocode_change end
 		default: {
 			// Ensures router is exhaustively checked if RouterName is a strict union.
 			const exhaustiveCheck: never = provider

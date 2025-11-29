@@ -50,7 +50,7 @@ import { useLmStudioModels } from "./useLmStudioModels"
 import { useExtensionState } from "@/context/ExtensionStateContext" // kilocode_change
 
 // kilocode_change start
-export const useModelProviders = (kilocodeDefaultModel: string, apiConfiguration?: ProviderSettings) => {
+export const useModelProviders = (kilocodeDefaultModel: string = "", apiConfiguration?: ProviderSettings) => {
 	const provider = apiConfiguration?.apiProvider
 	return useOpenRouterModelProviders(
 		provider === "kilocode"
@@ -165,7 +165,7 @@ function getSelectedModel({
 	routerModels,
 	openRouterModelProviders,
 	lmStudioModels,
-	kilocodeDefaultModel,
+	kilocodeDefaultModel = "",
 	ollamaModels,
 	virtualQuotaActiveModel, //kilocode_change
 }: {
@@ -174,9 +174,9 @@ function getSelectedModel({
 	routerModels: RouterModels
 	openRouterModelProviders: Record<string, ModelInfo>
 	lmStudioModels: ModelRecord | undefined
-	kilocodeDefaultModel: string
+	kilocodeDefaultModel?: string
 	ollamaModels: ModelRecord | undefined
-	virtualQuotaActiveModel?: { id: string; info: ModelInfo } //kilocode_change
+	virtualQuotaActiveModel?: string //kilocode_change
 }): { id: string; info: ModelInfo | undefined } {
 	// the `undefined` case are used to show the invalid selection to prevent
 	// users from seeing the default model if their selection is invalid
@@ -407,7 +407,12 @@ function getSelectedModel({
 		}
 		case "virtual-quota-fallback": {
 			if (virtualQuotaActiveModel) {
-				return virtualQuotaActiveModel
+				// virtualQuotaActiveModel is a model ID string, look up the info from kilocode models
+				const info = routerModels?.kilocode?.[virtualQuotaActiveModel]
+				return {
+					id: virtualQuotaActiveModel,
+					info,
+				}
 			}
 			// Fallback if no profiles or settings found
 			return {

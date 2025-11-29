@@ -42,7 +42,7 @@ const getProviderPreference = (apiConfiguration: ProviderSettings): ProviderPref
 interface Props {
 	apiConfiguration: ProviderSettings
 	setApiConfigurationField: <K extends keyof ProviderSettings>(field: K, value: ProviderSettings[K]) => void
-	kilocodeDefaultModel: string
+	kilocodeDefaultModel?: string
 }
 
 export const KiloProviderRoutingManagedByOrganization = (props: { organizationId: string }) => {
@@ -66,7 +66,11 @@ export const KiloProviderRoutingManagedByOrganization = (props: { organizationId
 	)
 }
 
-export const KiloProviderRouting = ({ apiConfiguration, setApiConfigurationField, kilocodeDefaultModel }: Props) => {
+export const KiloProviderRouting = ({
+	apiConfiguration,
+	setApiConfigurationField,
+	kilocodeDefaultModel = "",
+}: Props) => {
 	const { t } = useAppTranslation()
 	const providers = Object.values(useModelProviders(kilocodeDefaultModel, apiConfiguration).data ?? {})
 

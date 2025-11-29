@@ -41,7 +41,7 @@ type OpenRouterChatCompletionParams = OpenAI.Chat.ChatCompletionCreateParams & {
 // See `OpenAI.Chat.Completions.ChatCompletionChunk["usage"]`
 // `CompletionsAPI.CompletionUsage`
 // See also: https://openrouter.ai/docs/use-cases/usage-accounting
-interface CompletionUsage {
+export interface CompletionUsage {
 	completion_tokens?: number
 	completion_tokens_details?: {
 		reasoning_tokens?: number
@@ -55,6 +55,7 @@ interface CompletionUsage {
 	cost_details?: {
 		upstream_inference_cost?: number
 	}
+	is_byok?: boolean
 }
 
 export class OpenRouterHandler extends BaseProvider implements SingleCompletionHandler {
@@ -62,7 +63,7 @@ export class OpenRouterHandler extends BaseProvider implements SingleCompletionH
 	private client: OpenAI
 	protected models: ModelRecord = {}
 	protected endpoints: ModelRecord = {}
-	private readonly providerName = "OpenRouter"
+	protected readonly providerName: string = "OpenRouter"
 	private currentReasoningDetails: any[] = []
 
 	constructor(options: ApiHandlerOptions) {

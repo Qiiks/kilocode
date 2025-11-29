@@ -8,6 +8,11 @@ interface ImageGenerationSettingsProps {
 	onChange: (enabled: boolean) => void
 	imageGenerationProvider?: ImageGenerationProvider
 	openRouterImageApiKey?: string
+	// kilocode_change start
+	kiloCodeImageApiKey?: string
+	setKiloCodeImageApiKey?: (apiKey: string) => void
+	currentProfileKilocodeToken?: string
+	// kilocode_change end
 	openRouterImageGenerationSelectedModel?: string
 	setImageGenerationProvider: (provider: ImageGenerationProvider) => void
 	setOpenRouterImageApiKey: (apiKey: string) => void

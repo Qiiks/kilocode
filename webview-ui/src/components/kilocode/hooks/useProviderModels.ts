@@ -65,11 +65,11 @@ const FALLBACK_MODELS = {
 export const getModelsByProvider = ({
 	provider,
 	routerModels,
-	kilocodeDefaultModel,
+	kilocodeDefaultModel = "",
 }: {
 	provider: ProviderName
 	routerModels: RouterModels
-	kilocodeDefaultModel: string
+	kilocodeDefaultModel?: string
 }): { models: ModelRecord; defaultModel: string } => {
 	switch (provider) {
 		case "openrouter": {
