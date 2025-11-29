@@ -46,6 +46,7 @@ export const PROVIDER_REQUIRED_FIELDS: Record<ProviderName, string[]> = {
 	synthetic: ["syntheticApiKey", "apiModelId"],
 	copilot: [],
 	"sap-ai-core": ["sapAiCoreServiceKey", "sapAiCoreResourceGroup", "sapAiCoreDeploymentId", "sapAiCoreModelId"],
+	baseten: ["basetenApiKey", "basetenModelId"],
 	// Special cases handled separately in handleSpecialValidations
 	vertex: [], // Has special validation logic (either/or fields)
 	"vscode-lm": [], // Has nested object validation

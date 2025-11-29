@@ -17,7 +17,6 @@ import type {
 export type {
 	WebviewMessage,
 	MaybeTypedWebviewMessage,
-	UpdateGlobalStateMessage,
 	ClineAskResponse,
 	TaskHistoryRequestPayload,
 } from "@roo/WebviewMessage"

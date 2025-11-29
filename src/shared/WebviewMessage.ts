@@ -333,6 +333,7 @@ export interface WebviewMessage {
 		| "addTaskToHistory"
 		| "singleCompletion"
 		| "requestManagedIndexerState"
+		| "openExtensionSettings"
 	// kilocode_change end
 	text?: string
 	editedMessageContent?: string
@@ -400,6 +401,8 @@ export interface WebviewMessage {
 	filename?: string // For createRuleFile
 	commitRange?: any // For seeNewChanges
 	ruleType?: string // For createRuleFile
+	completionRequestId?: string // For singleCompletion
+	historyItem?: any // For addTaskToHistory
 	// kilocode_change end
 	codeIndexSettings?: {
 		// Global state settings
@@ -498,4 +501,5 @@ export type WebViewMessagePayload =
 	| TaskHistoryRequestPayload
 	| TasksByIdRequestPayload
 	| SeeNewChangesPayload
+	| RequestCheckpointRestoreApprovalPayload
 // kilocode_change end
