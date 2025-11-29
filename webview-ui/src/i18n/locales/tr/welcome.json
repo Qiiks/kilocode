@@ -1,6 +1,6 @@
 {
-	"greeting": "Merhaba, ben Kilo Code!",
-	"introduction": "<strong>Kilo Code, önde gelen otonom kodlama aracıdır.</strong> Daha önce hiç görmediğin şekilde mimari tasarım yapmaya, kod yazmaya, hata ayıklamaya ve üretkenliğini artırmaya hazırlan. Devam etmek için Kilo Code'un bir API anahtarına ihtiyacı var.",
+	"greeting": "Roo Code'a Hoş Geldin!",
+	"introduction": "Yerleşik ve genişletilebilir Modlar yelpazesiyle Roo Code, daha önce hiç olmadığı gibi planlama, mimari tasarım, kodlama, hata ayıklama ve üretkenliğini artırmanı sağlar.",
 	"notice": "Başlamak için bu eklentinin bir API sağlayıcısına ihtiyacı var.",
 	"start": "Hadi başlayalım!",
 	"routers": {
@@ -16,12 +16,28 @@
 			"incentive": "Roo'yu ücretsiz dene"
 		}
 	},
-	"chooseProvider": "Sihirini yapabilmesi için Kilo Code'nun bir API anahtarına ihtiyacı var.",
+	"chooseProvider": "Başlamak için bir LLM sağlayıcısına ihtiyacın var:",
+	"providerSignup": {
+		"rooCloudProvider": "Roo Code Cloud Sağlayıcısı",
+		"rooCloudDescription": "Roo'yu kullanmanın en basit yolu. Düşük maliyetle seçilmiş ücretsiz ve ücretli modellerin karışımı",
+		"learnMore": "daha fazla bilgi",
+		"useAnotherProvider": "Başka bir sağlayıcı kullan",
+		"useAnotherProviderDescription": "Bir API anahtarı gir ve başla.",
+		"getStarted": "Başla"
+	},
+	"waitingForCloud": {
+		"heading": "Seni Roo Code Cloud'a götürüyoruz...",
+		"description": "Tarayıcında kaydı tamamla ve otomatik olarak buraya döneceksin.",
+		"noPrompt": "URL açmanız istenmezse, <clickHere>buraya tıkla</clickHere>.",
+		"havingTrouble": "Kaydı tamamladıysan ama sorun yaşıyorsan, <clickHere>buraya tıkla</clickHere>.",
+		"pasteUrl": "Tarayıcınızdan geri arama URL'sini yapıştırın:",
+		"goBack": "Geri Dön"
+	},
 	"startRouter": "Bir LLM yönlendiricisi kullanmanı öneririz:",
 	"startCustom": "Veya kendi API anahtarını kullanabilirsin:",
 	"telemetry": {
-		"helpImprove": "Kilo Code'u Geliştirmeye Yardım Et",
-		"helpImproveMessage": "Kilo Code, hataları düzeltmemize ve eklentiyi geliştirmemize yardımcı olmak için hata ve kullanım verileri toplar. Bu telemetri kod, prompts veya kişisel bilgi toplamaz. Bunu <settingsLink>ayarlar</settingsLink>da kapatabilirsin."
+		"helpImprove": "Roo Code'u Geliştirmeye Yardım Et",
+		"helpImproveMessage": "Roo Code, hataları düzeltmemize ve uzantıyı geliştirmemize yardımcı olmak için hata ve kullanım verilerini toplar. Bu telemetri kod, prompt veya kişisel bilgi toplamaz. Bunu <settingsLink>ayarlar</settingsLink>dan kapatabilirsin."
 	},
 	"importSettings": "Ayarları İçe Aktar"
 }

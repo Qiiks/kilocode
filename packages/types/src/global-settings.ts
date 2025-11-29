@@ -14,7 +14,6 @@ import { telemetrySettingsSchema } from "./telemetry.js"
 import { modeConfigSchema } from "./mode.js"
 import { customModePromptsSchema, customSupportPromptsSchema } from "./mode.js"
 import { languagesSchema } from "./vscode.js"
-import { fastApplyModelSchema, ghostServiceSettingsSchema, fastApplyApiProviderSchema } from "./kilocode/kilocode.js"
 
 /**
  * Default delay in milliseconds after writes to allow diagnostics to detect potential problems.
@@ -60,16 +59,14 @@ export const globalSettingsSchema = z.object({
 	dismissedUpsells: z.array(z.string()).optional(),
 
 	// Image generation settings (experimental) - flattened for simplicity
+	imageGenerationProvider: z.enum(["openrouter", "roo"]).optional(),
 	openRouterImageApiKey: z.string().optional(),
 	openRouterImageGenerationSelectedModel: z.string().optional(),
-	kiloCodeImageApiKey: z.string().optional(),
 
 	condensingApiConfigId: z.string().optional(),
 	customCondensingPrompt: z.string().optional(),
 
 	autoApprovalEnabled: z.boolean().optional(),
-	yoloMode: z.boolean().optional(), // kilocode_change
-	yoloGatekeeperApiConfigId: z.string().optional(), // kilocode_change: AI gatekeeper for YOLO mode
 	alwaysAllowReadOnly: z.boolean().optional(),
 	alwaysAllowReadOnlyOutsideWorkspace: z.boolean().optional(),
 	alwaysAllowWrite: z.boolean().optional(),
@@ -96,7 +93,6 @@ export const globalSettingsSchema = z.object({
 	autoCondenseContext: z.boolean().optional(),
 	autoCondenseContextPercent: z.number().optional(),
 	maxConcurrentFileReads: z.number().optional(),
-	allowVeryLargeReads: z.boolean().optional(), // kilocode_change
 
 	/**
 	 * Whether to include current time in the environment details
@@ -108,6 +104,12 @@ export const globalSettingsSchema = z.object({
 	 * @default true
 	 */
 	includeCurrentCost: z.boolean().optional(),
+	/**
+	 * Maximum number of git status file entries to include in the environment details.
+	 * Set to 0 to disable git status. The header (branch, commits) is always included when > 0.
+	 * @default 0
+	 */
+	maxGitStatusFiles: z.number().optional(),
 
 	/**
 	 * Whether to include diagnostic messages (errors, warnings) in tool outputs
@@ -122,15 +124,6 @@ export const globalSettingsSchema = z.object({
 
 	browserToolEnabled: z.boolean().optional(),
 	browserViewportSize: z.string().optional(),
-	showAutoApproveMenu: z.boolean().optional(), // kilocode_change
-	showTaskTimeline: z.boolean().optional(), // kilocode_change
-	sendMessageOnEnter: z.boolean().optional(), // kilocode_change: Enter key behavior
-	showTimestamps: z.boolean().optional(), // kilocode_change
-	hideCostBelowThreshold: z.number().min(0).optional(), // kilocode_change
-	localWorkflowToggles: z.record(z.string(), z.boolean()).optional(), // kilocode_change
-	globalWorkflowToggles: z.record(z.string(), z.boolean()).optional(), // kilocode_change
-	localRulesToggles: z.record(z.string(), z.boolean()).optional(), // kilocode_change
-	globalRulesToggles: z.record(z.string(), z.boolean()).optional(), // kilocode_change
 	screenshotQuality: z.number().optional(),
 	remoteBrowserEnabled: z.boolean().optional(),
 	remoteBrowserHost: z.string().optional(),
@@ -144,20 +137,10 @@ export const globalSettingsSchema = z.object({
 		.max(MAX_CHECKPOINT_TIMEOUT_SECONDS)
 		.optional(),
 
-	// kilocode_change start - Auto-purge settings
-	autoPurgeEnabled: z.boolean().optional(),
-	autoPurgeDefaultRetentionDays: z.number().min(1).optional(),
-	autoPurgeFavoritedTaskRetentionDays: z.number().min(1).nullable().optional(),
-	autoPurgeCompletedTaskRetentionDays: z.number().min(1).optional(),
-	autoPurgeIncompleteTaskRetentionDays: z.number().min(1).optional(),
-	autoPurgeLastRunTimestamp: z.number().optional(),
-	// kilocode_change end
-
 	ttsEnabled: z.boolean().optional(),
 	ttsSpeed: z.number().optional(),
 	soundEnabled: z.boolean().optional(),
 	soundVolume: z.number().optional(),
-	systemNotificationsEnabled: z.boolean().optional(), // kilocode_change
 
 	maxOpenTabsContext: z.number().optional(),
 	maxWorkspaceFiles: z.number().optional(),
@@ -185,12 +168,6 @@ export const globalSettingsSchema = z.object({
 	fuzzyMatchThreshold: z.number().optional(),
 	experiments: experimentsSchema.optional(),
 
-	// kilocode_change start: Morph fast apply
-	morphApiKey: z.string().optional(),
-	fastApplyModel: fastApplyModelSchema.optional(),
-	fastApplyApiProvider: fastApplyApiProviderSchema.optional(),
-	// kilocode_change end
-
 	codebaseIndexModels: codebaseIndexModelsSchema.optional(),
 	codebaseIndexConfig: codebaseIndexConfigSchema.optional(),
 
@@ -200,7 +177,6 @@ export const globalSettingsSchema = z.object({
 
 	mcpEnabled: z.boolean().optional(),
 	enableMcpServerCreation: z.boolean().optional(),
-	mcpMarketplaceCatalog: z.any().optional(), // kilocode_change: MCP marketplace catalog
 
 	mode: z.string().optional(),
 	modeApiConfigs: z.record(z.string(), z.string()).optional(),
@@ -208,11 +184,6 @@ export const globalSettingsSchema = z.object({
 	customModePrompts: customModePromptsSchema.optional(),
 	customSupportPrompts: customSupportPromptsSchema.optional(),
 	enhancementApiConfigId: z.string().optional(),
-	dismissedNotificationIds: z.string().array().optional(), // kilocode_change
-	commitMessageApiConfigId: z.string().optional(), // kilocode_change
-	terminalCommandApiConfigId: z.string().optional(), // kilocode_change
-	ghostServiceSettings: ghostServiceSettingsSchema, // kilocode_change
-	hasPerformedOrganizationAutoSwitch: z.boolean().optional(), // kilocode_change
 	includeTaskHistoryInEnhance: z.boolean().optional(),
 	historyPreviewCollapsed: z.boolean().optional(),
 	reasoningBlockCollapsed: z.boolean().optional(),
@@ -264,13 +235,6 @@ export const SECRET_STATE_KEYS = [
 	"deepInfraApiKey",
 	"codeIndexOpenAiKey",
 	"codeIndexQdrantApiKey",
-	// kilocode_change start
-	"minimaxApiKey",
-	"kilocodeToken",
-	"syntheticApiKey",
-	"ovhCloudAiEndpointsApiKey",
-	"inceptionLabsApiKey",
-	// kilocode_change end
 	"codebaseIndexOpenAiCompatibleApiKey",
 	"codebaseIndexGeminiApiKey",
 	"codebaseIndexMistralApiKey",
@@ -283,13 +247,12 @@ export const SECRET_STATE_KEYS = [
 	"featherlessApiKey",
 	"ioIntelligenceApiKey",
 	"vercelAiGatewayApiKey",
-	"sapAiCoreServiceKey", // kilocode_change
+	"basetenApiKey",
 ] as const
 
 // Global secrets that are part of GlobalSettings (not ProviderSettings)
 export const GLOBAL_SECRET_KEYS = [
 	"openRouterImageApiKey", // For image generation
-	"kiloCodeImageApiKey",
 ] as const
 
 // Type for the actual secret storage keys
@@ -361,9 +324,6 @@ export const EVALS_SETTINGS: RooCodeSettings = {
 	ttsSpeed: 1,
 	soundEnabled: false,
 	soundVolume: 0.5,
-	dismissedNotificationIds: [], // kilocode_change
-	systemNotificationsEnabled: true, // kilocode_change
-	ghostServiceSettings: {}, // kilocode_change
 
 	terminalOutputLineLimit: 500,
 	terminalOutputCharacterLimit: DEFAULT_TERMINAL_OUTPUT_CHARACTER_LIMIT,
@@ -384,17 +344,10 @@ export const EVALS_SETTINGS: RooCodeSettings = {
 
 	enableCheckpoints: false,
 
-	// kilocode_change start - Auto-purge defaults
-	autoPurgeEnabled: false,
-	autoPurgeDefaultRetentionDays: 30,
-	autoPurgeFavoritedTaskRetentionDays: null, // null = never purge
-	autoPurgeCompletedTaskRetentionDays: 30,
-	autoPurgeIncompleteTaskRetentionDays: 7,
-	// kilocode_change end
-
 	rateLimitSeconds: 0,
 	maxOpenTabsContext: 20,
 	maxWorkspaceFiles: 200,
+	maxGitStatusFiles: 20,
 	showRooIgnoredFiles: true,
 	maxReadFileLine: -1, // -1 to enable full file reading.
 

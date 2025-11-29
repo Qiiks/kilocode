@@ -1,5 +1,5 @@
 {
-	"greeting": "Was kann Kilo Code für dich tun?",
+	"greeting": "Willkommen bei Roo Code",
 	"task": {
 		"title": "Aufgabe",
 		"expand": "Aufgabe erweitern",
@@ -21,15 +21,14 @@
 		"sharePublicly": "Öffentlich teilen",
 		"sharePubliclyDescription": "Jeder mit dem Link kann zugreifen",
 		"connectToCloud": "Mit Cloud verbinden",
-		"connectToCloudDescription": "Melde dich bei Kilo Code Cloud an, um Aufgaben zu teilen",
+		"connectToCloudDescription": "Melde dich bei Roo Code Cloud an, um Aufgaben zu teilen",
 		"sharingDisabledByOrganization": "Freigabe von der Organisation deaktiviert",
 		"shareSuccessOrganization": "Organisationslink in die Zwischenablage kopiert",
 		"shareSuccessPublic": "Öffentlicher Link in die Zwischenablage kopiert",
 		"openInCloud": "Aufgabe in Roo Code Cloud öffnen",
-		"openInCloudIntro": "Überwache oder interagiere mit Roo von überall aus. Scanne, klicke oder kopiere zum Öffnen."
-	},
-	"history": {
-		"title": "Verlauf"
+		"openInCloudIntro": "Überwache oder interagiere mit Roo von überall aus. Scanne, klicke oder kopiere zum Öffnen.",
+		"openApiHistory": "API-Verlauf öffnen",
+		"openUiHistory": "UI-Verlauf öffnen"
 	},
 	"unpin": "Lösen von oben",
 	"pin": "Anheften",
@@ -45,9 +44,6 @@
 	"startNewTask": {
 		"title": "Neue Aufgabe starten",
 		"tooltip": "Beginne eine neue Aufgabe"
-	},
-	"reportBug": {
-		"title": "Fehler melden"
 	},
 	"proceedAnyways": {
 		"title": "Trotzdem fortfahren",
@@ -91,9 +87,9 @@
 		"tooltip": "Aktuelle Operation abbrechen"
 	},
 	"scrollToBottom": "Zum Chat-Ende scrollen",
-	"about": "Generiere, überarbeite und debugge Code mit KI-Unterstützung. Schau dir unsere <DocsLink>Dokumentation</DocsLink> an, um mehr zu erfahren.",
+	"about": "Roo Code ist ein ganzes KI-Entwicklerteam in deinem Editor.",
 	"docs": "Schau in unsere <DocsLink>Dokumentation</DocsLink>, um mehr zu erfahren.",
-	"onboarding": "<strong>Deine Aufgabenliste in diesem Arbeitsbereich ist leer.</strong> Beginne mit der Eingabe einer Aufgabe unten. Du bist dir nicht sicher, wie du anfangen sollst? Lies mehr darüber, was Kilo Code für dich tun kann, in <DocsLink>den Dokumenten</DocsLink>.",
+	"onboarding": "Deine Aufgabenliste in diesem Arbeitsbereich ist leer.",
 	"rooTips": {
 		"customizableModes": {
 			"title": "Anpassbare Modi",
@@ -106,7 +102,6 @@
 	},
 	"selectMode": "Interaktionsmodus auswählen",
 	"selectApiConfig": "API-Konfiguration auswählen",
-	"selectModelConfig": "Modell auswählen",
 	"enhancePrompt": "Prompt mit zusätzlichem Kontext verbessern",
 	"addImages": "Bilder zur Nachricht hinzufügen",
 	"sendMessage": "Nachricht senden",
@@ -121,10 +116,9 @@
 		"title": "Modi",
 		"marketplace": "Modus-Marketplace",
 		"settings": "Modus-Einstellungen",
-		"description": "Spezialisierte Personas, die Kilo Codes Verhalten anpassen.",
+		"description": "Spezialisierte Personas, die Roos Verhalten anpassen.",
 		"searchPlaceholder": "Modi suchen...",
-		"noResults": "Keine Ergebnisse gefunden",
-		"organizationModes": "Organisations-Modi"
+		"noResults": "Keine Ergebnisse gefunden"
 	},
 	"errorReadingFile": "Fehler beim Lesen der Datei",
 	"noValidImages": "Keine gültigen Bilder wurden verarbeitet",
@@ -136,7 +130,7 @@
 	"diffError": {
 		"title": "Bearbeitung fehlgeschlagen"
 	},
-	"troubleMessage": "Kilo Code hat Probleme...",
+	"troubleMessage": "Roo hat Probleme...",
 	"apiRequest": {
 		"title": "API-Anfrage",
 		"failed": "API-Anfrage fehlgeschlagen",
@@ -164,48 +158,46 @@
 		"current": "Aktuell"
 	},
 	"instructions": {
-		"wantsToFetch": "Kilo Code möchte detaillierte Anweisungen abrufen, um bei der aktuellen Aufgabe zu helfen"
+		"wantsToFetch": "Roo möchte detaillierte Anweisungen abrufen, um bei der aktuellen Aufgabe zu helfen"
 	},
 	"fileOperations": {
-		"wantsToRead": "Kilo Code möchte diese Datei lesen",
-		"wantsToReadAndXMore": "Kilo Code möchte diese Datei und {{count}} weitere lesen",
-		"wantsToReadOutsideWorkspace": "Kilo Code möchte diese Datei außerhalb des Arbeitsbereichs lesen",
-		"didRead": "Kilo Code hat diese Datei gelesen",
-		"wantsToEdit": "Kilo Code möchte diese Datei bearbeiten",
-		"wantsToEditOutsideWorkspace": "Kilo Code möchte diese Datei außerhalb des Arbeitsbereichs bearbeiten",
-		"wantsToEditProtected": "Kilo Code möchte eine geschützte Konfigurationsdatei bearbeiten",
-		"wantsToCreate": "Kilo Code möchte eine neue Datei erstellen",
-		"wantsToSearchReplace": "Kilo Code möchte in dieser Datei suchen und ersetzen",
-		"didSearchReplace": "Kilo Code hat Suchen und Ersetzen in dieser Datei durchgeführt",
-		"wantsToInsert": "Kilo Code möchte Inhalte in diese Datei einfügen",
-		"wantsToInsertWithLineNumber": "Kilo Code möchte Inhalte in diese Datei in Zeile {{lineNumber}} einfügen",
-		"wantsToInsertAtEnd": "Kilo Code möchte Inhalte am Ende dieser Datei anhängen",
-		"wantsToReadMultiple": "Kilo Code möchte mehrere Dateien lesen",
-		"wantsToApplyBatchChanges": "Kilo Code möchte Änderungen an mehreren Dateien vornehmen",
-		"wantsToGenerateImage": "Kilo Code möchte ein Bild generieren",
-		"wantsToGenerateImageOutsideWorkspace": "Kilo Code möchte ein Bild außerhalb des Arbeitsbereichs generieren",
-		"wantsToGenerateImageProtected": "Kilo Code möchte ein Bild an einem geschützten Ort generieren",
-		"didGenerateImage": "Kilo Code hat ein Bild generiert",
-		"wantsToDelete": "Kilo Code möchte diese Datei löschen",
-		"wantsToDeleteDirectory": "Kilo Code möchte dieses Verzeichnis löschen"
+		"wantsToRead": "Roo möchte diese Datei lesen",
+		"wantsToReadAndXMore": "Roo möchte diese Datei und {{count}} weitere lesen",
+		"wantsToReadOutsideWorkspace": "Roo möchte diese Datei außerhalb des Arbeitsbereichs lesen",
+		"didRead": "Roo hat diese Datei gelesen",
+		"wantsToEdit": "Roo möchte diese Datei bearbeiten",
+		"wantsToEditOutsideWorkspace": "Roo möchte diese Datei außerhalb des Arbeitsbereichs bearbeiten",
+		"wantsToEditProtected": "Roo möchte eine geschützte Konfigurationsdatei bearbeiten",
+		"wantsToCreate": "Roo möchte eine neue Datei erstellen",
+		"wantsToSearchReplace": "Roo möchte in dieser Datei suchen und ersetzen",
+		"didSearchReplace": "Roo hat Suchen und Ersetzen in dieser Datei durchgeführt",
+		"wantsToInsert": "Roo möchte Inhalte in diese Datei einfügen",
+		"wantsToInsertWithLineNumber": "Roo möchte Inhalte in diese Datei in Zeile {{lineNumber}} einfügen",
+		"wantsToInsertAtEnd": "Roo möchte Inhalte am Ende dieser Datei anhängen",
+		"wantsToReadMultiple": "Roo möchte mehrere Dateien lesen",
+		"wantsToApplyBatchChanges": "Roo möchte Änderungen an mehreren Dateien vornehmen",
+		"wantsToGenerateImage": "Roo möchte ein Bild generieren",
+		"wantsToGenerateImageOutsideWorkspace": "Roo möchte ein Bild außerhalb des Arbeitsbereichs generieren",
+		"wantsToGenerateImageProtected": "Roo möchte ein Bild an einem geschützten Ort generieren",
+		"didGenerateImage": "Roo hat ein Bild generiert"
 	},
 	"directoryOperations": {
-		"wantsToViewTopLevel": "Kilo Code möchte die Dateien auf oberster Ebene in diesem Verzeichnis anzeigen",
-		"didViewTopLevel": "Kilo Code hat die Dateien auf oberster Ebene in diesem Verzeichnis angezeigt",
-		"wantsToViewRecursive": "Kilo Code möchte rekursiv alle Dateien in diesem Verzeichnis anzeigen",
-		"didViewRecursive": "Kilo Code hat rekursiv alle Dateien in diesem Verzeichnis angezeigt",
-		"wantsToViewDefinitions": "Kilo Code möchte Quellcode-Definitionsnamen in diesem Verzeichnis anzeigen",
-		"didViewDefinitions": "Kilo Code hat Quellcode-Definitionsnamen in diesem Verzeichnis angezeigt",
-		"wantsToSearch": "Kilo Code möchte dieses Verzeichnis nach <code>{{regex}}</code> durchsuchen",
-		"didSearch": "Kilo Code hat dieses Verzeichnis nach <code>{{regex}}</code> durchsucht",
-		"wantsToSearchOutsideWorkspace": "Kilo Code möchte dieses Verzeichnis (außerhalb des Arbeitsbereichs) nach <code>{{regex}}</code> durchsuchen",
-		"didSearchOutsideWorkspace": "Kilo Code hat dieses Verzeichnis (außerhalb des Arbeitsbereichs) nach <code>{{regex}}</code> durchsucht",
-		"wantsToViewTopLevelOutsideWorkspace": "Kilo Code möchte die Dateien auf oberster Ebene in diesem Verzeichnis (außerhalb des Arbeitsbereichs) anzeigen",
-		"didViewTopLevelOutsideWorkspace": "Kilo Code hat die Dateien auf oberster Ebene in diesem Verzeichnis (außerhalb des Arbeitsbereichs) angezeigt",
-		"wantsToViewRecursiveOutsideWorkspace": "Kilo Code möchte rekursiv alle Dateien in diesem Verzeichnis (außerhalb des Arbeitsbereichs) anzeigen",
-		"didViewRecursiveOutsideWorkspace": "Kilo Code hat rekursiv alle Dateien in diesem Verzeichnis (außerhalb des Arbeitsbereichs) angezeigt",
-		"wantsToViewDefinitionsOutsideWorkspace": "Kilo Code möchte Quellcode-Definitionsnamen in diesem Verzeichnis (außerhalb des Arbeitsbereichs) anzeigen",
-		"didViewDefinitionsOutsideWorkspace": "Kilo Code hat Quellcode-Definitionsnamen in diesem Verzeichnis (außerhalb des Arbeitsbereichs) angezeigt"
+		"wantsToViewTopLevel": "Roo möchte die Dateien auf oberster Ebene in diesem Verzeichnis anzeigen",
+		"didViewTopLevel": "Roo hat die Dateien auf oberster Ebene in diesem Verzeichnis angezeigt",
+		"wantsToViewRecursive": "Roo möchte rekursiv alle Dateien in diesem Verzeichnis anzeigen",
+		"didViewRecursive": "Roo hat rekursiv alle Dateien in diesem Verzeichnis angezeigt",
+		"wantsToViewDefinitions": "Roo möchte Quellcode-Definitionsnamen in diesem Verzeichnis anzeigen",
+		"didViewDefinitions": "Roo hat Quellcode-Definitionsnamen in diesem Verzeichnis angezeigt",
+		"wantsToSearch": "Roo möchte dieses Verzeichnis nach <code>{{regex}}</code> durchsuchen",
+		"didSearch": "Roo hat dieses Verzeichnis nach <code>{{regex}}</code> durchsucht",
+		"wantsToSearchOutsideWorkspace": "Roo möchte dieses Verzeichnis (außerhalb des Arbeitsbereichs) nach <code>{{regex}}</code> durchsuchen",
+		"didSearchOutsideWorkspace": "Roo hat dieses Verzeichnis (außerhalb des Arbeitsbereichs) nach <code>{{regex}}</code> durchsucht",
+		"wantsToViewTopLevelOutsideWorkspace": "Roo möchte die Dateien auf oberster Ebene in diesem Verzeichnis (außerhalb des Arbeitsbereichs) anzeigen",
+		"didViewTopLevelOutsideWorkspace": "Roo hat die Dateien auf oberster Ebene in diesem Verzeichnis (außerhalb des Arbeitsbereichs) angezeigt",
+		"wantsToViewRecursiveOutsideWorkspace": "Roo möchte rekursiv alle Dateien in diesem Verzeichnis (außerhalb des Arbeitsbereichs) anzeigen",
+		"didViewRecursiveOutsideWorkspace": "Roo hat rekursiv alle Dateien in diesem Verzeichnis (außerhalb des Arbeitsbereichs) angezeigt",
+		"wantsToViewDefinitionsOutsideWorkspace": "Roo möchte Quellcode-Definitionsnamen in diesem Verzeichnis (außerhalb des Arbeitsbereichs) anzeigen",
+		"didViewDefinitionsOutsideWorkspace": "Roo hat Quellcode-Definitionsnamen in diesem Verzeichnis (außerhalb des Arbeitsbereichs) angezeigt"
 	},
 	"commandOutput": "Befehlsausgabe",
 	"commandExecution": {
@@ -227,24 +219,24 @@
 	"response": "Antwort",
 	"arguments": "Argumente",
 	"text": {
-		"rooSaid": "Kilo hat gesagt"
+		"rooSaid": "Roo hat gesagt"
 	},
 	"feedback": {
 		"youSaid": "Du hast gesagt"
 	},
 	"mcp": {
-		"wantsToUseTool": "Kilo Code möchte ein Tool auf dem {{serverName}} MCP-Server verwenden",
-		"wantsToAccessResource": "Kilo Code möchte auf eine Ressource auf dem {{serverName}} MCP-Server zugreifen"
+		"wantsToUseTool": "Roo möchte ein Tool auf dem {{serverName}} MCP-Server verwenden",
+		"wantsToAccessResource": "Roo möchte auf eine Ressource auf dem {{serverName}} MCP-Server zugreifen"
 	},
 	"modes": {
-		"wantsToSwitch": "Kilo Code möchte zum <code>{{mode}}</code>-Modus wechseln",
-		"wantsToSwitchWithReason": "Kilo Code möchte zum <code>{{mode}}</code>-Modus wechseln, weil: {{reason}}",
-		"didSwitch": "Kilo Code hat zum <code>{{mode}}</code>-Modus gewechselt",
-		"didSwitchWithReason": "Kilo Code hat zum <code>{{mode}}</code>-Modus gewechselt, weil: {{reason}}"
+		"wantsToSwitch": "Roo möchte zum <code>{{mode}}</code>-Modus wechseln",
+		"wantsToSwitchWithReason": "Roo möchte zum <code>{{mode}}</code>-Modus wechseln, weil: {{reason}}",
+		"didSwitch": "Roo hat zum <code>{{mode}}</code>-Modus gewechselt",
+		"didSwitchWithReason": "Roo hat zum <code>{{mode}}</code>-Modus gewechselt, weil: {{reason}}"
 	},
 	"subtasks": {
-		"wantsToCreate": "Kilo Code möchte eine neue Teilaufgabe im <code>{{mode}}</code>-Modus erstellen",
-		"wantsToFinish": "Kilo Code möchte diese Teilaufgabe abschließen",
+		"wantsToCreate": "Roo möchte eine neue Teilaufgabe im <code>{{mode}}</code>-Modus erstellen",
+		"wantsToFinish": "Roo möchte diese Teilaufgabe abschließen",
 		"newTaskContent": "Teilaufgabenanweisungen",
 		"completionContent": "Teilaufgabe abgeschlossen",
 		"resultContent": "Teilaufgabenergebnisse",
@@ -252,7 +244,7 @@
 		"completionInstructions": "Teilaufgabe abgeschlossen! Du kannst die Ergebnisse überprüfen und Korrekturen oder nächste Schritte vorschlagen. Wenn alles gut aussieht, bestätige, um das Ergebnis an die übergeordnete Aufgabe zurückzugeben."
 	},
 	"questions": {
-		"hasQuestion": "Kilo Code hat eine Frage"
+		"hasQuestion": "Roo hat eine Frage"
 	},
 	"taskCompleted": "Aufgabe abgeschlossen",
 	"powershell": {
@@ -301,22 +293,22 @@
 			"goToSettingsButton": "Zu den Einstellungen"
 		},
 		"release": {
-			"heading": "Neu in der Extension:",
-			"openRouterEmbeddings": "Unterstützung für OpenRouter-Embedding-Modelle",
-			"chutesDynamic": "Chutes lädt die neuesten Modelle jetzt dynamisch",
-			"queuedMessagesFix": "Behebungen für verlorene Nachrichten in der Warteschlange"
+			"heading": "Neu in dieser Version:",
+			"browserUse": "Browser Use 2.0 verbessert das In-Chat-Browsing-Erlebnis mit persistenten Sitzungen, klareren Rückmeldungen, einem dedizierten Browser-Panel und natürlicheren Aktionsbeschreibungen",
+			"cloudPaid": "Der Roo Code Cloud-Provider bietet jetzt bezahlte Modelle: Kaufe Credits und nutze sie sowohl für Cloud-Agenten als auch für Inferenz"
 		},
 		"cloudAgents": {
 			"heading": "Neu in der Cloud:",
-			"prFixer": "Wir stellen den <bold>PR Fixer</bold> Cloud-Agent vor, der den PR Reviewer ergänzt.",
-			"prFixerDescription": "Roo Codes PR Fixer wendet hochwertige Änderungen direkt auf deine PRs in GitHub an. Rufe ihn über einen PR-Kommentar auf und er liest den gesamten Kommentarverlauf, um Kontext, Vereinbarungen und Kompromisse zu verstehen — dann setzt er die richtige Lösung um.",
-			"tryPrFixerButton": "PR Fixer ausprobieren"
+			"specialized": "Wir stellen <bold>Explainer</bold>, <bold>Planner</bold> und <bold>Coder</bold> vor - drei spezialisierte Cloud-Agenten zur Verbesserung deiner Workflows.",
+			"description": "Die Agenten arbeiten zusammen in der Cloud und können vom Web oder über Slack ausgelöst werden.",
+			"tryButton": "Probiere Cloud-Agenten aus"
 		},
 		"careers": "Außerdem, <careersLink>wir stellen ein!</careersLink>",
 		"socialLinks": "Folge uns auf <xLink>X</xLink>, <discordLink>Discord</discordLink> oder <redditLink>r/RooCode</redditLink> 🚀"
 	},
 	"browser": {
-		"rooWantsToUse": "Kilo Code möchte den Browser verwenden",
+		"session": "Browser-Sitzung",
+		"rooWantsToUse": "Roo möchte den Browser verwenden",
 		"consoleLogs": "Konsolenprotokolle",
 		"noNewLogs": "(Keine neuen Protokolle)",
 		"screenshot": "Browser-Screenshot",
@@ -332,8 +324,10 @@
 			"launch": "Browser starten auf {{url}}",
 			"click": "Klicken ({{coordinate}})",
 			"type": "Eingeben \"{{text}}\"",
+			"press": "{{key}} drücken",
 			"scrollDown": "Nach unten scrollen",
 			"scrollUp": "Nach oben scrollen",
+			"hover": "Hover ({{coordinate}})",
 			"close": "Browser schließen"
 		}
 	},
@@ -341,8 +335,6 @@
 		"tooltips": {
 			"expand": "Code-Block erweitern",
 			"collapse": "Code-Block reduzieren",
-			"enable_wrap": "Zeilenumbruch aktivieren",
-			"disable_wrap": "Zeilenumbruch deaktivieren",
 			"copy_code": "Code kopieren"
 		}
 	},
@@ -350,24 +342,24 @@
 	"profileViolationWarning": "Das aktuelle Profil ist nicht kompatibel mit den Einstellungen deiner Organisation",
 	"shellIntegration": {
 		"title": "Befehlsausführungswarnung",
-		"description": "Dein Befehl wird ohne VSCode Terminal-Shell-Integration ausgeführt. Um diese Warnung zu unterdrücken, kannst du die Shell-Integration im Abschnitt <strong>Terminal</strong> der <settingsLink>Kilo Code Einstellungen</settingsLink> deaktivieren oder die VSCode Terminal-Integration mit dem Link unten beheben.",
+		"description": "Dein Befehl wird ohne VSCode Terminal-Shell-Integration ausgeführt. Um diese Warnung zu unterdrücken, kannst du die Shell-Integration im Abschnitt <strong>Terminal</strong> der <settingsLink>Roo Code Einstellungen</settingsLink> deaktivieren oder die VSCode Terminal-Integration mit dem Link unten beheben.",
 		"troubleshooting": "Klicke hier für die Shell-Integrationsdokumentation."
 	},
 	"ask": {
 		"autoApprovedRequestLimitReached": {
 			"title": "Limit für automatisch genehmigte Anfragen erreicht",
-			"description": "Kilo Code hat das automatisch genehmigte Limit von {{count}} API-Anfrage(n) erreicht. Möchtest du den Zähler zurücksetzen und mit der Aufgabe fortfahren?",
+			"description": "Roo hat das automatisch genehmigte Limit von {{count}} API-Anfrage(n) erreicht. Möchtest du den Zähler zurücksetzen und mit der Aufgabe fortfahren?",
 			"button": "Zurücksetzen und fortfahren"
 		},
 		"autoApprovedCostLimitReached": {
-			"description": "Kilo Code hat das automatisch genehmigte Kostenlimit von ${{count}} erreicht. Möchtest du die Kosten zurücksetzen und mit der Aufgabe fortfahren?",
+			"description": "Roo hat das automatisch genehmigte Kostenlimit von ${{count}} erreicht. Möchten Sie die Kosten zurücksetzen und mit der Aufgabe fortfahren?",
 			"title": "Kostengrenze für automatische Genehmigung erreicht",
 			"button": "Zurücksetzen und Fortfahren"
 		}
 	},
 	"codebaseSearch": {
-		"wantsToSearch": "Kilo Code möchte den Codebase nach <code>{{query}}</code> durchsuchen",
-		"wantsToSearchWithPath": "Kilo Code möchte den Codebase nach <code>{{query}}</code> in <code>{{path}}</code> durchsuchen",
+		"wantsToSearch": "Roo möchte den Codebase nach <code>{{query}}</code> durchsuchen",
+		"wantsToSearchWithPath": "Roo möchte den Codebase nach <code>{{query}}</code> in <code>{{path}}</code> durchsuchen",
 		"didSearch_one": "1 Ergebnis gefunden",
 		"didSearch_other": "{{count}} Ergebnisse gefunden",
 		"resultTooltip": "Ähnlichkeitswert: {{score}} (klicken zum Öffnen der Datei)"
@@ -388,7 +380,7 @@
 		"status": "Index-Status"
 	},
 	"versionIndicator": {
-		"ariaLabel": "Version {{version}} - Klicke, um die Versionshinweise anzuzeigen"
+		"ariaLabel": "Version {{version}} - Klicken Sie, um die Versionshinweise anzuzeigen"
 	},
 	"rooCloudCTA": {
 		"title": "Roo Code Cloud entwickelt sich weiter!",
@@ -432,8 +424,8 @@
 		"clickToEdit": "Klicken zum Bearbeiten der Nachricht"
 	},
 	"slashCommand": {
-		"wantsToRun": "Kilo Code möchte einen Slash-Befehl ausführen",
-		"didRun": "Kilo Code hat einen Slash-Befehl ausgeführt"
+		"wantsToRun": "Roo möchte einen Slash-Befehl ausführen",
+		"didRun": "Roo hat einen Slash-Befehl ausgeführt"
 	},
 	"todo": {
 		"partial": "{{completed}} von {{total}} To-Dos erledigt",

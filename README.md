@@ -1,102 +1,176 @@
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code"><img src="https://img.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace"></a>
-  <a href="https://x.com/kilocode"><img src="https://img.shields.io/twitter/follow/kilocode?style=flat&logo=x&color=555" alt="X (Twitter)"></a>
-  <a href="https://blog.kilocode.ai"><img src="https://img.shields.io/badge/Blog-555?style=flat&logo=substack&logoColor=white" alt="Substack Blog"></a>
-  <a href="https://kilocode.ai/discord"><img src="https://img.shields.io/discord/1349288496988160052?style=flat&logo=discord&logoColor=white" alt="Discord"></a>
-  <a href="https://www.reddit.com/r/kilocode/"><img src="https://img.shields.io/reddit/subreddit-subscribers/kilocode?style=flat&logo=reddit&logoColor=white" alt="Reddit"></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=RooVeterinaryInc.roo-cline"><img src="https://img.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace"></a>
+  <a href="https://x.com/roocode"><img src="https://img.shields.io/badge/roocode-000000?style=flat&logo=x&logoColor=white" alt="X"></a>
+  <a href="https://youtube.com/@roocodeyt?feature=shared"><img src="https://img.shields.io/badge/YouTube-FF0000?style=flat&logo=youtube&logoColor=white" alt="YouTube"></a>
+  <a href="https://discord.gg/roocode"><img src="https://img.shields.io/badge/Join%20Discord-5865F2?style=flat&logo=discord&logoColor=white" alt="Join Discord"></a>
+  <a href="https://www.reddit.com/r/RooCode/"><img src="https://img.shields.io/badge/Join%20r%2FRooCode-FF4500?style=flat&logo=reddit&logoColor=white" alt="Join r/RooCode"></a>
 </p>
-
-# 🚀 Kilo Code
-
-> Kilo is an open-source VS Code AI agent. We frequently merge features from open-source projects while building our own vision.
-
-- ✨ Generate code from natural language
-- ✅ Checks its own work
-- 🧪 Run terminal commands
-- 🌐 Automate the browser
-- 🤖 Latest AI models
-- 🎁 API keys optional
-- 💡 **Get $20 in bonus credits when you top-up for the first time** Credits can be used with 400+ models like Gemini 3 Pro, Claude 4 Sonnet & Opus, and GPT-5
-
 <p align="center">
-  <img src="https://media.githubusercontent.com/media/Kilo-Org/kilocode/main/kilo.gif" width="100%" />
+  <em>Get help fast → <a href="https://discord.gg/roocode">Join Discord</a> • Prefer async? → <a href="https://www.reddit.com/r/RooCode/">Join r/RooCode</a></em>
 </p>
 
-- [VS Code Marketplace](https://kilocode.ai/vscode-marketplace?utm_source=Readme) (download)
-- [Official KiloCode.ai Home page](https://kilocode.ai) (learn more)
+# Roo Code
 
-## Key Features
+> Your AI-Powered Dev Team, Right in Your Editor
 
-- **Code Generation:** Kilo can generate code using natural language.
-- **Task Automation:** Kilo can automate repetitive coding tasks.
-- **Automated Refactoring:** Kilo can refactor and improve existing code.
-- **MCP Server Marketplace**: Kilo can easily find, and use MCP servers to extend the agent capabilities.
-- **Multi Mode**: Plan with Architect, Code with Coder, and Debug with Debugger, and make your own custom modes.
+<details>
+  <summary>🌐 Available languages</summary>
 
-## How to get started with Kilo Code
+- [English](README.md)
+- [Català](locales/ca/README.md)
+- [Deutsch](locales/de/README.md)
+- [Español](locales/es/README.md)
+- [Français](locales/fr/README.md)
+- [हिंदी](locales/hi/README.md)
+- [Bahasa Indonesia](locales/id/README.md)
+- [Italiano](locales/it/README.md)
+- [日本語](locales/ja/README.md)
+- [한국어](locales/ko/README.md)
+- [Nederlands](locales/nl/README.md)
+- [Polski](locales/pl/README.md)
+- [Português (BR)](locales/pt-BR/README.md)
+- [Русский](locales/ru/README.md)
+- [Türkçe](locales/tr/README.md)
+- [Tiếng Việt](locales/vi/README.md)
+- [简体中文](locales/zh-CN/README.md)
+- [繁體中文](locales/zh-TW/README.md)
+- ...
+      </details>
 
-1. Install the Kilo Code extension from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code).
-2. Create your account to access 400+ cutting-edge AI models including Gemini 3 Pro, Claude 4 Sonnet & Opus, and GPT-5 – with transparent pricing that matches provider rates exactly.
-3. Start coding with AI that adapts to your workflow. Watch our quick-start guide to see Kilo Code in action:
+---
 
-[![Watch the video](https://img.youtube.com/vi/pqGfYXgrhig/maxresdefault.jpg)](https://youtu.be/pqGfYXgrhig)
+## What Can Roo Code Do For YOU?
 
-## Extension Development
+- Generate Code from natural language descriptions and specs
+- Adapt with Modes: Code, Architect, Ask, Debug, and Custom Modes
+- Refactor & Debug existing code
+- Write & Update documentation
+- Answer Questions about your codebase
+- Automate repetitive tasks
+- Utilize MCP Servers
 
-For details on building and developing the extension, see [DEVELOPMENT.md](/DEVELOPMENT.md)
+## Modes
 
-## Contributors to Kilo
+Roo Code adapts to how you work:
 
-Thanks to all the contributors who help make Kilo Code better!
+- Code Mode: everyday coding, edits, and file ops
+- Architect Mode: plan systems, specs, and migrations
+- Ask Mode: fast answers, explanations, and docs
+- Debug Mode: trace issues, add logs, isolate root causes
+- Custom Modes: build specialized modes for your team or workflow
+- Roomote Control: Roomote Control lets you remotely control tasks running in your local VS Code instance.
 
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/mcowger">
-        <img src="https://avatars.githubusercontent.com/u/1929548?size=100" width="100" height="100" alt="mcowger" style="border-radius: 50%;" />
-      </a>
-    </td>    <td align="center">
-      <a href="https://github.com/bhaktatejas922">
-        <img src="https://avatars.githubusercontent.com/u/26863466?size=100" width="100" height="100" alt="bhaktatejas922" style="border-radius: 50%;" />
-      </a>
-    </td>    <td align="center">
-      <a href="https://github.com/NyxJae">
-        <img src="https://avatars.githubusercontent.com/u/52313587?size=100" width="100" height="100" alt="NyxJae" style="border-radius: 50%;" />
-      </a>
-    </td>    <td align="center">
-      <a href="https://github.com/Aikiboy123">
-        <img src="https://avatars.githubusercontent.com/u/161741275?size=100" width="100" height="100" alt="Aikiboy123" style="border-radius: 50%;" />
-      </a>
-    </td>    <td align="center">
-      <a href="https://github.com/cobra91">
-        <img src="https://avatars.githubusercontent.com/u/1060585?size=100" width="100" height="100" alt="cobra91" style="border-radius: 50%;" />
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/ivanarifin">
-        <img src="https://avatars.githubusercontent.com/u/111653938?size=100" width="100" height="100" alt="ivanarifin" style="border-radius: 50%;" />
-      </a>
-    </td>    <td align="center">
-      <a href="https://github.com/PeterDaveHello">
-        <img src="https://avatars.githubusercontent.com/u/3691490?size=100" width="100" height="100" alt="PeterDaveHello" style="border-radius: 50%;" />
-      </a>
-    </td>    <td align="center">
-      <a href="https://github.com/possible055">
-        <img src="https://avatars.githubusercontent.com/u/38576169?size=100" width="100" height="100" alt="possible055" style="border-radius: 50%;" />
-      </a>
-    </td>    <td align="center">
-      <a href="https://github.com/seuros">
-        <img src="https://avatars.githubusercontent.com/u/2394703?size=100" width="100" height="100" alt="seuros" style="border-radius: 50%;" />
-      </a>
-    </td>    <td align="center">
-      <!-- added this line to test github action -->
-      <a href="https://kilocode.ai/#contributors">
-        <b>more ...</b>
-      </a>
-    </td>
-  </tr>
-</table>
+Learn more: [Using Modes](https://docs.roocode.com/basic-usage/using-modes) • [Custom Modes](https://docs.roocode.com/advanced-usage/custom-modes) • [Roomote Control](https://docs.roocode.com/roo-code-cloud/roomote-control)
 
-<!-- END CONTRIBUTORS SECTION -->
+## Tutorial & Feature Videos
+
+<div align="center">
+
+|                                                                                                                                                                           |                                                                                                                                                                            |                                                                                                                                                                         |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| <a href="https://www.youtube.com/watch?v=Mcq3r1EPZ-4"><img src="https://img.youtube.com/vi/Mcq3r1EPZ-4/maxresdefault.jpg" width="100%"></a><br><b>Installing Roo Code</b> | <a href="https://www.youtube.com/watch?v=ZBML8h5cCgo"><img src="https://img.youtube.com/vi/ZBML8h5cCgo/maxresdefault.jpg" width="100%"></a><br><b>Configuring Profiles</b> | <a href="https://www.youtube.com/watch?v=r1bpod1VWhg"><img src="https://img.youtube.com/vi/r1bpod1VWhg/maxresdefault.jpg" width="100%"></a><br><b>Codebase Indexing</b> |
+|    <a href="https://www.youtube.com/watch?v=iiAv1eKOaxk"><img src="https://img.youtube.com/vi/iiAv1eKOaxk/maxresdefault.jpg" width="100%"></a><br><b>Custom Modes</b>     |     <a href="https://www.youtube.com/watch?v=Ho30nyY332E"><img src="https://img.youtube.com/vi/Ho30nyY332E/maxresdefault.jpg" width="100%"></a><br><b>Checkpoints</b>      |    <a href="https://www.youtube.com/watch?v=6h5vB9PpoPk"><img src="https://img.youtube.com/vi/6h5vB9PpoPk/maxresdefault.jpg" width="100%"></a><br><b>Todo Lists</b>     |
+
+</div>
+<p align="center">
+<a href="https://docs.roocode.com/tutorial-videos">More quick tutorial and feature videos...</a>
+</p>
+
+## Resources
+
+- **[Documentation](https://docs.roocode.com):** The official guide to installing, configuring, and mastering Roo Code.
+- **[YouTube Channel](https://youtube.com/@roocodeyt?feature=shared):** Watch tutorials and see features in action.
+- **[Discord Server](https://discord.gg/roocode):** Join the community for real-time help and discussion.
+- **[Reddit Community](https://www.reddit.com/r/RooCode):** Share your experiences and see what others are building.
+- **[GitHub Issues](https://github.com/RooCodeInc/Roo-Code/issues):** Report bugs and track development.
+- **[Feature Requests](https://github.com/RooCodeInc/Roo-Code/discussions/categories/feature-requests?discussions_q=is%3Aopen+category%3A%22Feature+Requests%22+sort%3Atop):** Have an idea? Share it with the developers.
+
+---
+
+## Local Setup & Development
+
+1. **Clone** the repo:
+
+```sh
+git clone https://github.com/RooCodeInc/Roo-Code.git
+```
+
+2. **Install dependencies**:
+
+```sh
+pnpm install
+```
+
+3. **Run the extension**:
+
+There are several ways to run the Roo Code extension:
+
+### Development Mode (F5)
+
+For active development, use VSCode's built-in debugging:
+
+Press `F5` (or go to **Run** → **Start Debugging**) in VSCode. This will open a new VSCode window with the Roo Code extension running.
+
+- Changes to the webview will appear immediately.
+- Changes to the core extension will also hot reload automatically.
+
+### Automated VSIX Installation
+
+To build and install the extension as a VSIX package directly into VSCode:
+
+```sh
+pnpm install:vsix [-y] [--editor=<command>]
+```
+
+This command will:
+
+- Ask which editor command to use (code/cursor/code-insiders) - defaults to 'code'
+- Uninstall any existing version of the extension.
+- Build the latest VSIX package.
+- Install the newly built VSIX.
+- Prompt you to restart VS Code for changes to take effect.
+
+Options:
+
+- `-y`: Skip all confirmation prompts and use defaults
+- `--editor=<command>`: Specify the editor command (e.g., `--editor=cursor` or `--editor=code-insiders`)
+
+### Manual VSIX Installation
+
+If you prefer to install the VSIX package manually:
+
+1.  First, build the VSIX package:
+    ```sh
+    pnpm vsix
+    ```
+2.  A `.vsix` file will be generated in the `bin/` directory (e.g., `bin/roo-cline-<version>.vsix`).
+3.  Install it manually using the VSCode CLI:
+    ```sh
+    code --install-extension bin/roo-cline-<version>.vsix
+    ```
+
+---
+
+We use [changesets](https://github.com/changesets/changesets) for versioning and publishing. Check our `CHANGELOG.md` for release notes.
+
+---
+
+## Disclaimer
+
+**Please note** that Roo Code, Inc does **not** make any representations or warranties regarding any code, models, or other tools provided or made available in connection with Roo Code, any associated third-party tools, or any resulting outputs. You assume **all risks** associated with the use of any such tools or outputs; such tools are provided on an **"AS IS"** and **"AS AVAILABLE"** basis. Such risks may include, without limitation, intellectual property infringement, cyber vulnerabilities or attacks, bias, inaccuracies, errors, defects, viruses, downtime, property loss or damage, and/or personal injury. You are solely responsible for your use of any such tools or outputs (including, without limitation, the legality, appropriateness, and results thereof).
+
+---
+
+## Contributing
+
+We love community contributions! Get started by reading our [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## License
+
+[Apache 2.0 © 2025 Roo Code, Inc.](./LICENSE)
+
+---
+
+**Enjoy Roo Code!** Whether you keep it on a short leash or let it roam autonomously, we can’t wait to see what you build. If you have questions or feature ideas, drop by our [Reddit community](https://www.reddit.com/r/RooCode/) or [Discord](https://discord.gg/roocode). Happy coding!

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState, useMemo } from "react"
 import { useEvent } from "react-use"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import posthog from "posthog-js"
 
 import { ExtensionMessage } from "@roo/ExtensionMessage"
 import TranslationProvider from "./i18n/TranslationContext"
@@ -14,26 +15,21 @@ import { ExtensionStateContextProvider, useExtensionState } from "./context/Exte
 import ChatView, { ChatViewRef } from "./components/chat/ChatView"
 import HistoryView from "./components/history/HistoryView"
 import SettingsView, { SettingsViewRef } from "./components/settings/SettingsView"
-import WelcomeView from "./components/kilocode/welcome/WelcomeView" // kilocode_change
-import ProfileView from "./components/kilocode/profile/ProfileView" // kilocode_change
+import WelcomeView from "./components/welcome/WelcomeView"
+import WelcomeViewProvider from "./components/welcome/WelcomeViewProvider"
 import McpView from "./components/mcp/McpView"
 import { MarketplaceView } from "./components/marketplace/MarketplaceView"
 import ModesView from "./components/modes/ModesView"
 import { HumanRelayDialog } from "./components/human-relay/HumanRelayDialog"
-import BottomControls from "./components/kilocode/BottomControls" // kilocode_change
-import { MemoryService } from "./services/MemoryService" // kilocode_change
 import { CheckpointRestoreDialog } from "./components/chat/CheckpointRestoreDialog"
 import { DeleteMessageDialog, EditMessageDialog } from "./components/chat/MessageModificationConfirmationDialog"
 import ErrorBoundary from "./components/ErrorBoundary"
-// import { AccountView } from "./components/account/AccountView" // kilocode_change: we have our own profile view
-// import { CloudView } from "./components/cloud/CloudView" // kilocode_change: not rendering this
+import { CloudView } from "./components/cloud/CloudView"
 import { useAddNonInteractiveClickListener } from "./components/ui/hooks/useNonInteractiveClick"
 import { TooltipProvider } from "./components/ui/tooltip"
 import { STANDARD_TOOLTIP_DELAY } from "./components/ui/standard-tooltip"
-import { useKiloIdentity } from "./utils/kilocode/useKiloIdentity"
-import { MemoryWarningBanner } from "./kilocode/MemoryWarningBanner"
 
-type Tab = "settings" | "history" | "mcp" | "modes" | "chat" | "marketplace" | "account" | "cloud" | "profile" // kilocode_change: add "profile"
+type Tab = "settings" | "history" | "mcp" | "modes" | "chat" | "marketplace" | "cloud"
 
 interface HumanRelayDialogState {
 	isOpen: boolean
@@ -67,9 +63,8 @@ const tabsByMessageAction: Partial<Record<NonNullable<ExtensionMessage["action"]
 	promptsButtonClicked: "modes",
 	mcpButtonClicked: "mcp",
 	historyButtonClicked: "history",
-	profileButtonClicked: "profile",
 	marketplaceButtonClicked: "marketplace",
-	// cloudButtonClicked: "cloud", // kilocode_change: no cloud
+	cloudButtonClicked: "cloud",
 }
 
 const App = () => {
@@ -80,16 +75,28 @@ const App = () => {
 		telemetrySetting,
 		telemetryKey,
 		machineId,
-		// kilocode_change start: unused
-		// cloudUserInfo,
-		// cloudIsAuthenticated,
-		// cloudApiUrl,
-		// cloudOrganizations,
-		// kilocode_change end
+		cloudUserInfo,
+		cloudIsAuthenticated,
+		cloudApiUrl,
+		cloudOrganizations,
 		renderContext,
 		mdmCompliant,
-		apiConfiguration, // kilocode_change
 	} = useExtensionState()
+
+	const [useProviderSignupView, setUseProviderSignupView] = useState(false)
+
+	// Check PostHog feature flag for provider signup view
+	// Wait for telemetry to be initialized before checking feature flags
+	useEffect(() => {
+		if (!didHydrateState || telemetrySetting === "disabled") {
+			return
+		}
+
+		posthog.onFeatureFlags(function () {
+			// Feature flag for new provider-focused welcome view
+			setUseProviderSignupView(posthog?.getFeatureFlag("welcome-provider-signup") === "test")
+		})
+	}, [didHydrateState, telemetrySetting])
 
 	// Create a persistent state manager
 	const marketplaceStateManager = useMemo(() => new MarketplaceViewStateManager(), [])
@@ -118,7 +125,7 @@ const App = () => {
 	})
 
 	const settingsRef = useRef<SettingsViewRef>(null)
-	const chatViewRef = useRef<ChatViewRef & { focusInput: () => void }>(null) // kilocode_change
+	const chatViewRef = useRef<ChatViewRef>(null)
 
 	const switchTab = useCallback(
 		(newTab: Tab) => {
@@ -143,23 +150,13 @@ const App = () => {
 	)
 
 	const [currentSection, setCurrentSection] = useState<string | undefined>(undefined)
-	const [_currentMarketplaceTab, setCurrentMarketplaceTab] = useState<string | undefined>(undefined)
+	const [currentMarketplaceTab, setCurrentMarketplaceTab] = useState<string | undefined>(undefined)
 
 	const onMessage = useCallback(
 		(e: MessageEvent) => {
 			const message: ExtensionMessage = e.data
 
 			if (message.type === "action" && message.action) {
-				// kilocode_change begin
-				if (message.action === "focusChatInput") {
-					if (tab !== "chat") {
-						switchTab("chat")
-					}
-					chatViewRef.current?.focusInput()
-					return
-				}
-				// kilocode_change end
-
 				// Handle switchTab action with tab parameter
 				if (message.action === "switchTab" && message.tab) {
 					const targetTab = message.tab as Tab
@@ -209,8 +206,7 @@ const App = () => {
 				chatViewRef.current?.acceptInput()
 			}
 		},
-		// kilocode_change: add tab
-		[tab, switchTab],
+		[switchTab],
 	)
 
 	useEvent("message", onMessage)
@@ -222,20 +218,11 @@ const App = () => {
 		}
 	}, [shouldShowAnnouncement, tab])
 
-	// kilocode_change start
-	const telemetryDistinctId = useKiloIdentity(apiConfiguration?.kilocodeToken ?? "", machineId ?? "")
 	useEffect(() => {
 		if (didHydrateState) {
-			telemetryClient.updateTelemetryState(telemetrySetting, telemetryKey, telemetryDistinctId)
-
-			// kilocode_change start
-			const memoryService = new MemoryService()
-			memoryService.start()
-			return () => memoryService.stop()
-			// kilocode_change end
+			telemetryClient.updateTelemetryState(telemetrySetting, telemetryKey, machineId)
 		}
-	}, [telemetrySetting, telemetryKey, telemetryDistinctId, didHydrateState])
-	// kilocode_change end
+	}, [telemetrySetting, telemetryKey, machineId, didHydrateState])
 
 	// Tell the extension that we are ready to receive messages.
 	useEffect(() => vscode.postMessage({ type: "webviewDidLaunch" }), [])
@@ -277,29 +264,27 @@ const App = () => {
 	// Do not conditionally load ChatView, it's expensive and there's state we
 	// don't want to lose (user input, disableInput, askResponse promise, etc.)
 	return showWelcome ? (
-		<WelcomeView />
+		useProviderSignupView ? (
+			<WelcomeViewProvider />
+		) : (
+			<WelcomeView />
+		)
 	) : (
 		<>
-			{/* kilocode_change: add MemoryWarningBanner */}
-			<MemoryWarningBanner />
 			{tab === "modes" && <ModesView onDone={() => switchTab("chat")} />}
 			{tab === "mcp" && <McpView onDone={() => switchTab("chat")} />}
 			{tab === "history" && <HistoryView onDone={() => switchTab("chat")} />}
 			{tab === "settings" && (
-				<SettingsView ref={settingsRef} onDone={() => switchTab("chat")} targetSection={currentSection} /> // kilocode_change
+				<SettingsView ref={settingsRef} onDone={() => setTab("chat")} targetSection={currentSection} />
 			)}
-			{/* kilocode_change: add profileview */}
-			{tab === "profile" && <ProfileView onDone={() => switchTab("chat")} />}
 			{tab === "marketplace" && (
 				<MarketplaceView
 					stateManager={marketplaceStateManager}
 					onDone={() => switchTab("chat")}
-					// kilocode_change: targetTab="mode"
-					targetTab="mode"
+					targetTab={currentMarketplaceTab as "mcp" | "mode" | undefined}
 				/>
 			)}
-			{/* kilocode_change: no cloud view */}
-			{/* {tab === "cloud" && (
+			{tab === "cloud" && (
 				<CloudView
 					userInfo={cloudUserInfo}
 					isAuthenticated={cloudIsAuthenticated}
@@ -307,11 +292,7 @@ const App = () => {
 					organizations={cloudOrganizations}
 					onDone={() => switchTab("chat")}
 				/>
-			)} */}
-			{/* kilocode_change: we have our own profile view */}
-			{/* {tab === "account" && (
-				<AccountView userInfo={cloudUserInfo} isAuthenticated={false} onDone={() => switchTab("chat")} />
-			)} */}
+			)}
 			<ChatView
 				ref={chatViewRef}
 				isHidden={tab !== "chat"}
@@ -384,13 +365,6 @@ const App = () => {
 						setEditMessageDialogState((prev) => ({ ...prev, isOpen: false }))
 					}}
 				/>
-			)}
-			{/* kilocode_change */}
-			{/* Chat, modes and history view contain their own bottom controls */}
-			{!["chat", "modes", "history"].includes(tab) && (
-				<div className="fixed inset-0 top-auto">
-					<BottomControls />
-				</div>
 			)}
 		</>
 	)

@@ -47,11 +47,8 @@ const TaskItem = ({
 			key={item.id}
 			data-testid={`task-item-${item.id}`}
 			className={cn(
-				"cursor-pointer group bg-vscode-editor-background rounded relative overflow-hidden border border-transparent hover:bg-vscode-list-hoverBackground transition-colors", // kilocode_change: no rounded borders
-				{
-					"bg-red-900 text-white": item.fileNotfound, // kilocode_change added this state instead of removing
-					"bg-vscode-editor-background": !item.fileNotfound, //kilocode_change this is the default normally in the regular classname list
-				},
+				"cursor-pointer group bg-vscode-editor-background rounded-xl relative overflow-hidden border hover:bg-vscode-editor-foreground/10 transition-colors",
+				"border-transparent",
 				className,
 			)}
 			onClick={handleClick}>
@@ -84,6 +81,7 @@ const TaskItem = ({
 						{...(item.highlight ? { dangerouslySetInnerHTML: { __html: item.highlight } } : {})}>
 						{item.highlight ? undefined : item.task}
 					</div>
+
 					<TaskItemFooter
 						item={item}
 						variant={variant}

@@ -1,10 +1,17 @@
-import {
-	HTMLAttributes,
-	useState, // kilocode_change
-} from "react"
+import { HTMLAttributes } from "react"
 import { useAppTranslation } from "@/i18n/TranslationContext"
 import { Trans } from "react-i18next"
-import { Info, Download, Upload, TriangleAlert } from "lucide-react"
+import {
+	Info,
+	Download,
+	Upload,
+	TriangleAlert,
+	Bug,
+	Lightbulb,
+	Shield,
+	MessageCircle,
+	MessagesSquare,
+} from "lucide-react"
 import { VSCodeCheckbox, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 
 import type { TelemetrySetting } from "@roo-code/types"
@@ -17,7 +24,6 @@ import { Button } from "@/components/ui"
 
 import { SectionHeader } from "./SectionHeader"
 import { Section } from "./Section"
-import { getMemoryPercentage } from "@/kilocode/helpers"
 
 type AboutProps = HTMLAttributes<HTMLDivElement> & {
 	telemetrySetting: TelemetrySetting
@@ -26,8 +32,6 @@ type AboutProps = HTMLAttributes<HTMLDivElement> & {
 
 export const About = ({ telemetrySetting, setTelemetrySetting, className, ...props }: AboutProps) => {
 	const { t } = useAppTranslation()
-
-	const [kiloCodeBloat, setKiloCodeBloat] = useState<number[][]>([])
 
 	return (
 		<div className={cn("flex flex-col gap-2", className)} {...props}>
@@ -57,35 +61,68 @@ export const About = ({ telemetrySetting, setTelemetrySetting, className, ...pro
 						<Trans
 							i18nKey="settings:footer.telemetry.description"
 							components={{
-								privacyLink: <VSCodeLink href="https://kilocode.ai/privacy" />,
+								privacyLink: <VSCodeLink href="https://roocode.com/privacy" />,
 							}}
 						/>
 					</p>
 				</div>
+			</Section>
 
-				<div>
-					<Trans
-						i18nKey="settings:footer.feedback"
-						components={{
-							githubLink: <VSCodeLink href="https://github.com/Kilo-Org/kilocode" />,
-							redditLink: <VSCodeLink href="https://reddit.com/r/kilocode" />,
-							discordLink: <VSCodeLink href="https://kilocode.ai/discord" />,
-						}}
-					/>
+			<Section className="space-y-0">
+				<h3>{t("settings:about.contactAndCommunity")}</h3>
+				<div className="flex flex-col gap-3">
+					<div className="flex items-start gap-2">
+						<Bug className="size-4 text-vscode-descriptionForeground shrink-0" />
+						<span>
+							{t("settings:about.bugReport.label")}{" "}
+							<VSCodeLink href="https://github.com/RooCodeInc/Roo-Code/issues/new?template=bug_report.yml">
+								{t("settings:about.bugReport.link")}
+							</VSCodeLink>
+						</span>
+					</div>
+					<div className="flex items-start gap-2">
+						<Lightbulb className="size-4 text-vscode-descriptionForeground shrink-0" />
+						<span>
+							{t("settings:about.featureRequest.label")}{" "}
+							<VSCodeLink href="https://github.com/RooCodeInc/Roo-Code/issues/new?template=feature_request.yml">
+								{t("settings:about.featureRequest.link")}
+							</VSCodeLink>
+						</span>
+					</div>
+					<div className="flex items-start gap-2">
+						<Shield className="size-4 text-vscode-descriptionForeground shrink-0" />
+						<span>
+							{t("settings:about.securityIssue.label")}{" "}
+							<VSCodeLink href="https://github.com/RooCodeInc/Roo-Code/security/policy">
+								{t("settings:about.securityIssue.link")}
+							</VSCodeLink>
+						</span>
+					</div>
+					<div className="flex items-start gap-2">
+						<MessageCircle className="size-4 text-vscode-descriptionForeground shrink-0" />
+						<span>
+							{t("settings:about.contact.label")}{" "}
+							<VSCodeLink href="mailto:support@roocode.com">support@roocode.com</VSCodeLink>
+						</span>
+					</div>
+					<div className="flex items-start gap-2">
+						<MessagesSquare className="size-4 text-vscode-descriptionForeground shrink-0" />
+						<span>
+							<Trans
+								i18nKey="settings:about.community"
+								components={{
+									redditLink: <VSCodeLink href="https://reddit.com/r/RooCode" />,
+									discordLink: <VSCodeLink href="https://discord.gg/roocode" />,
+								}}
+							/>
+						</span>
+					</div>
 				</div>
+			</Section>
 
-				{/* kilocode_change start */}
-				<div>
-					<Trans
-						i18nKey="settings:footer.support"
-						components={{
-							supportLink: <VSCodeLink href="https://kilocode.ai/support" />,
-						}}
-					/>
-				</div>
-				{/* kilocode_change end */}
-
-				<div className="flex flex-wrap items-center gap-2 mt-2">
+			<Section className="space-y-0">
+				<h3>{t("settings:about.manageSettings")}</h3>
+				<div className="flex flex-wrap items-center gap-2">
 					<Button onClick={() => vscode.postMessage({ type: "exportSettings" })} className="w-28">
 						<Upload className="p-0.5" />
 						{t("settings:footer.settings.export")}
@@ -102,23 +139,6 @@ export const About = ({ telemetrySetting, setTelemetrySetting, className, ...pro
 						{t("settings:footer.settings.reset")}
 					</Button>
 				</div>
-
-				{
-					// kilocode_change start
-					process.env.NODE_ENV === "development" && (
-						<div className="flex flex-wrap items-center gap-2 mt-2">
-							<Button
-								variant="destructive"
-								onClick={() => {
-									setKiloCodeBloat([...kiloCodeBloat, new Array<number>(20_000_000).fill(0)])
-									console.debug(`Memory percentage: ${getMemoryPercentage()}`)
-								}}>
-								Development: Allocate memory
-							</Button>
-						</div>
-					)
-					// kilocode_change end
-				}
 			</Section>
 		</div>
 	)

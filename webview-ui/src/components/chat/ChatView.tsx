@@ -1,9 +1,9 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react"
-import { useDeepCompareEffect, useEvent, useMount } from "react-use"
+import { useDeepCompareEffect, useEvent } from "react-use"
 import debounce from "debounce"
 import { Virtuoso, type VirtuosoHandle } from "react-virtuoso"
 import removeMd from "remove-markdown"
-import { VSCodeButton as Button } from "@vscode/webview-ui-toolkit/react" // kilocode_change: do not use rounded Roo buttons
+import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import useSound from "use-sound"
 import { LRUCache } from "lru-cache"
 import { Trans } from "react-i18next"
@@ -13,7 +13,7 @@ import { appendImages } from "@src/utils/imageUtils"
 
 import type { ClineAsk, ClineMessage } from "@roo-code/types"
 
-import { ClineSayBrowserAction, ClineSayTool, ExtensionMessage } from "@roo/ExtensionMessage"
+import { ClineSayTool, ExtensionMessage } from "@roo/ExtensionMessage"
 import { findLast } from "@roo/array"
 import { SuggestionItem } from "@roo-code/types"
 import { combineApiRequests } from "@roo/combineApiRequests"
@@ -28,35 +28,27 @@ import { vscode } from "@src/utils/vscode"
 import { useAppTranslation } from "@src/i18n/TranslationContext"
 import { useExtensionState } from "@src/context/ExtensionStateContext"
 import { useSelectedModel } from "@src/components/ui/hooks/useSelectedModel"
-// import RooHero from "@src/components/welcome/RooHero" // kilocode_change: unused
-// import RooTips from "@src/components/welcome/RooTips" // kilocode_change: unused
-import { StandardTooltip } from "@src/components/ui"
-
-// import VersionIndicator from "../common/VersionIndicator" // kilocode_change: unused
-import { OrganizationSelector } from "../kilocode/common/OrganizationSelector"
-// import { useTaskSearch } from "../history/useTaskSearch" // kilocode_change: unused
-// import { CloudUpsellDialog } from "@src/components/cloud/CloudUpsellDialog" // kilocode_change: unused
+import RooHero from "@src/components/welcome/RooHero"
+import RooTips from "@src/components/welcome/RooTips"
+import { StandardTooltip, Button } from "@src/components/ui"
+import { CloudUpsellDialog } from "@src/components/cloud/CloudUpsellDialog"
 
 import TelemetryBanner from "../common/TelemetryBanner"
+import VersionIndicator from "../common/VersionIndicator"
 import HistoryPreview from "../history/HistoryPreview"
 import Announcement from "./Announcement"
-import BrowserSessionRow from "./BrowserSessionRow"
+import BrowserActionRow from "./BrowserActionRow"
+import BrowserSessionStatusRow from "./BrowserSessionStatusRow"
 import ChatRow from "./ChatRow"
 import { ChatTextArea } from "./ChatTextArea"
-// import TaskHeader from "./TaskHeader"// kilocode_change
-import KiloTaskHeader from "../kilocode/KiloTaskHeader" // kilocode_change
-import AutoApproveMenu from "./AutoApproveMenu"
-import BottomControls from "../kilocode/BottomControls" // kilocode_change
+import TaskHeader from "./TaskHeader"
 import SystemPromptWarning from "./SystemPromptWarning"
-// import ProfileViolationWarning from "./ProfileViolationWarning" kilocode_change: unused
+import ProfileViolationWarning from "./ProfileViolationWarning"
 import { CheckpointWarning } from "./CheckpointWarning"
-import { IdeaSuggestionsBox } from "../kilocode/chat/IdeaSuggestionsBox" // kilocode_change
-import { KilocodeNotifications } from "../kilocode/KilocodeNotifications" // kilocode_change
 import { QueuedMessages } from "./QueuedMessages"
-import { buildDocLink } from "@/utils/docLinks"
-// import DismissibleUpsell from "../common/DismissibleUpsell" // kilocode_change: unused
-// import { useCloudUpsell } from "@src/hooks/useCloudUpsell" // kilocode_change: unused
-// import { Cloud } from "lucide-react" // kilocode_change: unused
+import DismissibleUpsell from "../common/DismissibleUpsell"
+import { useCloudUpsell } from "@src/hooks/useCloudUpsell"
+import { Cloud } from "lucide-react"
 
 export interface ChatViewProps {
 	isHidden: boolean
@@ -66,7 +58,6 @@ export interface ChatViewProps {
 
 export interface ChatViewRef {
 	acceptInput: () => void
-	focusInput: () => void // kilocode_change
 }
 
 export const MAX_IMAGES_PER_MESSAGE = 20 // This is the Anthropic limit.
@@ -91,25 +82,21 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 		clineMessages: messages,
 		currentTaskItem,
 		currentTaskTodos,
-		taskHistoryFullLength, // kilocode_change
-		taskHistoryVersion, // kilocode_change
+		taskHistory,
 		apiConfiguration,
 		organizationAllowList,
 		mode,
 		setMode,
 		alwaysAllowModeSwitch,
-		showAutoApproveMenu, // kilocode_change
-		enableCheckpoints, // kilocode_change
 		alwaysAllowUpdateTodoList,
 		customModes,
 		telemetrySetting,
 		hasSystemPromptOverride,
-		historyPreviewCollapsed, // kilocode_change
 		soundEnabled,
 		soundVolume,
-		// cloudIsAuthenticated, // kilocode_change
+		cloudIsAuthenticated,
 		messageQueue = [],
-		sendMessageOnEnter, // kilocode_change
+		isBrowserSessionActive,
 	} = useExtensionState()
 
 	const messagesRef = useRef(messages)
@@ -122,20 +109,6 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 	// task, then the extension is in a bad state and needs to be debugged (see
 	// Cline.abort).
 	const task = useMemo(() => messages.at(0), [messages])
-
-	// kilocode_change start
-	// Initialize expanded state based on the persisted setting (default to expanded if undefined)
-	const [isExpanded, setIsExpanded] = useState(
-		historyPreviewCollapsed === undefined ? true : !historyPreviewCollapsed,
-	)
-
-	const toggleExpanded = useCallback(() => {
-		const newState = !isExpanded
-		setIsExpanded(newState)
-		// Send message to extension to persist the new collapsed state
-		vscode.postMessage({ type: "setHistoryPreviewCollapsed", bool: !newState })
-	}, [isExpanded])
-	// kilocode_change end
 
 	const latestTodos = useMemo(() => {
 		// First check if we have initial todos from the state (for new subtasks)
@@ -202,16 +175,14 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 		clineAskRef.current = clineAsk
 	}, [clineAsk])
 
-	// kilocode_change start: unused
-	// const {
-	// 	isOpen: isUpsellOpen,
-	// 	openUpsell,
-	// 	closeUpsell,
-	// 	handleConnect,
-	// } = useCloudUpsell({
-	// 	autoOpenOnAuth: false,
-	// })
-	// kilocode_change end
+	const {
+		isOpen: isUpsellOpen,
+		openUpsell,
+		closeUpsell,
+		handleConnect,
+	} = useCloudUpsell({
+		autoOpenOnAuth: false,
+	})
 
 	// Keep inputValueRef in sync with inputValue state
 	useEffect(() => {
@@ -384,8 +355,22 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 							setSendingDisabled(false)
 							setClineAsk("resume_task")
 							setEnableButtons(true)
-							setPrimaryButtonText(t("chat:resumeTask.title"))
-							setSecondaryButtonText(t("chat:terminate.title"))
+							// For completed subtasks, show "Start New Task" instead of "Resume"
+							// A subtask is considered completed if:
+							// - It has a parentTaskId AND
+							// - Its messages contain a completion_result (either ask or say)
+							const isCompletedSubtask =
+								currentTaskItem?.parentTaskId &&
+								messages.some(
+									(msg) => msg.ask === "completion_result" || msg.say === "completion_result",
+								)
+							if (isCompletedSubtask) {
+								setPrimaryButtonText(t("chat:startNewTask.title"))
+								setSecondaryButtonText(undefined)
+							} else {
+								setPrimaryButtonText(t("chat:resumeTask.title"))
+								setSecondaryButtonText(t("chat:terminate.title"))
+							}
 							setDidClickCancel(false) // special case where we reset the cancel button state
 							break
 						case "resume_completed_task":
@@ -396,24 +381,6 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 							setSecondaryButtonText(undefined)
 							setDidClickCancel(false)
 							break
-						// kilocode_change begin
-						case "report_bug":
-							if (!isPartial) {
-								playSound("notification")
-							}
-							setSendingDisabled(isPartial)
-							setClineAsk("report_bug")
-							setEnableButtons(!isPartial)
-							setPrimaryButtonText(t("chat:reportBug.title"))
-							break
-						case "condense":
-							setSendingDisabled(isPartial)
-							setClineAsk("condense")
-							setEnableButtons(!isPartial)
-							setPrimaryButtonText(t("kilocode:chat.condense.condenseConversation"))
-							setSecondaryButtonText(undefined)
-							break
-						// kilocode_change end
 					}
 					break
 				case "say":
@@ -446,6 +413,19 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 			}
 		}
 	}, [lastMessage, secondLastMessage])
+
+	// Update button text when messages change (e.g., completion_result is added) for subtasks in resume_task state
+	useEffect(() => {
+		if (clineAsk === "resume_task" && currentTaskItem?.parentTaskId) {
+			const hasCompletionResult = messages.some(
+				(msg) => msg.ask === "completion_result" || msg.say === "completion_result",
+			)
+			if (hasCompletionResult) {
+				setPrimaryButtonText(t("chat:startNewTask.title"))
+				setSecondaryButtonText(undefined)
+			}
+		}
+	}, [clineAsk, currentTaskItem?.parentTaskId, messages, t])
 
 	useEffect(() => {
 		if (messages.length === 0) {
@@ -685,9 +665,7 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 				case "tool":
 				case "browser_action_launch":
 				case "use_mcp_server":
-				case "resume_task":
 				case "mistake_limit_reached":
-				case "report_bug":
 					// Only send text/images if they exist
 					if (trimmedInput || (images && images.length > 0)) {
 						vscode.postMessage({
@@ -703,6 +681,33 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 						vscode.postMessage({ type: "askResponse", askResponse: "yesButtonClicked" })
 					}
 					break
+				case "resume_task":
+					// For completed subtasks (tasks with a parentTaskId and a completion_result),
+					// start a new task instead of resuming since the subtask is done
+					const isCompletedSubtaskForClick =
+						currentTaskItem?.parentTaskId &&
+						messagesRef.current.some(
+							(msg) => msg.ask === "completion_result" || msg.say === "completion_result",
+						)
+					if (isCompletedSubtaskForClick) {
+						startNewTask()
+					} else {
+						// Only send text/images if they exist
+						if (trimmedInput || (images && images.length > 0)) {
+							vscode.postMessage({
+								type: "askResponse",
+								askResponse: "yesButtonClicked",
+								text: trimmedInput,
+								images: images,
+							})
+							// Clear input state after sending
+							setInputValue("")
+							setSelectedImages([])
+						} else {
+							vscode.postMessage({ type: "askResponse", askResponse: "yesButtonClicked" })
+						}
+					}
+					break
 				case "completion_result":
 				case "resume_completed_task":
 					// Waiting for feedback, but we can just present a new task button
@@ -711,21 +716,13 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 				case "command_output":
 					vscode.postMessage({ type: "terminalOperation", terminalOperation: "continue" })
 					break
-				// kilocode_change start
-				case "condense":
-					vscode.postMessage({
-						type: "condense",
-						text: lastMessage?.text,
-					})
-					break
-				// kilocode_change end
 			}
 
 			setSendingDisabled(true)
 			setClineAsk(undefined)
 			setEnableButtons(false)
 		},
-		[clineAsk, startNewTask, lastMessage?.text], // kilocode_change: add lastMessage?.text
+		[clineAsk, startNewTask, currentTaskItem?.parentTaskId],
 	)
 
 	const handleSecondaryButtonClick = useCallback(
@@ -777,8 +774,6 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 		},
 		[clineAsk, startNewTask, isStreaming],
 	)
-
-	const handleTaskCloseButtonClick = useCallback(() => startNewTask(), [startNewTask]) // kilocode_change
 
 	const { info: model } = useSelectedModel(apiConfiguration)
 
@@ -867,9 +862,6 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 	)
 
 	useEvent("message", handleMessage)
-
-	// NOTE: the VSCode window needs to be focused for this to work.
-	useMount(() => textAreaRef.current?.focus())
 
 	const visibleMessages = useMemo(() => {
 		// Pre-compute checkpoint hashes that have associated user messages for O(1) lookup
@@ -1025,118 +1017,54 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 		setWasStreaming(isStreaming)
 	}, [isStreaming, lastMessage, wasStreaming, messages.length])
 
-	const isBrowserSessionMessage = (message: ClineMessage): boolean => {
-		// Which of visible messages are browser session messages, see above.
-		if (message.type === "ask") {
-			return ["browser_action_launch"].includes(message.ask!)
+	// Compute current browser session messages for the top banner (not grouped into chat stream)
+	// Find the FIRST browser session from the beginning to show ALL sessions
+	const browserSessionStartIndex = useMemo(() => {
+		for (let i = 0; i < messages.length; i++) {
+			if (messages[i].ask === "browser_action_launch") {
+				return i
+			}
 		}
+		return -1
+	}, [messages])
 
-		if (message.type === "say") {
-			return ["api_req_started", "text", "browser_action", "browser_action_result"].includes(message.say!)
+	const _browserSessionMessages = useMemo<ClineMessage[]>(() => {
+		if (browserSessionStartIndex === -1) return []
+		return messages.slice(browserSessionStartIndex)
+	}, [browserSessionStartIndex, messages])
+
+	// Show globe toggle only when in a task that has a browser session (active or inactive)
+	const showBrowserDockToggle = useMemo(
+		() => Boolean(task && (browserSessionStartIndex !== -1 || isBrowserSessionActive)),
+		[task, browserSessionStartIndex, isBrowserSessionActive],
+	)
+
+	const isBrowserSessionMessage = useCallback((message: ClineMessage): boolean => {
+		// Only the launch ask should be hidden from chat (it's shown in the drawer header)
+		if (message.type === "ask" && message.ask === "browser_action_launch") {
+			return true
 		}
-
+		// browser_action_result messages are paired with browser_action and should not appear independently
+		if (message.type === "say" && message.say === "browser_action_result") {
+			return true
+		}
 		return false
-	}
+	}, [])
 
 	const groupedMessages = useMemo(() => {
-		const result: (ClineMessage | ClineMessage[])[] = []
-		let currentGroup: ClineMessage[] = []
-		let isInBrowserSession = false
-
-		const endBrowserSession = () => {
-			if (currentGroup.length > 0) {
-				result.push([...currentGroup])
-				currentGroup = []
-				isInBrowserSession = false
-			}
-		}
-
-		visibleMessages.forEach((message: ClineMessage) => {
-			// kilocode_change start: upstream pr https://github.com/RooCodeInc/Roo-Code/pull/5452
-			// Special handling for browser_action_result - ensure it's always in a browser session
-			if (message.say === "browser_action_result" && !isInBrowserSession) {
-				isInBrowserSession = true
-				currentGroup = []
-			}
-
-			// Special handling for browser_action - ensure it's always in a browser session
-			if (message.say === "browser_action" && !isInBrowserSession) {
-				isInBrowserSession = true
-				currentGroup = []
-			}
-			// kilocode_change end
-
-			if (message.ask === "browser_action_launch") {
-				// Complete existing browser session if any.
-				endBrowserSession()
-				// Start new.
-				isInBrowserSession = true
-				currentGroup.push(message)
-			} else if (isInBrowserSession) {
-				// End session if `api_req_started` is cancelled.
-
-				if (message.say === "api_req_started") {
-					// Get last `api_req_started` in currentGroup to check if
-					// it's cancelled. If it is then this api req is not part
-					// of the current browser session.
-					const lastApiReqStarted = [...currentGroup].reverse().find((m) => m.say === "api_req_started")
-
-					if (lastApiReqStarted?.text !== null && lastApiReqStarted?.text !== undefined) {
-						const info = JSON.parse(lastApiReqStarted.text)
-						const isCancelled = info.cancelReason !== null && info.cancelReason !== undefined
-
-						if (isCancelled) {
-							endBrowserSession()
-							result.push(message)
-							return
-						}
-					}
-				}
-
-				if (isBrowserSessionMessage(message)) {
-					// kilocode_change start: upstream pr https://github.com/RooCodeInc/Roo-Code/pull/5452
-					// Check if this is a browser_action_result for a close action
-					if (message.say === "browser_action_result") {
-						const lastBrowserAction = [...currentGroup].reverse().find((m) => m.say === "browser_action")
-						if (lastBrowserAction) {
-							const browserAction = JSON.parse(lastBrowserAction.text || "{}") as ClineSayBrowserAction
-							if (browserAction.action === "close") {
-								// Don't add the browser_action_result for close action to the group
-								// End the session immediately
-								endBrowserSession()
-								return
-							}
-						}
-					}
-					currentGroup.push(message)
-					// kilocode_change end
-				} else {
-					// complete existing browser session if any
-					endBrowserSession()
-					result.push(message)
-				}
-			} else {
-				result.push(message)
-			}
-		})
-
-		// Handle case where browser session is the last group
-		if (currentGroup.length > 0) {
-			result.push([...currentGroup])
-		}
+		// Only filter out the launch ask and result messages - browser actions appear in chat
+		const result: ClineMessage[] = visibleMessages.filter((msg) => !isBrowserSessionMessage(msg))
 
 		if (isCondensing) {
-			// Show indicator after clicking condense button
 			result.push({
 				type: "say",
 				say: "condense_context",
 				ts: Date.now(),
 				partial: true,
-			})
+			} as any)
 		}
-
 		return result
-	}, [isCondensing, visibleMessages])
+	}, [isCondensing, visibleMessages, isBrowserSessionMessage])
 
 	// scrolling
 
@@ -1162,34 +1090,6 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 			behavior: "auto", // Instant causes crash.
 		})
 	}, [])
-
-	// kilocode_change start
-	// Animated "blink" to highlight a specific message. Used by the TaskTimeline
-	const highlightClearTimerRef = useRef<NodeJS.Timeout | undefined>()
-	const [highlightedMessageIndex, setHighlightedMessageIndex] = useState<number | null>(null)
-	const handleMessageClick = useCallback((index: number) => {
-		setHighlightedMessageIndex(index)
-		virtuosoRef.current?.scrollToIndex({ index, align: "end", behavior: "smooth" })
-
-		// Clear existing timer if present
-		if (highlightClearTimerRef.current) {
-			clearTimeout(highlightClearTimerRef.current)
-		}
-		highlightClearTimerRef.current = setTimeout(() => {
-			setHighlightedMessageIndex(null)
-			highlightClearTimerRef.current = undefined
-		}, 1000)
-	}, [])
-
-	// Cleanup highlight timer on unmount
-	useEffect(() => {
-		return () => {
-			if (highlightClearTimerRef.current) {
-				clearTimeout(highlightClearTimerRef.current)
-			}
-		}
-	}, [])
-	// kilocode_change end
 
 	const handleSetExpandedRow = useCallback(
 		(ts: number, expand?: boolean) => {
@@ -1246,7 +1146,8 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 			}
 		}
 	}, [])
-	//kilocode_change
+
+	useEvent("wheel", handleWheel, window, { passive: true }) // passive improves scrolling performance
 
 	// Effect to clear checkpoint warning when messages appear or task changes
 	useEffect(() => {
@@ -1312,34 +1213,37 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 		vscode.postMessage({ type: "askResponse", askResponse: "objectResponse", text: JSON.stringify(response) })
 	}, [])
 
-	// Handler for when FollowUpSuggest component unmounts
-	const handleFollowUpUnmount = useCallback(() => {
-		// Mark that user has responded
-		userRespondedRef.current = true
-	}, [])
-
 	const itemContent = useCallback(
-		(index: number, messageOrGroup: ClineMessage | ClineMessage[]) => {
-			// browser session group
-			if (Array.isArray(messageOrGroup)) {
+		(index: number, messageOrGroup: ClineMessage) => {
+			const hasCheckpoint = modifiedMessages.some((message) => message.say === "checkpoint_saved")
+
+			// Check if this is a browser action message
+			if (messageOrGroup.type === "say" && messageOrGroup.say === "browser_action") {
+				// Find the corresponding result message by looking for the next browser_action_result after this action's timestamp
+				const nextMessage = modifiedMessages.find(
+					(m) => m.ts > messageOrGroup.ts && m.say === "browser_action_result",
+				)
+
+				// Calculate action index and total count
+				const browserActions = modifiedMessages.filter((m) => m.say === "browser_action")
+				const actionIndex = browserActions.findIndex((m) => m.ts === messageOrGroup.ts) + 1
+				const totalActions = browserActions.length
+
 				return (
-					<BrowserSessionRow
-						messages={messageOrGroup}
-						isLast={index === groupedMessages.length - 1}
-						lastModifiedMessage={modifiedMessages.at(-1)}
-						onHeightChange={handleRowHeightChange}
-						isStreaming={isStreaming}
-						isExpanded={(messageTs: number) => expandedRows[messageTs] ?? false}
-						onToggleExpand={(messageTs: number) => {
-							setExpandedRows((prev: Record<number, boolean>) => ({
-								...prev,
-								[messageTs]: !prev[messageTs],
-							}))
-						}}
+					<BrowserActionRow
+						key={messageOrGroup.ts}
+						message={messageOrGroup}
+						nextMessage={nextMessage}
+						actionIndex={actionIndex}
+						totalActions={totalActions}
 					/>
 				)
 			}
-			const hasCheckpoint = modifiedMessages.some((message) => message.say === "checkpoint_saved")
+
+			// Check if this is a browser session status message
+			if (messageOrGroup.type === "say" && messageOrGroup.say === "browser_session_status") {
+				return <BrowserSessionStatusRow key={messageOrGroup.ts} message={messageOrGroup} />
+			}
 
 			// regular message
 			return (
@@ -1354,9 +1258,6 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 					isStreaming={isStreaming}
 					onSuggestionClick={handleSuggestionClickInRow} // This was already stabilized
 					onBatchFileResponse={handleBatchFileResponse}
-					highlighted={highlightedMessageIndex === index} // kilocode_change: add highlight prop
-					enableCheckpoints={enableCheckpoints} // kilocode_change
-					onFollowUpUnmount={handleFollowUpUnmount}
 					isFollowUpAnswered={messageOrGroup.isAnswered === true || messageOrGroup.ts === currentFollowUpTs}
 					editable={
 						messageOrGroup.type === "ask" &&
@@ -1389,9 +1290,6 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 			isStreaming,
 			handleSuggestionClickInRow,
 			handleBatchFileResponse,
-			highlightedMessageIndex, // kilocode_change: add highlightedMessageIndex
-			enableCheckpoints, // kilocode_change
-			handleFollowUpUnmount,
 			currentFollowUpTs,
 			alwaysAllowUpdateTodoList,
 			enableButtons,
@@ -1439,12 +1337,11 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 
 	useEffect(() => {
 		window.addEventListener("keydown", handleKeyDown)
-		window.addEventListener("wheel", handleWheel, { passive: true }) // kilocode_change
+
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown)
-			window.removeEventListener("wheel", handleWheel) // kilocode_change
 		}
-	}, [handleKeyDown, handleWheel]) // kilocode_change
+	}, [handleKeyDown])
 
 	useImperativeHandle(ref, () => ({
 		acceptInput: () => {
@@ -1454,13 +1351,6 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 				handleSendMessage(inputValue, selectedImages)
 			}
 		},
-		// kilocode_change start
-		focusInput: () => {
-			if (textAreaRef.current) {
-				textAreaRef.current.focus()
-			}
-		},
-		// kilocode_change end
 	}))
 
 	const handleCondenseContext = (taskId: string) => {
@@ -1474,12 +1364,11 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 
 	const areButtonsVisible = showScrollToBottom || primaryButtonText || secondaryButtonText || isStreaming
 
-	const showTelemetryBanner = telemetrySetting === "unset" // kilocode_change
-
 	return (
 		<div
 			data-testid="chat-view"
 			className={isHidden ? "hidden" : "fixed top-0 left-0 right-0 bottom-0 flex flex-col overflow-hidden"}>
+			{telemetrySetting === "unset" && <TelemetryBanner />}
 			{(showAnnouncement || showAnnouncementModal) && (
 				<Announcement
 					hideAnnouncement={() => {
@@ -1494,8 +1383,7 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 			)}
 			{task ? (
 				<>
-					{/* kilocode_change start */}
-					{/* <TaskHeader
+					<TaskHeader
 						task={task}
 						tokensIn={apiMetrics.totalTokensIn}
 						tokensOut={apiMetrics.totalTokensOut}
@@ -1505,25 +1393,8 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 						contextTokens={apiMetrics.contextTokens}
 						buttonsDisabled={sendingDisabled}
 						handleCondenseContext={handleCondenseContext}
-						todos={latestTodos}
-					/> */}
-					<KiloTaskHeader
-						task={task}
-						tokensIn={apiMetrics.totalTokensIn}
-						tokensOut={apiMetrics.totalTokensOut}
-						cacheWrites={apiMetrics.totalCacheWrites}
-						cacheReads={apiMetrics.totalCacheReads}
-						totalCost={apiMetrics.totalCost}
-						contextTokens={apiMetrics.contextTokens}
-						buttonsDisabled={sendingDisabled}
-						handleCondenseContext={handleCondenseContext}
-						onClose={handleTaskCloseButtonClick}
-						groupedMessages={groupedMessages}
-						onMessageClick={handleMessageClick}
-						isTaskActive={sendingDisabled}
 						todos={latestTodos}
 					/>
-					{/* kilocode_change start */}
 
 					{hasSystemPromptOverride && (
 						<div className="px-3">
@@ -1538,123 +1409,61 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 					)}
 				</>
 			) : (
-				<div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-4 relative">
-					{/* Moved Task Bar Header Here */}
-					{taskHistoryFullLength !== 0 && (
-						<div className="flex text-vscode-descriptionForeground w-full mx-auto px-5 pt-3">
-							<div className="flex items-center gap-1 cursor-pointer" onClick={toggleExpanded}>
-								{taskHistoryFullLength < 10 && (
-									<span className={`font-medium text-xs `}>{t("history:recentTasks")}</span>
-								)}
-								<span
-									className={`codicon  ${isExpanded ? "codicon-eye" : "codicon-eye-closed"} scale-90`}
-								/>
-							</div>
-						</div>
-					)}
-					{!showTelemetryBanner && (
-						<div>
-							<OrganizationSelector className="absolute top-2 right-3" />
-						</div>
-					)}
-					{/* kilocode_change start: changed the classes to support notifications */}
-					<div className="w-full h-full flex flex-col gap-4 px-3.5 transition-all duration-300">
-						{/* kilocode_change end */}
-						{/* Version indicator in top-right corner - only on welcome screen */}
-						{/* kilocode_change: do not show */}
-						{/* <VersionIndicator
+				<div className="flex flex-col h-full justify-center p-6 min-h-0 overflow-y-auto gap-4 relative">
+					<div className="flex flex-col items-start gap-2 justify-center h-full min-[400px]:px-6">
+						<VersionIndicator
 							onClick={() => setShowAnnouncementModal(true)}
 							className="absolute top-2 right-3 z-10"
 						/>
-
-						<RooHero /> */}
-
-						{/* kilocode_change start: KilocodeNotifications + Layout fixes */}
-						{showTelemetryBanner && <TelemetryBanner />}
-						{!showTelemetryBanner && (
-							<div className={taskHistoryFullLength === 0 ? "mt-10" : undefined}>
-								<KilocodeNotifications />
-							</div>
-						)}
-						<div className="flex flex-grow flex-col justify-center gap-4">
-							{/* kilocode_change end */}
-							<p className="text-vscode-editor-foreground leading-normal font-vscode-font-family text-center text-balance max-w-[380px] mx-auto my-0">
+						<div className="flex flex-col gap-4 w-full">
+							<RooHero />
+							{/* Show RooTips when authenticated or when user is new */}
+							{taskHistory.length < 6 && <RooTips />}
+							{/* Everyone should see their task history if any */}
+							{taskHistory.length > 0 && <HistoryPreview />}
+						</div>
+						{/* Logged out users should see a one-time upsell, but not for brand new users */}
+						{!cloudIsAuthenticated && taskHistory.length >= 6 && (
+							<DismissibleUpsell
+								upsellId="taskList2"
+								icon={<Cloud className="size-5 mt-0.5 shrink-0" />}
+								onClick={() => openUpsell()}
+								dismissOnClick={false}
+								className="!bg-vscode-editor-background mt-6 border-border rounded-xl pl-4 pr-3 py-3 !text-base">
 								<Trans
-									i18nKey="chat:about"
+									i18nKey="cloud:upsell.taskList"
 									components={{
-										DocsLink: (
-											<a
-												href={buildDocLink("", "welcome")}
-												target="_blank"
-												rel="noopener noreferrer">
-												the docs
-											</a>
-										),
+										learnMoreLink: <VSCodeLink href="#" />,
 									}}
 								/>
-							</p>
-							{taskHistoryFullLength === 0 && <IdeaSuggestionsBox />} {/* kilocode_change */}
-							{/*<div className="mb-2.5">
-								{cloudIsAuthenticated || taskHistory.length < 4 ? <RooTips /> : <RooCloudCTA />}
-							</div> kilocode_change: do not show */}
-							{/* Show the task history preview if expanded and tasks exist */}
-							{taskHistoryFullLength > 0 && isExpanded && (
-								<HistoryPreview taskHistoryVersion={taskHistoryVersion} />
-							)}
-							{/* kilocode_change start: KilocodeNotifications + Layout fixes */}
-						</div>
-						{/* kilocode_change end */}
+							</DismissibleUpsell>
+						)}
 					</div>
-				</div>
-			)}
-
-			{/*
-			// Flex layout explanation:
-			// 1. Content div above uses flex: "1 1 0" to:
-			//    - Grow to fill available space (flex-grow: 1)
-			//    - Shrink when AutoApproveMenu needs space (flex-shrink: 1)
-			//    - Start from zero size (flex-basis: 0) to ensure proper distribution
-			//    minHeight: 0 allows it to shrink below its content height
-			//
-			// 2. AutoApproveMenu uses flex: "0 1 auto" to:
-			//    - Not grow beyond its content (flex-grow: 0)
-			//    - Shrink when viewport is small (flex-shrink: 1)
-			//    - Use its content size as basis (flex-basis: auto)
-			//    This ensures it takes its natural height when there's space
-			//    but becomes scrollable when the viewport is too small
-			*/}
-			{/* kilocode_change: added settings toggle for this */}
-			{!task && showAutoApproveMenu && (
-				<div className="mb-1 flex-initial min-h-0">
-					<AutoApproveMenu />
 				</div>
 			)}
 
 			{task && (
 				<>
-					<div className="grow flex" ref={scrollContainerRef}>
-						<Virtuoso
-							ref={virtuosoRef}
-							key={task.ts}
-							className="scrollable grow overflow-y-scroll mb-1"
-							// increasing top by 3_000 to prevent jumping around when user collapses a row
-							increaseViewportBy={{ top: 400, bottom: 400 }} // kilocode_change: use more modest numbers to see if they reduce gray screen incidence
-							data={groupedMessages}
-							itemContent={itemContent}
-							atBottomStateChange={(isAtBottom: boolean) => {
-								setIsAtBottom(isAtBottom)
-								if (isAtBottom) {
-									disableAutoScrollRef.current = false
-								}
-								setShowScrollToBottom(disableAutoScrollRef.current && !isAtBottom)
-							}}
-							atBottomThreshold={10}
-							initialTopMostItemIndex={groupedMessages.length - 1}
-						/>
-					</div>
-					<div className={`flex-initial min-h-0 ${!areButtonsVisible ? "mb-1" : ""}`}>
-						{/* kilocode_change: added settings toggle for this */}
-						{showAutoApproveMenu && <AutoApproveMenu />}
+					<div className="grow flex flex-col min-h-0" ref={scrollContainerRef}>
+						<div className="flex-auto min-h-0">
+							<Virtuoso
+								ref={virtuosoRef}
+								key={task.ts}
+								className="h-full overflow-y-auto mb-1"
+								increaseViewportBy={{ top: 3_000, bottom: 1000 }}
+								data={groupedMessages}
+								itemContent={itemContent}
+								atBottomStateChange={(isAtBottom: boolean) => {
+									setIsAtBottom(isAtBottom)
+									if (isAtBottom) {
+										disableAutoScrollRef.current = false
+									}
+									setShowScrollToBottom(disableAutoScrollRef.current && !isAtBottom)
+								}}
+								atBottomThreshold={10}
+								initialTopMostItemIndex={groupedMessages.length - 1}
+							/>
+						</div>
 					</div>
 					{areButtonsVisible && (
 						<div
@@ -1668,6 +1477,7 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 							{showScrollToBottom ? (
 								<StandardTooltip content={t("chat:scrollToBottom")}>
 									<Button
+										variant="secondary"
 										className="flex-[2]"
 										onClick={() => {
 											scrollToBottomSmooth()
@@ -1702,6 +1512,7 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 																				: undefined
 											}>
 											<Button
+												variant="primary"
 												disabled={!enableButtons}
 												className={secondaryButtonText ? "flex-1 mr-[6px]" : "flex-[2] mr-0"}
 												onClick={() => handlePrimaryButtonClick(inputValue, selectedImages)}>
@@ -1723,6 +1534,7 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 																: undefined
 											}>
 											<Button
+												variant="secondary"
 												disabled={!enableButtons && !(isStreaming && !didClickCancel)}
 												className={isStreaming ? "flex-[2] ml-0" : "flex-1 ml-[6px]"}
 												onClick={() => handleSecondaryButtonClick(inputValue, selectedImages)}>
@@ -1773,21 +1585,18 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 				mode={mode}
 				setMode={setMode}
 				modeShortcutText={modeShortcutText}
-				sendMessageOnEnter={sendMessageOnEnter} // kilocode_change
+				isBrowserSessionActive={!!isBrowserSessionActive}
+				showBrowserDockToggle={showBrowserDockToggle}
 			/>
-			{/* kilocode_change: added settings toggle the profile and model selection */}
-			<BottomControls showApiConfig />
-			{/* kilocode_change: end */}
 
-			{/* kilocode_change: disable {isProfileDisabled && (
+			{isProfileDisabled && (
 				<div className="px-3">
 					<ProfileViolationWarning />
 				</div>
-			)} */}
+			)}
 
 			<div id="roo-portal" />
-			{/* kilocode_change: disable  */}
-			{/* <CloudUpsellDialog open={isUpsellOpen} onOpenChange={closeUpsell} onConnect={handleConnect} /> */}
+			<CloudUpsellDialog open={isUpsellOpen} onOpenChange={closeUpsell} onConnect={handleConnect} />
 		</div>
 	)
 }

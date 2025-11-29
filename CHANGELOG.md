@@ -1,2511 +1,2680 @@
-# kilo-code
+# Roo Code Changelog
 
-## 4.125.0
+## [3.34.8] - 2025-11-27
 
-### Minor Changes
+![3.34.8 Release - Race Condition Fix](/releases/3.34.8-release.png)
+
+- Fix: Race condition in new_task tool for native protocol (PR #9655 by @daniel-lxs)
 
-- [#2827](https://github.com/Kilo-Org/kilocode/pull/2827) [`c7793db`](https://github.com/Kilo-Org/kilocode/commit/c7793dbd44371431f68deb76863af5f0c21375f4) Thanks [@bea-leanix](https://github.com/bea-leanix)! - Added SAP AI Core provider
+## [3.34.7] - 2025-11-27
 
-- [#3895](https://github.com/Kilo-Org/kilocode/pull/3895) [`f5d3459`](https://github.com/Kilo-Org/kilocode/commit/f5d34595f3a8c9436fb870b5f22bb8094db9f3c5) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.30.1-v3.32.0
+![3.34.7 Release - More Native Tool Integrations](/releases/3.34.7-release.png)
 
-    - Feature: Support for OpenAI Responses 24 hour prompt caching (PR #9259 by @hannesrudolph)
-    - Fix: OpenAI Native encrypted_content handling and remove gpt-5-chat-latest verbosity flag (#9225 by @politsin, PR by @hannesrudolph)
-    - Refactor: Rename sliding-window to context-management and truncateConversationIfNeeded to manageContext (thanks @hannesrudolph!)
-    - Fix: Apply updated API profile settings when provider/model unchanged (#9208 by @hannesrudolph, PR by @hannesrudolph)
-    - Migrate conversation continuity to plugin-side encrypted reasoning items using Responses API for improved reliability (thanks @hannesrudolph!)
-    - Fix: Include mcpServers in getState() for auto-approval (#9190 by @bozoweed, PR by @daniel-lxs)
-    - Batch settings updates from the webview to the extension host for improved performance (thanks @cte!)
-    - Fix: Replace rate-limited badges with badgen.net to improve README reliability (thanks @daniel-lxs!)
-    - Fix: Prevent command_output ask from blocking in cloud/headless environments (thanks @daniel-lxs!)
-    - Fix: Model switch re-applies selected profile, ensuring task configuration stays in sync (#9179 by @hannesrudolph, PR by @hannesrudolph)
-    - Move auto-approval logic from `ChatView` to `Task` for better architecture (thanks @cte!)
-    - Add custom Button component with variant system (thanks @brunobergher!)
-    - Improvements to to-do lists and task headers (thanks @brunobergher!)
-    - Fix: Prevent crash when streaming chunks have null choices array (thanks @daniel-lxs!)
-    - Fix: Prevent context condensing on settings save when provider/model unchanged (#4430 by @hannesrudolph, PR by @daniel-lxs)
-    - Fix: Respect custom OpenRouter URL for all API operations (#8947 by @sstraus, PR by @roomote)
-    - Fix: Auto-retry on empty assistant response to prevent task failures (#9076 by @Akillatech, PR by @daniel-lxs)
-    - Fix: Use system role for OpenAI Compatible provider when streaming is disabled (#8215 by @whitfin, PR by @roomote)
-    - Fix: Prevent notification sound on attempt_completion with queued messages (#8537 by @hannesrudolph, PR by @roomote)
-    - Feat: Auto-switch to imported mode with architect fallback for better mode detection (#8239 by @hannesrudolph, PR by @daniel-lxs)
-    - Feat: Improve diff appearance in main chat view (thanks @hannesrudolph!)
-    - UX: Home screen visuals (thanks @brunobergher!)
-    - Fix: eliminate UI flicker during task cancellation (thanks @daniel-lxs!)
-    - Add Global Inference support for Bedrock models (#8750 by @ronyblum, PR by @hannesrudolph)
-    - Add Qwen3 embedding models (0.6B and 4B) to OpenRouter support (#9058 by @dmarkey, PR by @app/roomote)
-    - Fix: keep pinned models fixed at top of scrollable list (#8812 by @XiaoYingYo, PR by @app/roomote)
-    - Fix: update Opus 4.1 max tokens from 8K to 32K (#9045 by @kaveh-deriv, PR by @app/roomote)
-    - Set Claude Sonnet 4.5 as default for key providers (thanks @hannesrudolph!)
-    - Fix: dynamic provider model validation to prevent cross-contamination (#9047 by @NotADev137, PR by @daniel-lxs)
-    - Fix: Bedrock user agent to report full SDK details (#9031 by @ajjuaire, PR by @ajjuaire)
-    - Add file path tooltips with centralized PathTooltip component (#8278 by @da2ce7, PR by @daniel-lxs)
-    - Fix: Correct OpenRouter Mistral model embedding dimension from 3072 to 1536 (thanks @daniel-lxs!)
+- Support native tools in the Anthropic provider for improved tool calling (PR #9644 by @mrubens)
+- Enable native tool calling for z.ai models (PR #9645 by @mrubens)
+- Enable native tool calling for Moonshot models (PR #9646 by @mrubens)
+- Fix: OpenRouter tool calls handling improvements (PR #9642 by @mrubens)
+- Fix: OpenRouter GPT-5 strict schema validation for read_file tool (PR #9633 by @daniel-lxs)
+- Fix: Create parent directories early in write_to_file to prevent ENOENT errors (#9634 by @ivanenev, PR #9640 by @daniel-lxs)
+- Fix: Disable native tools and temperature support for claude-code provider (PR #9643 by @hannesrudolph)
+- Add 'taking you to cloud' screen after provider welcome for improved onboarding (PR #9652 by @mrubens)
+
+## [3.34.6] - 2025-11-26
+
+![3.34.6 Release - Bedrock Embeddings](/releases/3.34.6-release.png)
+
+- Add support for AWS Bedrock embeddings in code indexing (#8658 by @kyle-hobbs, PR #9475 by @ggoranov-smar)
+- Add native tool calling support for Mistral provider (PR #9625 by @hannesrudolph)
+- Wire MULTIPLE_NATIVE_TOOL_CALLS experiment to OpenAI parallel_tool_calls for parallel tool execution (PR #9621 by @hannesrudolph)
+- Add fine grained tool streaming for OpenRouter Anthropic (PR #9629 by @mrubens)
+- Allow global inference selection for Bedrock when cross-region is enabled (PR #9616 by @roomote)
+- Fix: Filter non-Anthropic content blocks before sending to Vertex API (#9583 by @cardil, PR #9618 by @hannesrudolph)
+- Fix: Restore content undefined check in WriteToFileTool.handlePartial() (#9611 by @Lissanro, PR #9614 by @daniel-lxs)
+- Fix: Prevent model cache from persisting empty API responses (#9597 by @zx2021210538, PR #9623 by @daniel-lxs)
+- Fix: Exclude access_mcp_resource tool when MCP has no resources (PR #9615 by @daniel-lxs)
+- Fix: Update default settings for inline terminal and codebase indexing (PR #9622 by @roomote)
+- Fix: Convert line_ranges strings to lineRanges objects in native tool calls (PR #9627 by @daniel-lxs)
+- Fix: Defer new_task tool_result until subtask completes for native protocol (PR #9628 by @daniel-lxs)
+
+## [3.34.5] - 2025-11-25
+
+![3.34.5 Release - Experimental Parallel Tool Calling](/releases/3.34.5-release.png)
+
+- Experimental feature to enable multiple native tool calls per turn (PR #9273 by @daniel-lxs)
+- Add Bedrock Opus 4.5 to global inference model list (PR #9595 by @roomote)
+- Fix: Update API handler when toolProtocol changes (PR #9599 by @mrubens)
+- Set native tools as default for minimax-m2 and claude-haiku-4.5 (PR #9586 by @daniel-lxs)
+- Make single file read only apply to XML tools (PR #9600 by @mrubens)
+- Enhance web-evals dashboard with dynamic tool columns and UX improvements (PR #9592 by @hannesrudolph)
+- Revert "Add support for Roo Code Cloud as an embeddings provider" while we fix some issues (PR #9602 by @mrubens)
+
+## [3.34.4] - 2025-11-25
+
+![3.34.4 Release - BFL Image Generation](/releases/3.34.4-release.png)
+
+- Add new Black Forest Labs image generation models, free on Roo Code Cloud and also available on OpenRouter (PR #9587 and #9589 by @mrubens)
+- Fix: Preserve dynamic MCP tool names in native mode API history to prevent tool name mismatches (PR #9559 by @daniel-lxs)
+- Fix: Preserve tool_use blocks in summary message during condensing with native tools to maintain conversation context (PR #9582 by @daniel-lxs)
+
+## [3.34.3] - 2025-11-25
+
+![3.34.3 Release - Streaming and Opus 4.5](/releases/3.34.3-release.png)
+
+- Implement streaming for native tool calls, providing real-time feedback during tool execution (PR #9542 by @daniel-lxs)
+- Add Claude Opus 4.5 model to Claude Code provider (PR #9560 by @mrubens)
+- Add Claude Opus 4.5 model to Bedrock provider (#9571 by @pisicode, PR #9572 by @roomote)
+- Enable caching for Opus 4.5 model to improve performance (#9567 by @iainRedro, PR #9568 by @roomote)
+- Add support for Roo Code Cloud as an embeddings provider (PR #9543 by @mrubens)
+- Fix ask_followup_question streaming issue and add missing tool cases (PR #9561 by @daniel-lxs)
+- Add contact links to About Roo Code settings page (PR #9570 by @roomote)
+- Switch from asdf to mise-en-place in bare-metal evals setup script (PR #9548 by @cte)
+
+## [3.34.2] - 2025-11-24
+
+![3.34.2 Release - Opus Conductor](/releases/3.34.2-release.png)
+
+- Add support for Claude Opus 4.5 in Anthropic and Vertex providers (PR #9541 by @daniel-lxs)
+- Add support for Claude Opus 4.5 in OpenRouter with prompt caching and reasoning budget (PR #9540 by @daniel-lxs)
+- Add Roo Code Cloud as an image generation provider (PR #9528 by @mrubens)
+- Fix: Gracefully skip unsupported content blocks in Gemini transformer (PR #9537 by @daniel-lxs)
+- Fix: Flush LiteLLM cache when credentials change on refresh (PR #9536 by @daniel-lxs)
+- Fix: Ensure XML parser state matches tool protocol on config update (PR #9535 by @daniel-lxs)
+- Update Cerebras models (PR #9527 by @sebastiand-cerebras)
+- Fix: Support reasoning_details format for Gemini 3 models (PR #9506 by @daniel-lxs)
+
+## [3.34.1] - 2025-11-23
+
+- Show the prompt for image generation in the UI (PR #9505 by @mrubens)
+- Fix double todo list display issue (PR #9517 by @mrubens)
+- Add tracking for cloud synced messages (PR #9518 by @mrubens)
+- Enable the Roo Code Cloud provider in evals (PR #9492 by @cte)
+
+## [3.34.0] - 2025-11-21
+
+![3.34.0 Release - Browser Use 2.0](/releases/3.34.0-release.png)
+
+- Add Browser Use 2.0 with enhanced browser interaction capabilities (PR #8941 by @hannesrudolph)
+- Add support for Baseten as a new AI provider (PR #9461 by @AlexKer)
+- Improve base OpenAI compatible provider with better error handling and configuration (PR #9462 by @mrubens)
+- Add provider-oriented welcome screen to improve onboarding experience (PR #9484 by @mrubens)
+- Pin Roo provider to the top of the provider list for better discoverability (PR #9485 by @mrubens)
+- Enhance native tool descriptions with examples and clarifications for better AI understanding (PR #9486 by @daniel-lxs)
+- Fix: Make cancel button immediately responsive during streaming (#9435 by @jwadow, PR #9448 by @daniel-lxs)
+- Fix: Resolve apply_diff performance regression from earlier changes (PR #9474 by @daniel-lxs)
+- Fix: Implement model cache refresh to prevent stale disk cache issues (PR #9478 by @daniel-lxs)
+- Fix: Copy model-level capabilities to OpenRouter endpoint models correctly (PR #9483 by @daniel-lxs)
+- Fix: Add fallback to yield tool calls regardless of finish_reason (PR #9476 by @daniel-lxs)
+
+## [3.33.3] - 2025-11-20
+
+![3.33.3 Release - Gemini 3 Pro Image Preview](/releases/3.33.3-release.png)
+
+- Add Google Gemini 3 Pro Image Preview to image generation models (PR #9440 by @app/roomote)
+- Add support for Minimax as Anthropic-compatible provider (PR #9455 by @daniel-lxs)
+- Store reasoning in conversation history for all providers (PR #9451 by @daniel-lxs)
+- Fix: Improve preserveReasoning flag to control API reasoning inclusion (PR #9453 by @daniel-lxs)
+- Fix: Prevent OpenAI Native parallel tool calls for native tool calling (PR #9433 by @hannesrudolph)
+- Fix: Improve search and replace symbol parsing (PR #9456 by @daniel-lxs)
+- Fix: Send tool_result blocks for skipped tools in native protocol (PR #9457 by @daniel-lxs)
+- Fix: Improve markdown formatting and add reasoning support (PR #9458 by @daniel-lxs)
+- Fix: Prevent duplicate environment_details when resuming cancelled tasks (PR #9442 by @daniel-lxs)
+- Improve read_file tool description with examples (PR #9422 by @daniel-lxs)
+- Update glob dependency to ^11.1.0 (PR #9449 by @jr)
+- Update tar-fs to 3.1.1 via pnpm override (PR #9450 by @app/roomote)
+
+## [3.33.2] - 2025-11-19
+
+- Enable native tool calling for Gemini provider (PR #9343 by @hannesrudolph)
+- Add RCC credit balance display (PR #9386 by @jr)
+- Fix: Preserve user images in native tool call results (PR #9401 by @daniel-lxs)
+- Perf: Reduce excessive getModel() calls and implement disk cache fallback (PR #9410 by @daniel-lxs)
+- Show zero price for free models (PR #9419 by @mrubens)
+
+## [3.33.1] - 2025-11-18
+
+![3.33.1 Release - Native Tool Protocol Fixes](/releases/3.33.1-release.png)
+
+- Add native tool calling support to OpenAI-compatible (PR #9369 by @mrubens)
+- Fix: Resolve native tool protocol race condition causing 400 errors (PR #9363 by @daniel-lxs)
+- Fix: Update tools to return structured JSON for native protocol (PR #9373 by @daniel-lxs)
+- Fix: Include nativeArgs in tool repetition detection (PR #9377 by @daniel-lxs)
+- Fix: Ensure no XML parsing when protocol is native (PR #9371 by @daniel-lxs)
+- Fix: Gemini maxOutputTokens and reasoning config (PR #9375 by @hannesrudolph)
+- Fix: Gemini thought signature validation and token counting errors (PR #9380 by @hannesrudolph)
+- Fix: Exclude XML tool examples from MODES section when native protocol enabled (PR #9367 by @daniel-lxs)
+- Retry eval tasks if API instability detected (PR #9365 by @cte)
+- Add toolProtocol property to PostHog tool usage telemetry (PR #9374 by @app/roomote)
+
+## [3.33.0] - 2025-11-18
+
+![v3.33.0 Release - Twin Kangaroos and the Gemini Constellation](/releases/v3.33.0-release.png)
+
+- Add Gemini 3 Pro Preview model (PR #9357 by @hannesrudolph)
+- Improve Google Gemini defaults with better temperature and cost reporting (PR #9327 by @hannesrudolph)
+- Enable native tool calling for openai-native provider (PR #9348 by @hannesrudolph)
+- Add git status information to environment details (PR #9310 by @daniel-lxs)
+- Add tool protocol selector to advanced settings (PR #9324 by @daniel-lxs)
+- Implement dynamic tool protocol resolution with proper precedence hierarchy (PR #9286 by @daniel-lxs)
+- Move Import/Export functionality to Modes view toolbar and cleanup Mode Edit view (PR #9077 by @hannesrudolph)
+- Update cloud agent CTA to point to setup page (PR #9338 by @app/roomote)
+- Fix: Prevent duplicate tool_result blocks in native tool protocol (PR #9248 by @daniel-lxs)
+- Fix: Format tool responses properly for native protocol (PR #9270 by @daniel-lxs)
+- Fix: Centralize toolProtocol configuration checks (PR #9279 by @daniel-lxs)
+- Fix: Preserve tool blocks for native protocol in conversation history (PR #9319 by @daniel-lxs)
+- Fix: Prevent infinite loop when task_done succeeds (PR #9325 by @daniel-lxs)
+- Fix: Sync parser state with profile/model changes (PR #9355 by @daniel-lxs)
+- Fix: Pass tool protocol parameter to lineCountTruncationError (PR #9358 by @daniel-lxs)
+- Use VSCode theme color for outline button borders (PR #9336 by @app/roomote)
+- Replace broken badgen.net badges with shields.io (PR #9318 by @app/roomote)
+- Add max git status files setting to evals (PR #9322 by @mrubens)
+- Roo Code Cloud Provider pricing page and changes elsewhere (PR #9195 by @brunobergher)
+
+## [3.32.1] - 2025-11-14
+
+![3.32.1 Release - Bug Fixes](/releases/3.32.1-release.png)
+
+- Fix: Add abort controller for request cancellation in OpenAI native protocol (PR #9276 by @daniel-lxs)
+- Fix: Resolve duplicate tool blocks causing 'tool has already been used' error in native protocol mode (PR #9275 by @daniel-lxs)
+- Fix: Prevent duplicate tool_result blocks in native protocol mode for read_file (PR #9272 by @daniel-lxs)
+- Fix: Correct OpenAI Native handling of encrypted reasoning blocks to prevent errors during condensing (PR #9263 by @hannesrudolph)
+- Fix: Disable XML parser for native tool protocol to prevent parsing conflicts (PR #9277 by @daniel-lxs)
+
+## [3.32.0] - 2025-11-14
+
+![3.32.0 Release - GPT-5.1 models and OpenAI prompt caching](/releases/3.32.0-release.png)
+
+- Feature: Add GPT-5.1 models to OpenAI provider (PR #9252 by @hannesrudolph)
+- Feature: Support for OpenAI Responses 24 hour prompt caching (PR #9259 by @hannesrudolph)
+- Fix: Repair the share button in the UI (PR #9253 by @hannesrudolph)
+- Docs: Include PR numbers in the release guide to improve traceability (PR #9236 by @hannesrudolph)
+
+## [3.31.3] - 2025-11-13
+
+![3.31.3 Release - Kangaroo Decrypting a Message](/releases/3.31.3-release.png)
+
+- Fix: OpenAI Native encrypted_content handling and remove gpt-5-chat-latest verbosity flag (#9225 by @politsin, PR by @hannesrudolph)
+- Fix: Roo Code Cloud provider Anthropic input token normalization to avoid double-counting (thanks @hannesrudolph!)
+- Refactor: Rename sliding-window to context-management and truncateConversationIfNeeded to manageContext (thanks @hannesrudolph!)
+
+## [3.31.2] - 2025-11-12
+
+- Fix: Apply updated API profile settings when provider/model unchanged (#9208 by @hannesrudolph, PR by @hannesrudolph)
+- Migrate conversation continuity to plugin-side encrypted reasoning items using Responses API for improved reliability (thanks @hannesrudolph!)
+- Fix: Include mcpServers in getState() for auto-approval (#9190 by @bozoweed, PR by @daniel-lxs)
+- Batch settings updates from the webview to the extension host for improved performance (thanks @cte!)
+- Fix: Replace rate-limited badges with badgen.net to improve README reliability (thanks @daniel-lxs!)
+
+## [3.31.1] - 2025-11-11
+
+![3.31.1 Release - Kangaroo Stuck in the Clouds](/releases/3.31.1-release.png)
+
+- Fix: Prevent command_output ask from blocking in cloud/headless environments (thanks @daniel-lxs!)
+- Add IPC command for sending messages to the current task (thanks @mrubens!)
+- Fix: Model switch re-applies selected profile, ensuring task configuration stays in sync (#9179 by @hannesrudolph, PR by @hannesrudolph)
+- Move auto-approval logic from `ChatView` to `Task` for better architecture (thanks @cte!)
+- Add custom Button component with variant system (thanks @brunobergher!)
+
+## [3.31.0] - 2025-11-07
+
+![3.31.0 Release - Todo List and Task Header Improvements](/releases/3.31.0-release.png)
+
+- Improvements to to-do lists and task headers (thanks @brunobergher!)
+- Fix: Prevent crash when streaming chunks have null choices array (thanks @daniel-lxs!)
+- Fix: Prevent context condensing on settings save when provider/model unchanged (#4430 by @hannesrudolph, PR by @daniel-lxs)
+- Fix: Respect custom OpenRouter URL for all API operations (#8947 by @sstraus, PR by @roomote)
+- Add comprehensive error logging to Roo Cloud provider (thanks @daniel-lxs!)
+- UX: Less caffeinated kangaroo (thanks @brunobergher!)
+
+## [3.30.3] - 2025-11-06
+
+![3.30.3 Release - Moonshot Brain](/releases/3.30.3-release.png)
+
+- Feat: Add kimi-k2-thinking model to Moonshot provider (thanks @daniel-lxs!)
+- Fix: Auto-retry on empty assistant response to prevent task failures (#9076 by @Akillatech, PR by @daniel-lxs)
+- Fix: Use system role for OpenAI Compatible provider when streaming is disabled (#8215 by @whitfin, PR by @roomote)
+- Fix: Prevent notification sound on attempt_completion with queued messages (#8537 by @hannesrudolph, PR by @roomote)
+- Feat: Auto-switch to imported mode with architect fallback for better mode detection (#8239 by @hannesrudolph, PR by @daniel-lxs)
+- Feat: Add MiniMax-M2-Stable model and enable prompt caching (#9070 by @nokaka, PR by @roomote)
+- Feat: Improve diff appearance in main chat view (thanks @hannesrudolph!)
+- UX: Home screen visuals (thanks @brunobergher!)
+- Docs: Clarify that setting 0 disables Error & Repetition Limit (thanks @roomote!)
+- Chore: Update dependency @changesets/cli to v2.29.7 (thanks @renovate!)
+
+## [3.30.2] - 2025-11-05
+
+![3.30.2 Release - Eliminating UI Flicker](/releases/3.30.2-release.png)
+
+- Fix: eliminate UI flicker during task cancellation (thanks @daniel-lxs!)
+- Add Global Inference support for Bedrock models (#8750 by @ronyblum, PR by @hannesrudolph)
+- Add Qwen3 embedding models (0.6B and 4B) to OpenRouter support (#9058 by @dmarkey, PR by @app/roomote)
+- Fix: resolve incorrect commit location when GIT_DIR set in Dev Containers (#4567 by @nonsleepr, PR by @heyseth)
+- Fix: keep pinned models fixed at top of scrollable list (#8812 by @XiaoYingYo, PR by @app/roomote)
+- Fix: update Opus 4.1 max tokens from 8K to 32K (#9045 by @kaveh-deriv, PR by @app/roomote)
+- Set Claude Sonnet 4.5 as default for key providers (thanks @hannesrudolph!)
+- Fix: dynamic provider model validation to prevent cross-contamination (#9047 by @NotADev137, PR by @daniel-lxs)
+- Fix: Bedrock user agent to report full SDK details (#9031 by @ajjuaire, PR by @ajjuaire)
+- Add file path tooltips with centralized PathTooltip component (#8278 by @da2ce7, PR by @daniel-lxs)
+- Add conditional test running to pre-push hook (thanks @daniel-lxs!)
+- Update Cerebras integration (thanks @sebastiand-cerebras!)
+
+## [3.30.1] - 2025-11-04
+
+- Fix: Correct OpenRouter Mistral model embedding dimension from 3072 to 1536 (thanks @daniel-lxs!)
+- Revert: Previous UI flicker fix that caused issues with task resumption (thanks @mrubens!)
+
+## [3.30.0] - 2025-11-03
+
+![3.30.0 Release - PR Fixer](/releases/3.30.0-release.png)
+
+- Feat: Add OpenRouter embedding provider support (#8972 by @dmarkey, PR by @dmarkey)
+- Feat: Add GLM-4.6 model to Fireworks provider (#8752 by @mmealman, PR by @app/roomote)
+- Feat: Add MiniMax M2 model to Fireworks provider (#8961 by @dmarkey, PR by @app/roomote)
+- Feat: Add preserveReasoning flag to include reasoning in API history (thanks @daniel-lxs!)
+- Fix: Prevent message loss during queue drain race condition (#8536 by @hannesrudolph, PR by @daniel-lxs)
+- Fix: Capture the reasoning content in base-openai-compatible for GLM 4.6 (thanks @mrubens!)
+- Fix: Create new Requesty profile during OAuth (thanks @Thibault00!)
+- Fix: Prevent UI flicker and enable resumption after task cancellation (thanks @daniel-lxs!)
+- Fix: Cleanup terminal settings tab and change default terminal to inline (thanks @hannesrudolph!)
+
+## [3.29.5] - 2025-11-01
+
+- Fix: Resolve Qdrant codebase_search error by adding keyword index for type field (#8963 by @rossdonald, PR by @app/roomote)
+- Fix cost and token tracking between provider styles to ensure accurate usage metrics (thanks @mrubens!)
+
+## [3.29.4] - 2025-10-30
+
+- Feat: Add Minimax Provider (thanks @Maosghoul!)
+- Fix: prevent infinite loop when canceling during auto-retry (#8901 by @mini2s, PR by @app/roomote)
+- Fix: Enhanced codebase index recovery and reuse ('Start Indexing' button now reuses existing Qdrant index) (#8129 by @jaroslaw-weber, PR by @heyseth)
+- Fix: make code index initialization non-blocking at activation (#8777 by @cjlawson02, PR by @daniel-lxs)
+- Fix: remove search_and_replace tool from codebase (#8891 by @hannesrudolph, PR by @app/roomote)
+- Fix: custom modes under custom path not showing (#8122 by @hannesrudolph, PR by @elianiva)
+- Fix: prevent MCP server restart when toggling tool permissions (#8231 by @hannesrudolph, PR by @heyseth)
+- Fix: truncate type definition to match max read line (#8149 by @chenxluo, PR by @elianiva)
+- Fix: auto-sync enableReasoningEffort with reasoning dropdown selection (thanks @daniel-lxs!)
+- Fix: Gate auth-driven Roo model refresh to active provider only (thanks @daniel-lxs!)
+- Prevent a noisy cloud agent exception (thanks @cte!)
+- Feat: improve @ file search for large projects (#5721 by @Naituw, PR by @daniel-lxs)
+- Feat: add zai-glm-4.6 model to Cerebras and set gpt-oss-120b as default (thanks @kevint-cerebras!)
+- Feat: rename MCP Errors tab to Logs for mixed-level messages (#8893 by @hannesrudolph, PR by @app/roomote)
+- docs(vscode-lm): clarify VS Code LM API integration warning (thanks @hannesrudolph!)
+
+## [3.29.3] - 2025-10-28
+
+- Update Gemini models with latest 09-2025 versions including Gemini 2.5 Pro and Flash (#8485 by @cleacos, PR by @roomote)
+- Add reasoning support for Z.ai GLM binary thinking mode (#8465 by @BeWater799, PR by @daniel-lxs)
+- Enable reasoning in Roo provider (thanks @mrubens!)
+- Add settings to configure time and cost display in system prompt (#8450 by @jaxnb, PR by @roomote)
+- Fix: Use max_output_tokens when available in LiteLLM fetcher (#8454 by @fabb, PR by @roomote)
+- Fix: Process queued messages after context condensing completes (#8477 by @JosXa, PR by @roomote)
+- Fix: Use monotonic clock for rate limiting to prevent timing issues (#7770 by @intermarkec, PR by @chrarnoldus)
+- Fix: Resolve checkpoint menu popover overflow (thanks @daniel-lxs!)
+- Fix: LiteLLM test failures after merge (thanks @daniel-lxs!)
+- Improve UX: Focus textbox and add newlines after adding to context (thanks @mrubens!)
+
+## [3.29.2] - 2025-10-27
+
+- Add support for LongCat-Flash-Thinking-FP8 models in Chutes AI provider (#8425 by @leakless21, PR by @roomote)
+- Fix: Remove specific Claude model version from settings descriptions to avoid outdated references (#8435 by @rwydaegh, PR by @roomote)
+- Fix: Correct caching logic in Roo provider to improve performance (thanks @mrubens!)
+- Fix: Ensure free models don't display pricing information in the UI (thanks @mrubens!)
+
+## [3.29.1] - 2025-10-26
+
+![3.29.1 Release - Window Cleaning](/releases/3.29.1-release.png)
+
+- Fix: Clean up max output token calculations to prevent context window overruns (#8821 by @enerage, PR by @roomote)
+- Fix: Change Add to Context keybinding to avoid Redo conflict (#8652 by @swythan, PR by @roomote)
+- Fix provider model loading race conditions (thanks @mrubens!)
+
+## [3.29.0] - 2025-10-24
+
+![3.29.0 Release - Intelligent File Reading](/releases/3.29.0-release.png)
+
+- Add token-budget based file reading with intelligent preview to avoid context overruns (thanks @daniel-lxs!)
+- Enable browser-use tool for all image-capable models (#8116 by @hannesrudolph, PR by @app/roomote!)
+- Add dynamic model loading for Roo Code Cloud provider (thanks @app/roomote!)
+- Fix: Respect nested .gitignore files in search_files (#7921 by @hannesrudolph, PR by @daniel-lxs)
+- Fix: Preserve trailing newlines in stripLineNumbers for apply_diff (#8020 by @liyi3c, PR by @app/roomote)
+- Fix: Exclude max tokens field for models that don't support it in export (#7944 by @hannesrudolph, PR by @elianiva)
+- Retry API requests on stream failures instead of aborting task (thanks @daniel-lxs!)
+- Improve auto-approve button responsiveness (thanks @daniel-lxs!)
+- Add checkpoint initialization timeout settings and fix checkpoint timeout warnings (#7843 by @NaccOll, PR by @NaccOll)
+- Always show checkpoint restore options regardless of change detection (thanks @daniel-lxs!)
+- Improve checkpoint menu translations (thanks @daniel-lxs!)
+- Add GLM-4.6-turbo model to chutes ai provider (thanks @mohammad154!)
+- Add Claude Haiku 4.5 to prompt caching models (thanks @hannesrudolph!)
+- Expand Z.ai model coverage with GLM-4.5-X, AirX, Flash (thanks @hannesrudolph!)
+- Update Mistral Medium model name (#8362 by @ThomsenDrake, PR by @ThomsenDrake)
+- Remove GPT-5 instructions/reasoning_summary from UI message metadata to prevent ui_messages.json bloat (thanks @hannesrudolph!)
+- Normalize docs-extractor audience tags; remove admin/stakeholder; strip tool invocations (thanks @hannesrudolph!)
+- Update X/Twitter username from roo_code to roocode (thanks @app/roomote!)
+- Update Configuring Profiles video link (thanks @app/roomote!)
+- Fix link text for Roomote Control in README (thanks @laz-001!)
+- Remove verbose error for cloud agents (thanks @cte!)
+- Try 5s status mutation timeout (thanks @cte!)
+
+## [3.28.18] - 2025-10-17
+
+- Fix: Remove request content from UI messages to improve performance and reduce clutter (#5601 by @MuriloFP, #8594 by @multivac2x, #8690 by @hannesrudolph, PR by @mrubens)
+- Fix: Prevent file editing issues when git diff views are open (thanks @hassoncs!)
+- Fix: Add userAgent to Bedrock client for version tracking (#8660 by @ajjuaire, PR by @app/roomote)
+- Feat: Z AI now uses only two coding endpoints for better performance (#8687 by @hannesrudolph)
+- Feat: Update image generation model selection for improved quality (thanks @chrarnoldus!)
+
+## [3.28.17] - 2025-10-15
+
+- Add support for Claude Haiku 4.5 model (thanks @daniel-lxs!)
+- Fix: Update zh-TW run command title translation (thanks @PeterDaveHello!)
+
+## [3.28.16] - 2025-10-09
+
+![3.28.16 Release - Expanded Context Window](/releases/3.28.16-release.png)
+
+- feat: Add Claude Sonnet 4.5 1M context window support for Claude Code (thanks @ColbySerpa!)
+- feat: Identify cloud tasks in the extension bridge (thanks @cte!)
+- fix: Add the parent task ID in telemetry (thanks @mrubens!)
+
+## [3.28.15] - 2025-10-03
+
+![3.28.15 Release - Kangaroo Sliding Down a Chute](/releases/3.28.15-release.png)
+
+- Add new DeepSeek and GLM models with detailed descriptions to the Chutes provider (thanks @mohammad154!)
+- Fix: properly reset cost limit tracking when user clicks "Reset and Continue" (#6889 by @alecoot, PR by app/roomote)
+- Fix: improve save button activation in prompts settings (#5780 by @beccare, PR by app/roomote)
+- Fix: overeager 'there are unsaved changes' dialog in settings (thanks @brunobergher!)
+- Fix: show send button when only images are selected in chat textarea (thanks app/roomote!)
+- Fix: Claude Sonnet 4.5 compatibility improvements (thanks @mrubens!)
+- Add UsageStats schema and type for better analytics tracking (thanks app/roomote!)
+- Include reasoning messages in cloud tasks (thanks @mrubens!)
+- Security: update dependency vite to v6.3.6 (thanks app/renovate!)
+- Deprecate free grok 4 fast model (thanks @mrubens!)
+- Remove unsupported Gemini 2.5 Flash Image Preview free model (thanks @SannidhyaSah!)
+- Add structured data to the homepage for better SEO (thanks @mrubens!)
+- Update dependency glob to v11.0.3 (thanks app/renovate!)
+
+## [3.28.14] - 2025-09-30
+
+![3.28.14 Release - GLM-4.6 Model Support](/releases/3.28.14-release.png)
+
+- Add support for GLM-4.6 model for z.ai provider (#8406 by @dmarkey, PR by @roomote)
+
+## [3.28.13] - 2025-09-29
+
+- Fix: Remove topP parameter from Bedrock inference config (#8377 by @ronyblum, PR by @daniel-lxs)
+- Fix: Correct Vertex AI Sonnet 4.5 model configuration (#8387 by @nickcatal, PR by @mrubens!)
+
+## [3.28.12] - 2025-09-29
+
+- Fix: Correct Anthropic Sonnet 4.5 model ID and add Bedrock 1M context checkbox (thanks @daniel-lxs!)
+
+## [3.28.11] - 2025-09-29
+
+- Fix: Correct Amazon Bedrock Claude Sonnet 4.5 model identifier (#8371 by @sunhyung, PR by @app/roomote)
+- Fix: Correct Claude Sonnet 4.5 model ID format (thanks @daniel-lxs!)
+
+## [3.28.10] - 2025-09-29
+
+![3.28.10 Release - Kangaroo Writing Sonnet 4.5](/releases/3.28.10-release.png)
+
+- Feat: Add Sonnet 4.5 support (thanks @daniel-lxs!)
+- Fix: Resolve max_completion_tokens issue for GPT-5 models in LiteLLM provider (#6979 by @lx1054331851, PR by @roomote)
+- Fix: Make chat icons properly sized with shrink-0 class (thanks @mrubens!)
+- Enhancement: Track telemetry settings changes for better analytics (thanks @mrubens!)
+- Web: Add testimonials section to website (thanks @brunobergher!)
+- CI: Refresh contrib.rocks cache workflow for contributor badges (thanks @hannesrudolph!)
+
+## [3.28.9] - 2025-09-26
+
+![3.28.9 Release - Supernova Upgrade](/releases/3.28.9-release.png)
+
+- The free Supernova model now has a 1M token context window (thanks @mrubens!)
+- Experiment to show the Roo provider on the welcome screen (thanks @mrubens!)
+- Web: Website improvements to https://roocode.com/ (thanks @brunobergher!)
+- Fix: Remove <thinking> tags from prompts for cleaner output and fewer tokens (#8318 by @hannesrudolph, PR by @app/roomote)
+- Correct tool use suggestion to improve model adherence to suggestion (thanks @hannesrudolph!)
+- feat: log out from cloud when resetting extension state (thanks @app/roomote!)
+- feat: Add telemetry tracking to DismissibleUpsell component (thanks @app/roomote!)
+- refactor: remove pr-reviewer mode (thanks @daniel-lxs!)
+- Removing user hint when refreshing models (thanks @requesty-JohnCosta27!)
+
+## [3.28.8] - 2025-09-25
+
+![3.28.8 Release - Bug fixes and improvements](/releases/3.28.8-release.png)
+
+- Fix: Resolve frequent "No tool used" errors by clarifying tool-use rules (thanks @hannesrudolph!)
+- Fix: Include initial ask in condense summarization (thanks @hannesrudolph!)
+- Add support for more free models in the Roo provider (thanks @mrubens!)
+- Show cloud switcher and option to add a team when logged in (thanks @mrubens!)
+- Add Opengraph image for web (thanks @brunobergher!)
+
+## [3.28.7] - 2025-09-23
+
+![3.28.7 Release - Hidden Thinking](/releases/3.28.7-release.png)
+
+- UX: Collapse thinking blocks by default with UI settings to always show them (thanks @brunobergher!)
+- Fix: Resolve checkpoint restore popover positioning issue (#8219 by @NaccOll, PR by @app/roomote)
+- Add cloud account switcher functionality (thanks @mrubens!)
+- Add support for zai-org/GLM-4.5-turbo model in Chutes provider (#8155 by @mugnimaestra, PR by @app/roomote)
+
+## [3.28.6] - 2025-09-23
+
+![3.28.6 Release - Kangaroo studying ancient codex](/releases/3.28.6-release.png)
+
+- Feat: Add GPT-5-Codex model (thanks @daniel-lxs!)
+- Feat: Add keyboard shortcut for toggling auto-approve (Cmd/Ctrl+Alt+A) (thanks @brunobergher!)
+- Fix: Improve reasoning block formatting for better readability (thanks @daniel-lxs!)
+- Fix: Respect Ollama Modelfile num_ctx configuration (#7797 by @hannesrudolph, PR by @app/roomote)
+- Fix: Prevent checkpoint text from wrapping in non-English languages (#8206 by @NaccOll, PR by @app/roomote)
+- Remove language selection and word wrap toggle from CodeBlock (thanks @mrubens!)
+- Feat: Add package.nls.json checking to find-missing-translations script (thanks @app/roomote!)
+- Fix: Bare metal evals fixes (thanks @cte!)
+- Fix: Follow-up questions should trigger the "interactive" state (thanks @cte!)
+
+## [3.28.5] - 2025-09-20
+
+![3.28.5 Release - Kangaroo staying hydrated](/releases/3.28.5-release.png)
+
+- Fix: Resolve duplicate rehydrate during reasoning; centralize rehydrate and preserve cancel metadata (#8153 by @hannesrudolph, PR by @hannesrudolph)
+- Add an announcement for Supernova (thanks @mrubens!)
+- Wrap code blocks by default for improved readability (thanks @mrubens!)
+- Fix: Support dash prefix in parseMarkdownChecklist for todo lists (#8054 by @NaccOll, PR by app/roomote)
+- Fix: Apply tiered pricing for Gemini models via Vertex AI (#8017 by @ikumi3, PR by app/roomote)
+- Update SambaNova models to latest versions (thanks @snova-jorgep!)
+- Update privacy policy to allow occasional emails (thanks @jdilla1277!)
+
+## [3.28.4] - 2025-09-19
+
+![3.28.4 Release - Supernova Discovery](/releases/3.28.4-release.png)
+
+- UX: Redesigned Message Feed (thanks @brunobergher!)
+- UX: Responsive Auto-Approve (thanks @brunobergher!)
+- Add telemetry retry queue for network resilience (thanks @daniel-lxs!)
+- Fix: Transform keybindings in nightly build to fix command+y shortcut (thanks @app/roomote!)
+- New code-supernova stealth model in the Roo Code Cloud provider (thanks @mrubens!)
+
+## [3.28.3] - 2025-09-16
+
+![3.28.3 Release - UI/UX Improvements and Bug Fixes](/releases/3.28.3-release.png)
+
+- Fix: Filter out Claude Code built-in tools (ExitPlanMode, BashOutput, KillBash) (#7817 by @juliettefournier-econ, PR by @roomote)
+- Replace + icon with edit icon for New Task button (#7941 by @hannesrudolph, PR by @roomote)
+- Fix: Corrected C# tree-sitter query (#5238 by @vadash, PR by @mubeen-zulfiqar)
+- Add keyboard shortcut for "Add to Context" action (#7907 by @hannesrudolph, PR by @roomote)
+- Fix: Context menu is obscured when edit message (#7759 by @mini2s, PR by @NaccOll)
+- Fix: Handle ByteString conversion errors in OpenAI embedders (#7959 by @PavelA85, PR by @daniel-lxs)
+- Add Z.ai coding plan support (thanks @daniel-lxs!)
+- Move slash commands to Settings tab with gear icon for discoverability (thanks @roomote!)
+- Reposition Add Image button inside ChatTextArea (thanks @roomote!)
+- Bring back a way to temporarily and globally pause auto-approve without losing your toggle state (thanks @brunobergher!)
+- Makes text area buttons appear only when there's text (thanks @brunobergher!)
+- CONTRIBUTING.md tweaks and issue template rewrite (thanks @hannesrudolph!)
+- Bump axios from 1.9.0 to 1.12.0 (thanks @dependabot!)
+
+## [3.28.2] - 2025-09-14
+
+![3.28.2 Release - Auto-approve improvements](/releases/3.28.2-release.png)
+
+- Improve auto-approve UI with smaller and more subtle design (thanks @brunobergher!)
+- Fix: Message queue re-queue loop in Task.ask() causing performance issues (#7861 by @hannesrudolph, PR by @daniel-lxs)
+- Fix: Restrict @-mention parsing to line-start or whitespace boundaries to prevent false triggers (#7875 by @hannesrudolph, PR by @app/roomote)
+- Fix: Make nested git repository warning persistent with path info for better visibility (#7884 by @hannesrudolph, PR by @app/roomote)
+- Fix: Include API key in Ollama /api/tags requests for authenticated instances (#7902 by @ItsOnlyBinary, PR by @app/roomote)
+- Fix: Preserve original first message context during conversation condensing (thanks @daniel-lxs!)
+- Add Qwen3 Next 80B A3B models to chutes provider (thanks @daniel-lxs!)
+- Disable Roomote Control on logout for better security (thanks @cte!)
+- Add padding to the cloudview for better visual spacing (thanks @mrubens!)
+
+## [3.28.1] - 2025-09-11
+
+![3.28.1 Release - Kangaroo riding rocket to the clouds](/releases/3.28.1-release.png)
+
+- Announce Roo Code Cloud!
+- Add cloud task button for opening tasks in Roo Code Cloud (thanks @app/roomote!)
+- Make Posthog telemetry the default (thanks @mrubens!)
+- Show notification when the checkpoint initialization fails (thanks @app/roomote!)
+- Bust cache in generated image preview (thanks @mrubens!)
+- Fix: Center active mode in selector dropdown on open (#7882 by @hannesrudolph, PR by @app/roomote)
+- Fix: Preserve first message during conversation condensing (thanks @daniel-lxs!)
+
+## [3.28.0] - 2025-09-10
+
+![3.28.0 Release - Continue tasks in Roo Code Cloud](/releases/3.28.0-release.png)
+
+- feat: Continue tasks in Roo Code Cloud (thanks @brunobergher!)
+- feat: Support connecting to Cloud without redirect handling (thanks @mrubens!)
+- feat: Add toggle to control task syncing to Cloud (thanks @jr!)
+- feat: Add click-to-edit, ESC-to-cancel, and fix padding consistency for chat messages (#7788 by @hannesrudolph, PR by @app/roomote)
+- feat: Make reasoning more visible (thanks @app/roomote!)
+- fix: Fix Groq context window display (thanks @mrubens!)
+- fix: Add GIT_EDITOR env var to merge-resolver mode for non-interactive rebase (thanks @daniel-lxs!)
+- fix: Resolve chat message edit/delete duplication issues (thanks @daniel-lxs!)
+- fix: Reduce CodeBlock button z-index to prevent overlap with popovers (#7703 by @A0nameless0man, PR by @daniel-lxs)
+- fix: Revert PR #7188 - Restore temperature parameter to fix TabbyApi/ExLlamaV2 crashes (#7581 by @drknyt, PR by @daniel-lxs)
+- fix: Make ollama models info transport work like lmstudio (#7674 by @ItsOnlyBinary, PR by @ItsOnlyBinary)
+- fix: Update DeepSeek pricing to new unified rates effective Sept 5, 2025 (#7685 by @NaccOll, PR by @app/roomote)
+- feat: Update Vertex AI models and regions (#7725 by @ssweens, PR by @ssweens)
+- chore: Update dependency eslint-plugin-turbo to v2.5.6 (thanks @app/renovate!)
+- chore: Update dependency @changesets/cli to v2.29.6 (thanks @app/renovate!)
+- chore: Update dependency nock to v14.0.10 (thanks @app/renovate!)
+- chore: Update dependency eslint-config-prettier to v10.1.8 (thanks @app/renovate!)
+- chore: Update dependency esbuild to v0.25.9 (thanks @app/renovate!)
+
+## [3.27.0] - 2025-09-05
+
+![3.27.0 Release - Bug Fixes and Improvements](/releases/3.27.0-release.png)
+
+- Add: User message editing and deletion functionality (thanks @NaccOll!)
+- Add: Kimi K2-0905 model support in Chutes provider (#7700 by @pwilkin, PR by @app/roomote)
+- Fix: Prevent stack overflow in codebase indexing for large projects (#7588 by @StarTrai1, PR by @daniel-lxs)
+- Fix: Resolve race condition in Gemini Grounding Sources by improving code design (#6372 by @daniel-lxs, PR by @HahaBill)
+- Fix: Preserve conversation context by retrying with full conversation on invalid previous_response_id (thanks @daniel-lxs!)
+- Fix: Identify MCP and slash command config path in multiple folder workspaces (#6720 by @kfuglsang, PR by @NaccOll)
+- Fix: Handle array paths from VSCode terminal profiles correctly (#7695 by @Amosvcc, PR by @app/roomote)
+- Fix: Improve WelcomeView styling and readability (thanks @daniel-lxs!)
+- Fix: Resolve CI e2e test ETIMEDOUT errors when downloading VS Code (thanks @daniel-lxs!)
+
+## [3.26.7] - 2025-09-04
+
+![3.26.7 Release - OpenAI Service Tiers](/releases/3.26.7-release.png)
+
+- Feature: Add OpenAI Responses API service tiers (flex/priority) with UI selector and pricing (thanks @hannesrudolph!)
+- Feature: Add DeepInfra as a model provider in Roo Code (#7661 by @Thachnh, PR by @Thachnh)
+- Feature: Update kimi-k2-0905-preview and kimi-k2-turbo-preview models on the Moonshot provider (thanks @CellenLee!)
+- Feature: Add kimi-k2-0905-preview to Groq, Moonshot, and Fireworks (thanks @daniel-lxs and Cline!)
+- Fix: Prevent countdown timer from showing in history for answered follow-up questions (#7624 by @XuyiK, PR by @daniel-lxs)
+- Fix: Moonshot's maximum return token count limited to 1024 issue resolved (#6936 by @greyishsong, PR by @wangxiaolong100)
+- Fix: Add error transform to cryptic OpenAI SDK errors when API key is invalid (#7483 by @A0nameless0man, PR by @app/roomote)
+- Fix: Validate MCP tool exists before execution (#7631 by @R-omk, PR by @app/roomote)
+- Fix: Handle zsh glob qualifiers correctly (thanks @mrubens!)
+- Fix: Handle zsh process substitution correctly (thanks @mrubens!)
+- Fix: Minor zh-TW Traditional Chinese locale typo fix (thanks @PeterDaveHello!)
+
+## [3.26.6] - 2025-09-03
+
+![3.26.6 Release - Bug Fixes and Tool Improvements](/releases/3.26.6-release.png)
+
+- Add experimental run_slash_command tool to let the model initiate slash commands (thanks @app/roomote!)
+- Fix: use askApproval wrapper in insert_content and search_and_replace tools (#7648 by @hannesrudolph, PR by @app/roomote)
+- Add Kimi K2 Turbo model configuration to moonshotModels (thanks @wangxiaolong100!)
+- Fix: preserve scroll position when switching tabs in settings (thanks @DC-Dancao!)
+
+## [3.26.5] - 2025-09-03
+
+![3.26.5 Release - Enhanced AI Thinking Capabilities](/releases/3.26.5-release.png)
+
+- feat: Add support for Qwen3 235B A22B Thinking 2507 model in chutes (thanks @mohammad154!)
+- feat: Add auto-approve support for MCP access_resource tool (#7565 by @m-ibm, PR by @daniel-lxs)
+- feat: Add configurable embedding batch size for code indexing (#7356 by @BenLampson, PR by @app/roomote)
+- fix: Add cache reporting support for OpenAI-Native provider (thanks @hannesrudolph!)
+- feat: Move message queue to the extension host for better performance (thanks @cte!)
+
+## [3.26.4] - 2025-09-01
+
+![3.26.4 Release - Memory Optimization](/releases/3.26.4-release.png)
+
+- Optimize memory usage for image handling in webview (thanks @daniel-lxs!)
+- Fix: Special tokens should not break task processing (#7539 by @pwilkin, PR by @pwilkin)
+- Add Ollama API key support for Turbo mode (#7147 by @LivioGama, PR by @app/roomote)
+- Rename Account tab to Cloud tab for clarity (thanks @app/roomote!)
+- Add kangaroo-themed release image generation (thanks @mrubens!)
+
+## [3.26.3] - 2025-08-29
+
+![3.26.3 Release - Kangaroo Photo Editor](/releases/3.26.3-release.png)
+
+- Add optional input image parameter to image generation tool (thanks @roomote!)
+- Refactor: Flatten image generation settings structure (thanks @daniel-lxs!)
+- Show console logging in vitests when the --no-silent flag is set (thanks @hassoncs!)
+
+## [3.26.2] - 2025-08-28
+
+![3.26.2 Release - Kangaroo Digital Artist](/releases/3.26.2-release.png)
+
+- feat: Add experimental image generation tool with OpenRouter integration (thanks @daniel-lxs!)
+- Fix: Resolve GPT-5 Responses API issues with condensing and image support (#7334 by @nlbuescher, PR by @daniel-lxs)
+- Fix: Hide .rooignore'd files from environment details by default (#7368 by @AlexBlack772, PR by @app/roomote)
+- Fix: Exclude browser scroll actions from repetition detection (#7470 by @cgrierson-smartsheet, PR by @app/roomote)
+
+## [3.26.1] - 2025-08-27
+
+![3.26.1 Release - Kangaroo Network Engineer](/releases/3.26.1-release.png)
+
+- Add Vercel AI Gateway provider integration (thanks @joshualipman123!)
+- Add support for Vercel embeddings (thanks @mrubens!)
+- Enable on-disk storage for Qdrant vectors and HNSW index (thanks @daniel-lxs!)
+- Show model ID in API configuration dropdown (thanks @daniel-lxs!)
+- Update tooltip component to match native VSCode tooltip shadow styling (thanks @roomote!)
+- Fix: remove duplicate cache display in task header (thanks @mrubens!)
+- Random chat text area cleanup (thanks @cte!)
+
+## [3.26.0] - 2025-08-26
+
+![3.26.0 Release - Kangaroo Speed Racer](/releases/3.26.0-release.png)
+
+- Sonic -> Grok Code Fast
+- feat: Add Qwen Code CLI API Support with OAuth Authentication (thanks @evinelias and Cline!)
+- feat: Add Deepseek v3.1 to Fireworks AI provider (#7374 by @dmarkey, PR by @app/roomote)
+- Add a built-in /init slash command (thanks @mrubens and @hannesrudolph!)
+- Fix: Make auto approve toggle trigger stay (#3909 by @kyle-apex, PR by @elianiva)
+- Fix: Preserve user input when selecting follow-up choices (#7316 by @teihome, PR by @daniel-lxs)
+- Fix: Handle Mistral thinking content as reasoning chunks (#6842 by @Biotrioo, PR by @app/roomote)
+- Fix: Resolve newTaskRequireTodos setting not working correctly (thanks @hannesrudolph!)
+- Fix: Requesty model listing (#7377 by @dtrugman, PR by @dtrugman)
+- feat: Hide static providers with no models from provider list (thanks @daniel-lxs!)
+- Add todos parameter to new_task tool usage in issue-fixer mode (thanks @hannesrudolph!)
+- Handle substitution patterns in command validation (thanks @mrubens!)
+- Mark code-workspace files as protected (thanks @mrubens!)
+- Update list of default allowed commands (thanks @mrubens!)
+- Follow symlinks in rooignore checks (thanks @mrubens!)
+- Show cache read and write prices for OpenRouter inference providers (thanks @chrarnoldus!)
+- chore(deps): Update dependency drizzle-kit to v0.31.4 (thanks @app/renovate!)
+
+## [3.25.23] - 2025-08-22
+
+- feat: add custom base URL support for Requesty provider (thanks @requesty-JohnCosta27!)
+- feat: add DeepSeek V3.1 model to Chutes AI provider (#7294 by @dmarkey, PR by @app/roomote)
+- Revert "feat: enable loading Roo modes from multiple files in .roo/modes directory" temporarily to fix a bug with mode installation
+
+## [3.25.22] - 2025-08-22
+
+- Add prompt caching support for Kimi K2 on Groq (thanks @daniel-lxs and @benank!)
+- Add documentation links for global custom instructions in UI (thanks @app/roomote!)
+
+## [3.25.21] - 2025-08-21
+
+- Ensure subtask results are provided to GPT-5 in OpenAI Responses API
+- Promote the experimental AssistantMessageParser to the default parser
+- Update DeepSeek models context window to 128k (thanks @JuanPerezReal)
+- Enable grounding features for Vertex AI (thanks @anguslees)
+- Allow orchestrator to pass TODO lists to subtasks
+- Improved MDM handling
+- Handle nullish token values in ContextCondenseRow to prevent UI crash (thanks @s97712)
+- Improved context window error handling for OpenAI and other providers
+- Add "installed" filter to Roo Marketplace (thanks @semidark)
+- Improve filesystem access checks (thanks @elianiva)
+- Support for loading Roo modes from multiple YAML files in the `.roo/modes/` directory (thanks @farazoman)
+- Add Featherless provider (thanks @DarinVerheijke)
+
+## [3.25.20] - 2025-08-19
+
+- Add announcement for Sonic model
+
+## [3.25.19] - 2025-08-19
+
+- Fix issue where new users couldn't select the Roo Code Cloud provider (thanks @daniel-lxs!)
+
+## [3.25.18] - 2025-08-19
+
+- Add new stealth Sonic model through the Roo Code Cloud provider
+- Fix: respect enableReasoningEffort setting when determining reasoning usage (#7048 by @ikbencasdoei, PR by @app/roomote)
+- Fix: prevent duplicate LM Studio models with case-insensitive deduplication (#6954 by @fbuechler, PR by @daniel-lxs)
+- Feat: simplify ask_followup_question prompt documentation (thanks @daniel-lxs!)
+- Feat: simple read_file tool for single-file-only models (thanks @daniel-lxs!)
+- Fix: Add missing zaiApiKey and doubaoApiKey to SECRET_STATE_KEYS (#7082 by @app/roomote)
+- Feat: Add new models and update configurations for vscode-lm (thanks @NaccOll!)
+
+## [3.25.17] - 2025-08-17
+
+- Fix: Resolve terminal reuse logic issues
+
+## [3.25.16] - 2025-08-16
+
+- Add support for OpenAI gpt-5-chat-latest model (#7057 by @PeterDaveHello, PR by @app/roomote)
+- Fix: Use native Ollama API instead of OpenAI compatibility layer (#7070 by @LivioGama, PR by @daniel-lxs)
+- Fix: Prevent XML entity decoding in diff tools (#7107 by @indiesewell, PR by @app/roomote)
+- Fix: Add type check before calling .match() on diffItem.content (#6905 by @pwilkin, PR by @app/roomote)
+- Refactor task execution system: improve call stack management (thanks @catrielmuller!)
+- Fix: Enable save button for provider dropdown and checkbox changes (thanks @daniel-lxs!)
+- Add an API for resuming tasks by ID (thanks @mrubens!)
+- Emit event when a task ask requires interaction (thanks @cte!)
+- Make enhance with task history default to true (thanks @liwilliam2021!)
+- Fix: Use cline.cwd as primary source for workspace path in codebaseSearchTool (thanks @NaccOll!)
+- Hotfix multiple folder workspace checkpoint (thanks @NaccOll!)
+
+## [3.25.15] - 2025-08-14
+
+- Fix: Remove 500-message limit to prevent scrollbar jumping in long conversations (#7052, #7063 by @daniel-lxs, PR by @app/roomote)
+- Fix: Reset condensing state when switching tasks (#6919 by @f14XuanLv, PR by @f14XuanLv)
+- Fix: Implement sitemap generation in TypeScript and remove XML file (#5231 by @abumalick, PR by @abumalick)
+- Fix: allowedMaxRequests and allowedMaxCost values not showing in the settings UI (thanks @chrarnoldus!)
+
+## [3.25.14] - 2025-08-13
+
+- Fix: Only include verbosity parameter for models that support it (#7054 by @eastonmeth, PR by @app/roomote)
+- Fix: Amazon Bedrock 1M context - Move anthropic_beta to additionalModelRequestFields (thanks @daniel-lxs!)
+- Fix: Make cancelling requests more responsive by reverting recent changes
+
+## [3.25.13] - 2025-08-12
+
+- Add Sonnet 1M context checkbox to Bedrock
+- Fix: add --no-messages flag to ripgrep to suppress file access errors (#6756 by @R-omk, PR by @app/roomote)
+- Add support for AGENT.md alongside AGENTS.md (#6912 by @Brendan-Z, PR by @app/roomote)
+- Remove deprecated GPT-4.5 Preview model (thanks @PeterDaveHello!)
+
+## [3.25.12] - 2025-08-12
+
+- Update: Claude Sonnet 4 context window configurable to 1 million tokens in Anthropic provider (thanks @daniel-lxs!)
+- Add: Minimal reasoning support to OpenRouter (thanks @daniel-lxs!)
+- Fix: Add configurable API request timeout for local providers (#6521 by @dabockster, PR by @app/roomote)
+- Fix: Add --no-sandbox flag to browser launch options (#6632 by @QuinsZouls, PR by @QuinsZouls)
+- Fix: Ensure JSON files respect .rooignore during indexing (#6690 by @evermoving, PR by @app/roomote)
+- Add: New Chutes provider models (#6698 by @fstandhartinger, PR by @app/roomote)
+- Add: OpenAI gpt-oss models to Amazon Bedrock dropdown (#6752 by @josh-clanton-powerschool, PR by @app/roomote)
+- Fix: Correct tool repetition detector to not block first tool call when limit is 1 (#6834 by @NaccOll, PR by @app/roomote)
+- Fix: Improve checkpoint service initialization handling (thanks @NaccOll!)
+- Update: Improve zh-TW Traditional Chinese locale (thanks @PeterDaveHello!)
+- Add: Task expand and collapse translations (thanks @app/roomote!)
+- Update: Exclude GPT-5 models from 20% context window output token cap (thanks @app/roomote!)
+- Fix: Truncate long model names in model selector to prevent overflow (thanks @app/roomote!)
+- Add: Requesty base url support (thanks @requesty-JohnCosta27!)
+
+## [3.25.11] - 2025-08-11
+
+- Add: Native OpenAI provider support for Codex Mini model (#5386 by @KJ7LNW, PR by @daniel-lxs)
+- Add: IO Intelligence Provider support (thanks @ertan2002!)
+- Fix: MCP startup issues and remove refresh notifications (thanks @hannesrudolph!)
+- Fix: Improvements to GPT-5 OpenAI provider configuration (thanks @hannesrudolph!)
+- Fix: Clarify codebase_search path parameter as optional and improve tool descriptions (thanks @app/roomote!)
+- Fix: Bedrock provider workaround for LiteLLM passthrough issues (thanks @jr!)
+- Fix: Token usage and cost being underreported on cancelled requests (thanks @chrarnoldus!)
+
+## [3.25.10] - 2025-08-07
+
+- Add support for GPT-5 (thanks Cline and @app/roomote!)
+- Fix: Use CDATA sections in XML examples to prevent parser errors (#4852 by @hannesrudolph, PR by @hannesrudolph)
+- Fix: Add missing MCP error translation keys (thanks @app/roomote!)
+
+## [3.25.9] - 2025-08-07
+
+- Fix: Resolve rounding issue with max tokens (#6806 by @markp018, PR by @mrubens)
+- Add support for GLM-4.5 and OpenAI gpt-oss models in Fireworks provider (#6753 by @alexfarlander, PR by @app/roomote)
+- Improve UX by focusing chat input when clicking plus button in extension menu (thanks @app/roomote!)
+
+## [3.25.8] - 2025-08-06
+
+- Fix: Prevent disabled MCP servers from starting processes and show correct status (#6036 by @hannesrudolph, PR by @app/roomote)
+- Fix: Handle current directory path "." correctly in codebase_search tool (#6514 by @hannesrudolph, PR by @app/roomote)
+- Fix: Trim whitespace from OpenAI base URL to fix model detection (#6559 by @vauhochzett, PR by @app/roomote)
+- Feat: Reduce Gemini 2.5 Pro minimum thinking budget to 128 (thanks @app/roomote!)
+- Fix: Improve handling of net::ERR_ABORTED errors in URL fetching (#6632 by @QuinsZouls, PR by @app/roomote)
+- Fix: Recover from error state when Qdrant becomes available (#6660 by @hannesrudolph, PR by @app/roomote)
+- Fix: Resolve memory leak in ChatView virtual scrolling implementation (thanks @xyOz-dev!)
+- Add: Swift files to fallback list (#5857 by @niteshbalusu11, #6555 by @sealad886, PR by @niteshbalusu11)
+- Feat: Clamp default model max tokens to 20% of context window (thanks @mrubens!)
+
+## [3.25.7] - 2025-08-05
+
+- Add support for Claude Opus 4.1
+- Add Fireworks AI provider (#6653 by @ershang-fireworks, PR by @ershang-fireworks)
+- Add Z AI provider (thanks @jues!)
+- Add Groq support for GPT-OSS
+- Add Cerebras support for GPT-OSS
+- Add code indexing support for multiple folders similar to task history (#6197 by @NaccOll, PR by @NaccOll)
+- Make mode selection dropdowns responsive (#6423 by @AyazKaan, PR by @AyazKaan)
+- Redesigned task header and task history (thanks @brunobergher!)
+- Fix checkpoints timing and ensure checkpoints work properly (#4827 by @mrubens, PR by @NaccOll)
+- Fix empty mode names from being saved (#5766 by @kfxmvp, PR by @app/roomote)
+- Fix MCP server creation when setting is disabled (#6607 by @characharm, PR by @app/roomote)
+- Update highlight layer style and align to textarea (#6647 by @NaccOll, PR by @NaccOll)
+- Fix UI for approving chained commands
+- Use assistantMessageParser class instead of parseAssistantMessage (#5340 by @qdaxb, PR by @qdaxb)
+- Conditionally include reminder section based on todo list config (thanks @NaccOll!)
+- Task and TaskProvider event emitter cleanup with new events (thanks @cte!)
+
+## [3.25.6] - 2025-08-01
+
+- Set horizon-beta model max tokens to 32k for OpenRouter (requested by @hannesrudolph, PR by @app/roomote)
+- Add support for syncing provider profiles from the cloud
+
+## [3.25.5] - 2025-08-01
+
+- Fix: Improve Claude Code ENOENT error handling with installation guidance (#5866 by @JamieJ1, PR by @app/roomote)
+- Fix: LM Studio model context length (#5075 by @Angular-Angel, PR by @pwilkin)
+- Fix: VB.NET indexing by implementing fallback chunking system (#6420 by @JensvanZutphen, PR by @daniel-lxs)
+- Add auto-approved cost limits (thanks @hassoncs!)
+- Add Cerebras as a provider (thanks @kevint-cerebras!)
+- Add Qwen 3 Coder from Cerebras (thanks @kevint-cerebras!)
+- Fix: Handle Qdrant deletion errors gracefully to prevent indexing interruption (thanks @daniel-lxs!)
+- Fix: Restore message sending when clicking save button (thanks @daniel-lxs!)
+- Fix: Linter not applied to locales/\*/README.md (thanks @liwilliam2021!)
+- Handle more variations of chaining and subshell command validation
+- More tolerant search/replace match
+- Clean up the auto-approve UI (thanks @mrubens!)
+- Skip interpolation for non-existent slash commands (thanks @app/roomote!)
+
+## [3.25.4] - 2025-07-30
+
+- feat: add SambaNova provider integration (#6077 by @snova-jorgep, PR by @snova-jorgep)
+- feat: add Doubao provider integration (thanks @AntiMoron!)
+- feat: set horizon-alpha model max tokens to 32k for OpenRouter (thanks @app/roomote!)
+- feat: add zai-org/GLM-4.5-FP8 model to Chutes AI provider (#6440 by @leakless21, PR by @app/roomote)
+- feat: add symlink support for AGENTS.md file loading (thanks @app/roomote!)
+- feat: optionally add task history context to prompt enhancement (thanks @liwilliam2021!)
+- fix: remove misleading task resumption message (#5850 by @KJ7LNW, PR by @KJ7LNW)
+- feat: add pattern to support Databricks /invocations endpoints (thanks @adambrand!)
+- fix: resolve navigator global error by updating mammoth and bluebird dependencies (#6356 by @hishtadlut, PR by @app/roomote)
+- feat: enhance token counting by extracting text from messages using VSCode LM API (#6112 by @sebinseban, PR by @NaccOll)
+- feat: auto-refresh marketplace data when organization settings change (thanks @app/roomote!)
+- fix: kill button for execute_command tool (thanks @daniel-lxs!)
+
+## [3.25.3] - 2025-07-30
+
+- Allow queueing messages with images
+- Increase Claude Code default max output tokens to 16k (#6125 by @bpeterson1991, PR by @app/roomote)
+- Add docs link for slash commands
+- Hide Gemini checkboxes on the welcome view
+- Clarify apply_diff tool descriptions to emphasize surgical edits
+- Fix: Prevent input clearing when clicking chat buttons (thanks @hassoncs!)
+- Update PR reviewer rules and mode configuration (thanks @daniel-lxs!)
+- Add translation check action to pull_request.opened event (thanks @app/roomote!)
+- Remove "(prev Roo Cline)" from extension title in all languages (thanks @app/roomote!)
+- Remove event types mention from PR reviewer rules (thanks @daniel-lxs!)
+
+## [3.25.2] - 2025-07-29
+
+- Fix: Show diff view before approval when background edits are disabled (thanks @daniel-lxs!)
+- Add support for organization-level MCP controls
+- Fix zap icon hover state
+
+## [3.25.1] - 2025-07-29
+
+- Add support for GLM-4.5-Air model to Chutes AI provider (#6376 by @matbgn, PR by @app/roomote)
+- Improve subshell validation for commands
+
+## [3.25.0] - 2025-07-29
+
+- Add message queueing (thanks @app/roomote!)
+- Add custom slash commands
+- Add options for URL Context and Grounding with Google Search to the Gemini provider (thanks @HahaBill!)
+- Add image support to read_file tool (thanks @samhvw8!)
+- Add experimental setting to prevent editor focus disruption (#4784 by @hannesrudolph, PR by @app/roomote)
+- Add prompt caching support for LiteLLM (#5791 by @steve-gore-snapdocs, PR by @MuriloFP)
+- Add markdown table rendering support
+- Fix list_files recursive mode now works for dot directories (#2992 by @avtc, #4807 by @zhang157686, #5409 by @MuriloFP, PR by @MuriloFP)
+- Add search functionality to mode selector popup and reorganize layout
+- Sync API config selector style with mode selector
+- Fix keyboard shortcuts for non-QWERTY layouts (#6161 by @shlgug, PR by @app/roomote)
+- Add ESC key handling for modes, API provider, and indexing settings popovers (thanks @app/roomote!)
+- Make task mode sticky to task (thanks @app/roomote!)
+- Add text wrapping to command patterns in Manage Command Permissions (thanks @app/roomote!)
+- Update list-files test for fixed hidden files bug (thanks @daniel-lxs!)
+- Fix normalize Windows paths to forward slashes in mode export (#6307 by @hannesrudolph, PR by @app/roomote)
+- Ensure form-data >= 4.0.4
+- Fix filter out non-text tab inputs (Kilo-Org/kilocode#712 by @szermatt, PR by @hassoncs)
+
+## [3.24.0] - 2025-07-25
+
+- Add Hugging Face provider with support for open source models (thanks @TGlide!)
+- Add terminal command permissions UI to chat interface
+- Add support for Agent Rules standard via AGENTS.md (thanks @sgryphon!)
+- Add settings to control diagnostic messages
+- Fix auto-approve checkbox to be toggled at any time (thanks @KJ7LNW!)
+- Add efficiency warning for single SEARCH/REPLACE blocks in apply_diff (thanks @KJ7LNW!)
+- Fix respect maxReadFileLine setting for file mentions to prevent context exhaustion (thanks @sebinseban!)
+- Fix Ollama API URL normalization by removing trailing slashes (thanks @Naam!)
+- Fix restore list styles for markdown lists in chat interface (thanks @village-way!)
+- Add support for bedrock api keys
+- Add confirmation dialog and proper cleanup for marketplace mode removal
+- Fix cancel auto-approve timer when editing follow-up suggestion (thanks @hassoncs!)
+- Fix add error message when no workspace folder is open for code indexing
+
+## [3.23.19] - 2025-07-23
+
+- Add Roo Code Cloud Waitlist CTAs (thanks @brunobergher!)
+- Split commands on newlines when evaluating auto-approve
+- Smarter auto-deny of commands
+
+## [3.23.18] - 2025-07-23
+
+- Fix: Resolve 'Bad substitution' error in command parsing (#5978 by @KJ7LNW, PR by @daniel-lxs)
+- Fix: Add ErrorBoundary component for better error handling (#5731 by @elianiva, PR by @KJ7LNW)
+- Fix: Todo list toggle not working (thanks @chrarnoldus!)
+- Improve: Use SIGKILL for command execution timeouts in the "execa" variant (thanks @cte!)
+
+## [3.23.17] - 2025-07-22
+
+- Add: todo list tool enable checkbox to provider advanced settings
+- Add: Moonshot provider (thanks @CellenLee!)
+- Add: Qwen/Qwen3-235B-A22B-Instruct-2507 model to Chutes AI provider
+- Fix: move context condensing prompt to Prompts section (thanks @SannidhyaSah!)
+- Add: jump icon for newly created files
+- Fix: add character limit to prevent terminal output context explosion
+- Fix: resolve global mode export not including rules files
+- Fix: enable export, share, and copy buttons during API operations (thanks @MuriloFP!)
+- Add: configurable timeout for evals (5-10 min)
+- Add: auto-omit MCP content when no servers are configured
+- Fix: sort symlinked rules files by symlink names, not target names
+- Docs: clarify when to use update_todo_list tool
+- Add: Mistral embedding provider (thanks @SannidhyaSah!)
+- Fix: add run parameter to vitest command in rules (thanks @KJ7LNW!)
+- Update: the max_tokens fallback logic in the sliding window
+- Fix: Bedrock and Vertext token counting improvements (thanks @daniel-lxs!)
+- Add: llama-4-maverick model to Vertex AI provider (thanks @MuriloFP!)
+- Fix: properly distinguish between user cancellations and API failures
+- Fix: add case sensitivity mention to suggested fixes in apply_diff error message
+
+## [3.23.16] - 2025-07-19
+
+- Add global rate limiting for OpenAI-compatible embeddings (thanks @daniel-lxs!)
+- Add batch limiting to code indexer (thanks @daniel-lxs!)
+- Fix Docker port conflicts for evals services
+
+## [3.23.15] - 2025-07-18
+
+- Fix configurable delay for diagnostics to prevent premature error reporting
+- Add command timeout allowlist
+- Add description and whenToUse fields to custom modes in .roomodes (thanks @RandalSchwartz!)
+- Fix Claude model detection by name for API protocol selection (thanks @daniel-lxs!)
+- Move marketplace icon from overflow menu to top navigation
+- Optional setting to prevent completion with open todos
+- Added YouTube to website footer (thanks @thill2323!)
+
+## [3.23.14] - 2025-07-17
+
+- Log api-initiated tasks to a tmp directory
+
+## [3.23.13] - 2025-07-17
+
+- Add the ability to "undo" enhance prompt changes
+- Fix a bug where the path component of the baseURL for the LiteLLM provider contains path in it (thanks @ChuKhaLi)
+- Add support for Vertex AI model name formatting when using Claude Code with Vertex AI (thanks @janaki-sasidhar)
+- The list-files tool must include at least the first-level directory contents (thanks @qdaxb)
+- Add a configurable limit that controls both consecutive errors and tool repetitions (thanks @MuriloFP)
+- Add `.terraform/` and `.terragrunt-cache/` directories to the checkpoint exclusion patterns (thanks @MuriloFP)
+- Increase Ollama API timeout values (thanks @daniel-lxs)
+- Fix an issue where you need to "discard changes" before saving even though there are no settings changes
+- Fix `DirectoryScanner` memory leak and improve file limit handling (thanks @daniel-lxs)
+- Fix time formatting in environment (thanks @chrarnoldus)
+- Prevent empty mode names from being saved (thanks @daniel-lxs)
+- Improve auto-approve checkbox UX
+- Improve the chat message edit / delete functionality (thanks @liwilliam2021)
+- Add `commandExecutionTimeout` to `GlobalSettings`
+
+## [3.23.12] - 2025-07-15
+
+- Update the max-token calculation in model-params to better support Kimi K2 and others
+
+## [3.23.11] - 2025-07-14
+
+- Add Kimi K2 model to Groq along with fixes to context condensing math
+- Add Cmd+Shift+. keyboard shortcut for previous mode switching
+
+## [3.23.10] - 2025-07-14
+
+- Prioritize built-in model dimensions over custom dimensions (thanks @daniel-lxs!)
+- Add padding to the index model options
+
+## [3.23.9] - 2025-07-14
+
+- Enable Claude Code provider to run natively on Windows (thanks @SannidhyaSah!)
+- Add gemini-embedding-001 model to code-index service (thanks @daniel-lxs!)
+- Resolve vector dimension mismatch error when switching embedding models
+- Return the cwd in the exec tool's response so that the model is not lost after subsequent calls (thanks @chris-garrett!)
+- Add configurable timeout for command execution in VS Code settings
+
+## [3.23.8] - 2025-07-13
+
+- Add enable/disable toggle for code indexing (thanks @daniel-lxs!)
+- Add a command auto-deny list to auto-approve settings
+- Add navigation link to history tab in HistoryPreview
+
+## [3.23.7] - 2025-07-11
+
+- Fix Mermaid syntax warning (thanks @MuriloFP!)
+- Expand Vertex AI region config to include all available regions in GCP Vertex AI (thanks @shubhamgupta731!)
+- Handle Qdrant vector dimension mismatch when switching embedding models (thanks @daniel-lxs!)
+- Fix typos in comment & document (thanks @noritaka1166!)
+- Improve the display of codebase search results
+- Correct translation fallback logic for embedding errors (thanks @daniel-lxs!)
+- Clean up MCP tool disabling
+- Link to marketplace from modes and MCP tab
+- Fix TTS button display (thanks @sensei-woo!)
+- Add Devstral Medium model support
+- Add comprehensive error telemetry to code-index service (thanks @daniel-lxs!)
+- Exclude cache tokens from context window calculation (thanks @daniel-lxs!)
+- Enable dynamic tool selection in architect mode for context discovery
+- Add configurable max output tokens setting for claude-code
+
+## [3.23.6] - 2025-07-10
+
+- Grok 4
+
+## [3.23.5] - 2025-07-09
+
+- Fix: use decodeURIComponent in openFile (thanks @vivekfyi!)
+- Fix(embeddings): Translate error messages before sending to UI (thanks @daniel-lxs!)
+- Make account tab visible
+
+## [3.23.4] - 2025-07-09
+
+- Update chat area icons for better discoverability & consistency
+- Fix a bug that allowed `list_files` to return directory results that should be excluded by .gitignore
+- Add an overflow header menu to make the UI a little tidier (thanks @dlab-anton)
+- Fix a bug the issue where null custom modes configuration files cause a 'Cannot read properties of null' error (thanks @daniel-lxs!)
+- Replace native title attributes with StandardTooltip component for consistency (thanks @daniel-lxs!)
+
+## [3.23.3] - 2025-07-09
+
+- Remove erroneous line from announcement modal
+
+## [3.23.2] - 2025-07-09
+
+- Fix bug where auto-approval was intermittently failing
+
+## [3.23.1] - 2025-07-09
+
+- Always show the code indexing dot under the chat text area
+
+## [3.23.0] - 2025-07-08
+
+- Move codebase indexing out of experimental (thanks @daniel-lxs and @MuriloFP!)
+- Add todo list tool (thanks @qdaxb!)
+- Fix code index secret persistence and improve settings UX (thanks @daniel-lxs!)
+- Add Gemini embedding provider for codebase indexing (thanks @SannidhyaSah!)
+- Support full endpoint URLs in OpenAI Compatible provider (thanks @SannidhyaSah!)
+- Add markdown support to codebase indexing (thanks @MuriloFP!)
+- Add Search/Filter Functionality to API Provider Selection in Settings (thanks @GOODBOY008!)
+- Add configurable max search results (thanks @MuriloFP!)
+- Add copy prompt button to task actions (thanks @Juice10 and @vultrnerd!)
+- Fix insertContentTool to create new files with content (thanks @Ruakij!)
+- Fix typescript compiler watch path inconsistency (thanks @bbenshalom!)
+- Use actual max_completion_tokens from OpenRouter API (thanks @shariqriazz!)
+- Prevent completion sound from replaying when reopening completed tasks (thanks @SannidhyaSah!)
+- Fix access_mcp_resource fails to handle images correctly (thanks @s97712!)
+- Prevent chatbox focus loss during automated file editing (thanks @hannesrudolph!)
+- Resolve intermittent hangs and lack of clear error feedback in apply_diff tool (thanks @lhish!)
+- Resolve Go duplicate references in tree-sitter queries (thanks @MuriloFP!)
+- Chat UI consistency and layout shifts (thanks @seedlord!)
+- Chat index UI enhancements (thanks @MuriloFP!)
+- Fix model search being prefilled on dropdown (thanks @kevinvandijk!)
+- Improve chat UI - add camera icon margin and make placeholder non-selectable (thanks @MuriloFP!)
+- Delete .roo/rules-{mode} folder when custom mode is deleted
+- Enforce file restrictions for all edit tools in architect mode
+- Add User-Agent header to API providers
+- Fix auto question timer unmount (thanks @liwilliam2021!)
+- Fix new_task tool streaming issue
+- Optimize file listing when maxWorkspaceFiles is 0 (thanks @daniel-lxs!)
+- Correct export/import of OpenAI Compatible codebase indexing settings (thanks @MuriloFP!)
+- Resolve workspace path inconsistency in code indexing for multi-workspace scenarios
+
+## [3.22.6] - 2025-07-02
+
+- Add timer-based auto approve for follow up questions (thanks @liwilliam2021!)
+- Add import/export modes functionality
+- Add persistent version indicator on chat screen
+- Add automatic configuration import on extension startup (thanks @takakoutso!)
+- Add user-configurable search score threshold slider for semantic search (thanks @hannesrudolph!)
+- Add default headers and testing for litellm fetcher (thanks @andrewshu2000!)
+- Fix consistent cancellation error messages for thinking vs streaming phases
+- Fix Amazon Bedrock cross-region inference profile mapping (thanks @KevinZhao!)
+- Fix URL loading timeout issues in @ mentions (thanks @MuriloFP!)
+- Fix API retry exponential backoff capped at 10 minutes (thanks @MuriloFP!)
+- Fix Qdrant URL field auto-filling with default value (thanks @SannidhyaSah!)
+- Fix profile context condensation threshold (thanks @PaperBoardOfficial!)
+- Fix apply_diff tool documentation for multi-file capabilities
+- Fix cache files excluded from rules compilation (thanks @MuriloFP!)
+- Add streamlined extension installation and documentation (thanks @devxpain!)
+- Prevent Architect mode from providing time estimates
+- Remove context size from environment details
+- Change default mode to architect for new installations
+- Suppress Mermaid error rendering
+- Improve Mermaid buttons with light background in light mode (thanks @chrarnoldus!)
+- Add .vscode/ to write-protected files/directories
+- Update Amazon Bedrock cross-region inference profile mapping (thanks @KevinZhao!)
+
+## [3.22.5] - 2025-06-28
+
+- Remove Gemini CLI provider while we work with Google on a better integration
+
+## [3.22.4] - 2025-06-27
+
+- Fix: resolve E2BIG error by passing large prompts via stdin to Claude CLI (thanks @Fovty!)
+- Add optional mode suggestions to follow-up questions
+- Fix: move StandardTooltip inside PopoverTrigger in ShareButton (thanks @daniel-lxs!)
+
+## [3.22.3] - 2025-06-27
+
+- Restore JSON backwards compatibility for .roomodes files (thanks @daniel-lxs!)
+
+## [3.22.2] - 2025-06-27
+
+- Fix: eliminate XSS vulnerability in CodeBlock component (thanks @KJ7LNW!)
+- Fix terminal keyboard shortcut error when adding content to context (thanks @MuriloFP!)
+- Fix checkpoint popover not opening due to StandardTooltip wrapper conflict (thanks @daniel-lxs!)
+- Fix(i18n): correct gemini cli error translation paths (thanks @daniel-lxs!)
+- Code Index (Qdrant) recreate services when change configurations (thanks @catrielmuller!)
+
+## [3.22.1] - 2025-06-26
+
+- Add Gemini CLI provider (thanks Cline!)
+- Fix undefined mcp command (thanks @qdaxb!)
+- Use upstream_inference_cost for OpenRouter BYOK cost calculation and show cached token count (thanks @chrarnoldus!)
+- Update maxTokens value for qwen/qwen3-32b model on Groq (thanks @KanTakahiro!)
+- Standardize tooltip delays to 300ms
+
+## [3.22.0] - 2025-06-25
+
+- Add 1-click task sharing
+- Add support for loading rules from a global .roo directory (thanks @samhvw8!)
+- Modes selector improvements (thanks @brunobergher!)
+- Use safeWriteJson for all JSON file writes to avoid task history corruption (thanks @KJ7LNW!)
+- Improve YAML error handling when editing modes
+- Register importSettings as VSCode command (thanks @shivamd1810!)
+- Add default task names for empty tasks (thanks @daniel-lxs!)
+- Improve translation workflow to avoid unnecessary file reads (thanks @KJ7LNW!)
+- Allow write_to_file to handle newline-only and empty content (thanks @Githubguy132010!)
+- Address multiple memory leaks in CodeBlock component (thanks @kiwina!)
+- Memory cleanup (thanks @xyOz-dev!)
+- Fix port handling bug in code indexing for HTTPS URLs (thanks @benashby!)
+- Improve Bedrock error handling for throttling and streaming contexts
+- Handle long Claude code messages (thanks @daniel-lxs!)
+- Fixes to Claude Code caching and image upload
+- Disable reasoning budget UI controls for Claude Code provider
+- Remove temperature parameter for Azure OpenAI reasoning models (thanks @ExactDoug!)
+- Allowed commands import/export (thanks @catrielmuller!)
+- Add VS Code setting to disable quick fix context actions (thanks @OlegOAndreev!)
+
+## [3.21.5] - 2025-06-23
+
+- Fix Qdrant URL prefix handling for QdrantClient initialization (thanks @CW-B-W!)
+- Improve LM Studio model detection to show all downloaded models (thanks @daniel-lxs!)
+- Resolve Claude Code provider JSON parsing and reasoning block display
+
+## [3.21.4] - 2025-06-23
+
+- Fix start line not working in multiple apply diff (thanks @samhvw8!)
+- Resolve diff editor issues with markdown preview associations (thanks @daniel-lxs!)
+- Resolve URL port handling bug for HTTPS URLs in Qdrant (thanks @benashby!)
+- Mark unused Ollama schema properties as optional (thanks @daniel-lxs!)
+- Close the local browser when used as fallback for remote (thanks @markijbema!)
+- Add Claude Code provider for local CLI integration (thanks @BarreiroT!)
+
+## [3.21.3] - 2025-06-21
+
+- Add profile-specific context condensing thresholds (thanks @SannidhyaSah!)
+- Fix context length for lmstudio and ollama (thanks @thecolorblue!)
+- Resolve MCP tool eye icon state and hide in chat context (thanks @daniel-lxs!)
+
+## [3.21.2] - 2025-06-20
+
+- Add LaTeX math equation rendering in chat window
+- Add toggle for excluding MCP server tools from the prompt (thanks @Rexarrior!)
+- Add symlink support to list_files tool
+- Fix marketplace blanking after populating
+- Fix recursive directory scanning in @ mention "Add Folder" functionality (thanks @village-way!)
+- Resolve phantom subtask display on cancel during API retry
+- Correct Gemini 2.5 Flash pricing (thanks @daniel-lxs!)
+- Resolve marketplace timeout issues and display installed MCPs (thanks @daniel-lxs!)
+- Onboarding tweaks to emphasize modes (thanks @brunobergher!)
+- Rename 'Boomerang Tasks' to 'Task Orchestration' for clarity
+- Remove command execution from attempt_completion
+- Fix markdown for links followed by punctuation (thanks @xyOz-dev!)
+
+## [3.21.1] - 2025-06-19
+
+- Fix tree-sitter issues that were preventing codebase indexing from working correctly
+- Improve error handling for codebase search embeddings
+- Resolve MCP server execution on Windows with node version managers
+- Default 'Enable MCP Server Creation' to false
+- Rate limit correctly when starting a subtask (thanks @olweraltuve!)
+
+## [3.21.0] - 2025-06-17
+
+- Add Roo Marketplace to make it easy to discover and install great MCPs and modes!
+- Add Gemini 2.5 models (Pro, Flash and Flash Lite) (thanks @daniel-lxs!)
+- Add support for Excel (.xlsx) files in tools (thanks @chrarnoldus!)
+- Add max tokens checkbox option for OpenAI compatible provider (thanks @AlexandruSmirnov!)
+- Update provider models and prices for Groq & Mistral (thanks @KanTakahiro!)
+- Add proper error handling for API conversation history issues (thanks @KJ7LNW!)
+- Fix ambiguous model id error (thanks @elianiva!)
+- Fix save/discard/revert flow for Prompt Settings (thanks @hassoncs!)
+- Fix codebase indexing alignment with list-files hidden directory filtering (thanks @daniel-lxs!)
+- Fix subtask completion mismatch (thanks @feifei325!)
+- Fix Windows path normalization in MCP variable injection (thanks @daniel-lxs!)
+- Update marketplace branding to 'Roo Marketplace' (thanks @SannidhyaSah!)
+- Refactor to more consistent history UI (thanks @elianiva!)
+- Adjust context menu positioning to be near Copilot
+- Update evals Docker setup to work on Windows (thanks @StevenTCramer!)
+- Include current working directory in terminal details
+- Encourage use of start_line in multi-file diff to match legacy diff
+- Always focus the panel when clicked to ensure menu buttons are visible (thanks @hassoncs!)
+
+## [3.20.3] - 2025-06-13
+
+- Resolve diff editor race condition in multi-monitor setups (thanks @daniel-lxs!)
+- Add logic to prevent auto-approving edits of configuration files
+- Adjust searching and listing files outside of the workspace to respect the auto-approve settings
+- Add Indonesian translation support (thanks @chrarnoldus and @daniel-lxs!)
+- Fix multi-file diff error handling and UI feedback (thanks @daniel-lxs!)
+- Improve prompt history navigation to not interfere with text editing (thanks @daniel-lxs!)
+- Fix errant maxReadFileLine default
+
+## [3.20.2] - 2025-06-13
+
+- Limit search_files to only look within the workspace for improved security
+- Force tar-fs >=2.1.3 for security vulnerability fix
+- Add cache breakpoints for custom vertex models on Unbound (thanks @pugazhendhi-m!)
+- Reapply reasoning for bedrock with fix (thanks @daniel-lxs!)
+- Sync BatchDiffApproval styling with BatchFilePermission for UI consistency (thanks @samhvw8!)
+- Add max height constraint to MCP execution response for better UX (thanks @samhvw8!)
+- Prevent MCP 'installed' label from being squeezed #4630 (thanks @daniel-lxs!)
+- Allow a lower context condesning threshold (thanks @SECKainersdorfer!)
+- Avoid type system duplication for cleaner codebase (thanks @EamonNerbonne!)
+
+## [3.20.1] - 2025-06-12
+
+- Temporarily revert thinking support for Bedrock models
+- Improve performance of MCP execution block
+- Add indexing status badge to chat view
+
+## [3.20.0] - 2025-06-12
+
+- Add experimental Marketplace for extensions and modes (thanks @Smartsheet-JB-Brown, @elianiva, @monkeyDluffy6017, @NamesMT, @daniel-lxs, Cline, and more!)
+- Add experimental multi-file edits (thanks @samhvw8!)
+- Move concurrent reads setting to context settings with default of 5
+- Improve MCP execution UX (thanks @samhvw8!)
+- Add magic variables support for MCPs with `workspaceFolder` injection (thanks @NamesMT!)
+- Add prompt history navigation via arrow up/down in prompt field
+- Add support for escaping context mentions (thanks @KJ7LNW!)
+- Add DeepSeek R1 support to Chutes provider
+- Add reasoning budget support to Bedrock models for extended thinking
+- Add mermaid diagram support buttons (thanks @qdaxb!)
+- Update XAI models and pricing (thanks @edwin-truthsearch-io!)
+- Update O3 model pricing
+- Add manual OpenAI-compatible format specification and parsing (thanks @dflatline!)
+- Add core tools integration tests for comprehensive coverage
+- Add JSDoc documentation for ClineAsk and ClineSay types (thanks @hannesrudolph!)
+- Populate whenToUse descriptions for built-in modes
+- Fix file write tool with early relPath & newContent validation checks (thanks @Ruakij!)
+- Fix TaskItem display and copy issues with HTML tags in task messages (thanks @forestyoo!)
+- Fix OpenRouter cost calculation with BYOK (thanks @chrarnoldus!)
+- Fix terminal busy state reset after manual commands complete
+- Fix undefined output on multi-file apply_diff operations (thanks @daniel-lxs!)
+
+## [3.19.7] - 2025-06-11
+
+- Fix McpHub sidebar focus behavior to prevent unwanted focus grabbing
+- Disable checkpoint functionality when nested git repositories are detected to prevent conflicts
+- Remove unused Storybook components and dependencies to reduce bundle size
+- Add data-testid ESLint rule for improved testing standards (thanks @elianiva!)
+- Update development dependencies including eslint, knip, @types/node, i18next, fast-xml-parser, and @google/genai
+- Improve CI infrastructure with GitHub Actions and Blacksmith runner migrations
+
+## [3.19.6] - 2025-06-09
+
+- Replace explicit caching with implicit caching to reduce latency for Gemini models
+- Clarify that the default concurrent file read limit is 15 files (thanks @olearycrew!)
+- Fix copy button logic (thanks @samhvw8!)
+- Fade buttons on history preview if no interaction in progress (thanks @sachasayan!)
+- Allow MCP server refreshing, fix state changes in MCP server management UI view (thanks @taylorwilsdon!)
+- Remove unnecessary npx usage in some npm scripts (thanks @user202729!)
+- Bug fix for trailing slash error when using LiteLLM provider (thanks @kcwhite!)
+
+## [3.19.5] - 2025-06-05
+
+- Fix Gemini 2.5 Pro Preview thinking budget bug
+
+## [3.19.4] - 2025-06-05
+
+- Add Gemini Pro 06-05 model support (thanks @daniel-lxs and @shariqriazz!)
+- Fix reading PDF, DOCX, and IPYNB files in read_file tool (thanks @samhvw8!)
+- Fix Mermaid CSP errors with enhanced bundling strategy (thanks @KJ7LNW!)
+- Improve model info detection for custom Bedrock ARNs (thanks @adamhill!)
+- Add OpenAI Compatible embedder for codebase indexing (thanks @SannidhyaSah!)
+- Fix multiple memory leaks in ChatView component (thanks @kiwina!)
+- Fix WorkspaceTracker resource leaks by disposing FileSystemWatcher (thanks @kiwina!)
+- Fix RooTips setTimeout cleanup to prevent state updates on unmounted components (thanks @kiwina!)
+- Fix FileSystemWatcher leak in RooIgnoreController (thanks @kiwina!)
+- Fix clipboard memory leak by clearing setTimeout in useCopyToClipboard (thanks @kiwina!)
+- Fix ClineProvider instance cleanup (thanks @xyOz-dev!)
+- Enforce codebase_search as primary tool for code understanding tasks (thanks @hannesrudolph!)
+- Improve Docker setup for evals
+- Move evals into pnpm workspace, switch from SQLite to Postgres
+- Refactor MCP to use getDefaultEnvironment for stdio client transport (thanks @samhvw8!)
+- Get rid of "partial" component in names referencing not necessarily partial messages (thanks @wkordalski!)
+- Improve feature request template (thanks @elianiva!)
+
+## [3.19.3] - 2025-06-02
+
+- Fix SSE MCP Invocation - Fixed SSE connection issue in McpHub.ts by ensuring transport.start override only applies to stdio transports, allowing SSE and streamable-http transports to retain their original start methods (thanks @taylorwilsdon!)
+
+## [3.19.2] - 2025-06-01
+
+- Add support for Streamable HTTP Transport MCP servers (thanks @taylorwilsdon!)
+- Add cached read and writes to stats and cost calculation for LiteLLM provider (thanks @mollux!)
+- Prevent dump of an entire file into the context on user edit (thanks @KJ7LNW!)
+- Fix directory link handling in markdown (thanks @KJ7LNW!)
+- Prevent start_line/end_line in apply_diff REPLACE (thanks @KJ7LNW!)
+- Unify history item UI with TaskItem and TaskItemHeader (thanks @KJ7LNW!)
+- Fix the label of the OpenAI-compatible API keys
+- Fix Virtuoso footer re-rendering issue (thanks @kiwina!)
+- Optimize ChatRowContent layout and styles (thanks @zhangtony239!)
+- Release memory in apply diff (thanks @xyOz-dev!)
+- Upgrade Node.js to v20.19.2 for security enhancements (thanks @PeterDaveHello!)
+- Fix typos (thanks @noritaka1166!)
+
+## [3.19.1] - 2025-05-30
+
+- Experimental feature to allow reading multiple files at once (thanks @samhvw8!)
+- Fix to correctly pass headers to SSE MCP servers
+- Adding support for custom VPC endpoints when using Amazon Bedrock (thanks @kcwhite!)
+- Fix bug with context condensing in Amazon Bedrock
+- Fix UTF-8 encoding in ExecaTerminalProcess (thanks @mr-ryan-james!)
+- Set sidebar name bugfix (thanks @chrarnoldus!)
+- Fix link to CONTRIBUTING.md in feature request template (thanks @cannuri!)
+- Add task metadata to Unbound and improve caching logic (thanks @pugazhendhi-m!)
+
+## [3.19.0] - 2025-05-29
+
+- Enable intelligent content condensing by default and move condense button out of expanded task menu
+- Skip condense and show error if context grows during condensing
+- Transform Prompts tab into Modes tab and move support prompts to Settings for better organization
+- Add DeepSeek R1 0528 model support to Chutes provider (thanks @zeozeozeo!)
+- Fix @directory not respecting .rooignore files (thanks @xyOz-dev!)
+- Add rooignore checking for insert_content and search_and_replace tools
+- Fix menu breaking when Roo is moved between primary and secondary sidebars (thanks @chrarnoldus!)
+- Resolve memory leak in ChatView by stabilizing callback props (thanks @samhvw8!)
+- Fix write_to_file to properly create empty files when content is empty (thanks @Ruakij!)
+- Fix chat input clearing during running tasks (thanks @xyOz-dev!)
+- Update AWS regions to include Spain and Hyderabad
+- Improve POSIX shell compatibility in pre-push hook (thanks @PeterDaveHello and @chrarnoldus!)
+- Update PAGER environment variable for Windows compatibility in Terminal (thanks @SmartManoj!)
+- Add environment variable injection support for whole MCP config (thanks @NamesMT!)
+- Update codebase search description to emphasize English query requirements (thanks @ChuKhaLi!)
+
+## [3.18.5] - 2025-05-27
+
+- Add thinking controls for Requesty (thanks @dtrugman!)
+- Re-enable telemetry
+- Improve zh-TW Traditional Chinese locale (thanks @PeterDaveHello and @chrarnoldus!)
+- Improve model metadata for LiteLLM
+
+## [3.18.4] - 2025-05-25
+
+- Fix codebase indexing settings saving and Ollama indexing (thanks @daniel-lxs!)
+- Fix handling BOM when user rejects apply_diff (thanks @avtc!)
+- Fix wrongfully clearing input on auto-approve (thanks @Ruakij!)
+- Fix correct spawnSync parameters for pnpm check in bootstrap.mjs (thanks @ChuKhaLi!)
+- Update xAI models and default model ID (thanks @PeterDaveHello!)
+- Add metadata to create message (thanks @dtrugman!)
+
+## [3.18.3] - 2025-05-24
+
+- Add reasoning support for Claude 4 and Gemini 2.5 Flash on OpenRouter, plus a fix for o1-pro
+- Add experimental codebase indexing + semantic search feature (thanks @daniel-lxs!)
+- For providers that used to default to Sonnet 3.7, change to Sonnet 4
+- Enable prompt caching for Gemini 2.5 Flash Preview (thanks @shariqriazz!)
+- Preserve model settings when selecting a specific OpenRouter provider
+- Add ability to refresh LiteLLM models list
+- Improve tool descriptions to guide proper file editing tool selection
+- Fix MCP Server error loading config when running with npx and bunx (thanks @devxpain!)
+- Improve pnpm bootstrapping and add compile script (thanks @KJ7LNW!)
+- Simplify object assignment & use startsWith (thanks @noritaka1166!)
+- Fix mark-as-read logic in the context tracker (thanks @samhvw8!)
+- Remove deprecated claude-3.7-sonnet models from vscodelm (thanks @shariqriazz!)
+
+## [3.18.2] - 2025-05-23
+
+- Fix vscode-material-icons in the filer picker
+- Fix global settings export
+- Respect user-configured terminal integration timeout (thanks @KJ7LNW)
+- Context condensing enhancements (thanks @SannidhyaSah)
+
+## [3.18.1] - 2025-05-22
+
+- Add support for Claude Sonnet 4 and Claude Opus 4 models with thinking variants in Anthropic, Bedrock, and Vertex (thanks @shariqriazz!)
+- Fix README gif display in all localized versions
+- Fix referer URL
+- Switch codebase to a monorepo and create an automated "nightly" build
+
+## [3.18.0] - 2025-05-21
+
+- Add support for Gemini 2.5 Flash preview models (thanks @shariqriazz and @daniel-lxs!)
+- Add button to task header to intelligently condense content with visual feedback
+- Add YAML support for mode definitions (thanks @R-omk!)
+- Add allowedMaxRequests feature to cap consecutive auto-approved requests (inspired by Cline, thanks @hassoncs!)
+- Add Qwen3 model series to the Chutes provider (thanks @zeozeozeo!)
+- Fix more causes of grey screen issues (thanks @xyOz-dev!)
+- Add LM Studio reasoning support (thanks @avtc!)
+- Add refresh models button for Unbound provider (thanks @pugazhendhi-m!)
+- Add template variables for version numbers in announcement strings (thanks @ChuKhaLi!)
+- Make prompt input textareas resizable again
+- Fix diffview scroll display (thanks @qdaxb!)
+- Fix LM Studio and Ollama usage tracking (thanks @xyOz-dev!)
+- Fix links to filename:0 (thanks @RSO!)
+- Fix missing or inconsistent syntax highlighting across UI components (thanks @KJ7LNW!)
+- Fix packaging to include correct tiktoken.wasm (thanks @vagadiya!)
+- Fix import settings bugs and position error messages correctly (thanks @ChuKhaLi!)
+- Move audio playing to the webview to ensure cross-platform support (thanks @SmartManoj and @samhvw8!)
+- Simplify loop syntax in multiple components (thanks @noritaka1166!)
+- Auto reload extension core changes in dev mode (thanks @hassoncs!)
+
+## [3.17.2] - 2025-05-15
+
+- Revert "Switch to the new Roo message parser" (appears to cause a tool parsing bug)
+- Lock the versions of vsce and ovsx
+
+## [3.17.1] - 2025-05-15
+
+- Fix the display of the command to execute during approval
+- Fix incorrect reserved tokens calculation on OpenRouter (thanks @daniel-lxs!)
+
+## [3.17.0] - 2025-05-14
+
+- Enable Gemini implicit caching
+- Add "when to use" section to mode definitions to enable better orchestration
+- Add experimental feature to intelligently condense the task context instead of truncating it
+- Fix one of the causes of the gray screen issue (thanks @xyOz-dev!)
+- Focus improvements for better UI interactions (thanks Cline!)
+- Switch to the new Roo message parser for improved performance (thanks Cline!)
+- Enable source maps for improved debugging (thanks @KJ7LNW!)
+- Update OpenRouter provider to use provider-specific model info (thanks @daniel-lxs!)
+- Fix Requesty cost/token reporting (thanks @dtrugman!)
+- Improve command execution UI
+- Add more in-app links to relevant documentation
+- Update the new task tool description and the ask mode custom instructions in the system prompt
+- Add IPC types to roo-code.d.ts
+- Add build VSIX workflow to pull requests (thanks @SmartManoj!)
+- Improve apply_diff tool to intelligently deduce line numbers (thanks @samhvw8!)
+- Fix command validation for shell array indexing (thanks @KJ7LNW!)
+- Handle diagnostics that point at a directory URI (thanks @daniel-lxs!)
+- Fix "Current ask promise was ignored" error (thanks @zxdvd!)
+
+## [3.16.6] - 2025-05-12
+
+- Restore "Improve provider profile management in the external API"
+- Fix to subtask sequencing (thanks @wkordalski!)
+- Fix webview terminal output processing error (thanks @KJ7LNW!)
+- Fix textarea empty string fallback logic (thanks @elianiva!)
+
+## [3.16.5] - 2025-05-10
+
+- Revert "Improve provider profile management in the external API" until we track down a bug with defaults
+
+## [3.16.4] - 2025-05-09
+
+- Improve provider profile management in the external API
+- Enforce provider selection in OpenRouter by using 'only' parameter and disabling fallbacks (thanks @shariqriazz!)
+- Fix display issues with long profile names (thanks @cannuri!)
+- Prevent terminal focus theft on paste after command execution (thanks @MuriloFP!)
+- Save OpenAI compatible custom headers correctly
+- Fix race condition when updating prompts (thanks @elianiva!)
+- Fix display issues in high contrast themes (thanks @zhangtony239!)
+- Fix not being able to use specific providers on Openrouter (thanks @daniel-lxs!)
+- Show properly formatted multi-line commands in preview (thanks @KJ7LNW!)
+- Handle unsupported language errors gracefully in read_file tool (thanks @KJ7LNW!)
+- Enhance focus styles in select-dropdown and fix docs URL (thanks @zhangtony239!)
+- Properly handle mode name overflow in UI (thanks @elianiva!)
+- Fix project MCP always allow issue (thanks @aheizi!)
+
+## [3.16.3] - 2025-05-08
+
+- Revert Tailwind migration while we fix a few spots
+- Add Elixir file extension support in language parser (thanks @pfitz!)
+
+## [3.16.2] - 2025-05-07
+
+- Clarify XML tool use formatting instructions
+- Error handling code cleanup (thanks @monkeyDluffy6017!)
+
+## [3.16.1] - 2025-05-07
+
+- Add LiteLLM provider support
+- Improve stability by detecting and preventing tool loops
+- Add Dutch localization (thanks @Githubguy132010!)
+- Add editor name to telemetry for better analytics
+- Migrate to Tailwind CSS for improved UI consistency
+- Fix footer button wrapping in About section on narrow screens (thanks @ecmasx!)
+- Update evals defaults
+- Update dependencies to latest versions
+
+## [3.16.0] - 2025-05-06
+
+- Add vertical tab navigation to the settings (thanks @dlab-anton)
+- Add Groq and Chutes API providers (thanks @shariqriazz)
+- Clickable code references in code block (thanks @KJ7LNW)
+- Improve accessibility of ato-approve toggles (thanks @Deon588)
+- Requesty provider fixes (thanks @dtrugman)
+- Fix migration and persistence of per-mode API profiles (thanks @alasano)
+- Fix usage of `path.basename` in the extension webview (thanks @samhvw8)
+- Fix display issue of the programming language dropdown in the code block component (thanks @zhangtony239)
+- MCP server errors are now captured and shown in a new "Errors" tab (thanks @robertheadley)
+- Error logging will no longer break MCP functionality if the server is properly connected (thanks @ksze)
+- You can now toggle the `terminal.integrated.inheritEnv` VSCode setting directly for the Roo Code settings (thanks @KJ7LNW)
+- Add `gemini-2.5-pro-preview-05-06` to the Vertex and Gemini providers (thanks @zetaloop)
+- Ensure evals exercises are up-to-date before running evals (thanks @shariqriazz)
+- Lots of general UI improvements (thanks @elianiva)
+- Organize provider settings into separate components
+- Improved icons and translations for the code block component
+- Add support for tests that use ESM libraries
+- Move environment detail generation to a separate module
+- Enable prompt caching by default for supported Gemini models
+
+## [3.15.5] - 2025-05-05
+
+- Update @google/genai to 0.12 (includes some streaming completion bug fixes)
+- Rendering performance improvements for code blocks in chat (thanks @KJ7LNW)
+
+## [3.15.4] - 2025-05-04
+
+- Fix a nasty bug that would cause Roo Code to hang, particularly in orchestrator mode
+- Improve Gemini caching efficiency
+
+## [3.15.3] - 2025-05-02
+
+- Terminal: Fix empty command bug
+- Terminal: More robust process killing
+- Optimize Gemini prompt caching for OpenRouter
+- Chat view performance improvements
+
+## [3.15.2] - 2025-05-02
+
+- Fix terminal performance issues
+- Handle Mermaid validation errors
+- Add customizable headers for OpenAI-compatible provider (thanks @mark-bradshaw!)
+- Add config option to overwrite OpenAI's API base (thanks @GOODBOY008!)
+- Fixes to padding and height issues when resizing the sidebar (thanks @zhangtony239!)
+- Remove tool groups from orchestrator mode definition
+- Add telemetry for title button clicks
+
+## [3.15.1] - 2025-04-30
+
+- Capture stderr in execa-spawned processes
+- Play sound only when action needed from the user (thanks @olearycrew)
+- Make retries respect the global auto approve checkbox
+- Fix a selection mode bug in the history view (thanks @jr)
+
+## [3.15.0] - 2025-04-30
+
+- Add prompt caching to the Google Vertex provider (thanks @ashktn)
+- Add a fallback mechanism for executing terminal commands if VSCode terminal shell integration fails
+- Improve the UI/UX of code snippets in the chat (thanks @KJ7LNW)
+- Add a reasoning effort setting for the OpenAI Compatible provider (thanks @mr-ryan-james)
+- Allow terminal commands to be stopped directly from the chat UI
+- Adjust chat view padding to accommodate small width layouts (thanks @zhangtony239)
+- Fix file mentions for filenames containing spaces
+- Improve the auto-approve toggle buttons for some high-contrast VSCode themes
+- Offload expensive count token operations to a web worker (thanks @samhvw8)
+- Improve support for mult-root workspaces (thanks @snoyiatk)
+- Simplify and streamline Roo Code's quick actions
+- Allow Roo Code settings to be imported from the welcome screen (thanks @julionav)
+- Remove unused types (thanks @wkordalski)
+- Improve the performance of mode switching (thanks @dlab-anton)
+- Fix importing & exporting of custom modes (thanks @julionav)
+
+## [3.14.3] - 2025-04-25
+
+- Add Boomerang Orchestrator as a built-in mode
+- Improve home screen UI
+- Make token count estimation more efficient to reduce gray screens
+- Revert change to automatically close files after edit until we figure out how to make it work well with diagnostics
+- Clean up settings data model
+- Omit reasoning params for non-reasoning models
+- Clearer documentation for adding settings (thanks @shariqriazz!)
+- Fix word wrapping in Roo message title (thanks @zhangtony239!)
+- Update default model id for Unbound from claude 3.5 to 3.7 (thanks @pugazhendhi-m!)
+
+## [3.14.2] - 2025-04-24
+
+- Enable prompt caching for Gemini (with some improvements)
+- Allow users to turn prompt caching on / off for Gemini 2.5 on OpenRouter
+- Compress terminal output with backspace characters (thanks @KJ7LNW)
+- Add Russian language (Спасибо @asychin)
+
+## [3.14.1] - 2025-04-24
+
+- Disable Gemini caching while we investigate issues reported by the community.
+
+## [3.14.0] - 2025-04-23
+
+- Add prompt caching for `gemini-2.5-pro-preview-03-25` in the Gemini provider (Vertex and OpenRouter coming soon!)
+- Improve the search_and_replace and insert_content tools and bring them out of experimental, and deprecate append_to_file (thanks @samhvw8!)
+- Use material icons for files and folders in mentions (thanks @elianiva!)
+- Make the list_files tool more efficient and smarter about excluding directories like .git/
+- Fix file drag and drop on Windows and when using SSH tunnels (thanks @NyxJae!)
+- Correctly revert changes and suggest alternative tools when write_to_file fails on a missing line count
+- Allow interpolation of `workspace`, `mode`, `language`, `shell`, and `operatingSystem` into custom system prompt overrides (thanks @daniel-lxs!)
+- Fix interpolation bug in the “add to context” code action (thanks @elianiva!)
+- Preserve editor state and prevent tab unpinning during diffs (thanks @seedlord!)
+- Improvements to icon rendering on Linux (thanks @elianiva!)
+- Improvements to Requesty model list fetching (thanks @dtrugman!)
+- Fix user feedback not being added to conversation history in API error state, redundant ‘TASK RESUMPTION’ prompts, and error messages not showing after cancelling API requests (thanks @System233!)
+- Track tool use errors in evals
+- Fix MCP hub error when dragging extension to another sidebar
+- Improve display of long MCP tool arguments
+- Fix redundant ‘TASK RESUMPTION’ prompts (thanks @System233!)
+- Fix bug opening files when editor has no workspace root
+- Make the VS Code LM provider show the correct model information (thanks @QuinsZouls!)
+- Fixes to make the focusInput command more reliable (thanks @hongzio!)
+- Better handling of aftercursor content in context mentions (thanks @elianiva!)
+- Support injecting environment variables in MCP config (thanks @NamesMT!)
+- Better handling of FakeAI “controller” object (thanks @wkordalski)
+- Remove unnecessary calculation from VS Code LM provider (thanks @d-oit!)
+- Allow Amazon Bedrock Marketplace ARNs (thanks @mlopezr!)
+- Give better loading feedback on chat rows (thanks @elianiva!)
+- Performance improvements to task size calculations
+- Don’t immediately show a model ID error when changing API providers
+- Fix apply_diff edge cases
+- Use a more sensible task export icon
+- Use path aliases in webview source files
+- Display a warning when the system prompt is overridden
+- Better progress indicator for apply_diff tools (thanks @qdaxb!)
+- Fix terminal carriage return handling for correct progress bar display (thanks @Yikai-Liao!)
+
+## [3.13.2] - 2025-04-18
+
+- Allow custom URLs for Gemini provider
+
+## [3.13.1] - 2025-04-18
+
+- Support Gemini 2.5 Flash thinking mode (thanks @monotykamary)
+- Make auto-approval toggle on/off states more obvious (thanks @sachasayan)
+- Add telemetry for shell integration errors
+- Fix the path of files dragging into the chat textarea on Windows (thanks @NyxJae)
+
+## [3.13.0] - 2025-04-17
+
+- UI improvements to task header, chat view, history preview, and welcome view (thanks @sachasayan!)
+- Add append_to_file tool for appending content to files (thanks @samhvw8!)
+- Add Gemini 2.5 Flash Preview to Gemini and Vertex providers (thanks @nbihan-mediware!)
+- Fix image support in Bedrock (thanks @Smartsheet-JB-Brown!)
+- Make diff edits more resilient to models passing in incorrect parameters
+
+## [3.12.3] - 2025-04-17
+
+- Fix character escaping issues in Gemini diff edits
+- Support dragging and dropping tabs into the chat box (thanks @NyxJae!)
+- Make sure slash commands only fire at the beginning of the chat box (thanks @logosstone!)
+
+## [3.12.2] - 2025-04-16
+
+- Add OpenAI o3 & 4o-mini (thanks @PeterDaveHello!)
+- Improve file/folder context mention UI (thanks @elianiva!)
+- Improve diff error telemetry
+
+## [3.12.1] - 2025-04-16
+
+- Bugfix to Edit button visibility in the select dropdowns
+
+## [3.12.0] - 2025-04-15
+
+- Add xAI provider and expose reasoning effort options for Grok on OpenRouter (thanks Cline!)
+- Make diff editing config per-profile and improve pre-diff string normalization
+- Make checkpoints faster and more reliable
+- Add a search bar to mode and profile select dropdowns (thanks @samhvw8!)
+- Add telemetry for code action usage, prompt enhancement usage, and consecutive mistake errors
+- Suppress zero cost values in the task header (thanks @do-it!)
+- Make JSON parsing safer to avoid crashing the webview on bad input
+- Allow users to bind a keyboard shortcut for accepting suggestions or input in the chat view (thanks @axkirillov!)
+
+## [3.11.17] - 2025-04-14
+
+- Improvements to OpenAI cache reporting and cost estimates (thanks @monotykamary and Cline!)
+- Visual improvements to the auto-approve toggles (thanks @sachasayan!)
+- Bugfix to diff apply logic (thanks @avtc for the test case!) and telemetry to track errors going forward
+- Fix race condition in capturing short-running terminal commands (thanks @KJ7LNW!)
+- Fix eslint error (thanks @nobu007!)
+
+## [3.11.16] - 2025-04-14
+
+- Add gpt-4.1, gpt-4.1-mini, and gpt-4.1-nano to the OpenAI provider
+- Include model ID in environment details and when exporting tasks (thanks @feifei325!)
+
+## [3.11.15] - 2025-04-13
+
+- Add ability to filter task history by workspace (thanks @samhvw8!)
+- Fix Node.js version in the .tool-versions file (thanks @bogdan0083!)
+- Fix duplicate suggested mentions for open tabs (thanks @samhvw8!)
+- Fix Bedrock ARN validation and token expiry issue when using profiles (thanks @vagadiya!)
+- Add Anthropic option to pass API token as Authorization header instead of X-Api-Key (thanks @mecab!)
+- Better documentation for adding new settings (thanks @KJ7LNW!)
+- Localize package.json (thanks @samhvw8!)
+- Add option to hide the welcome message and fix the background color for the new profile dialog (thanks @zhangtony239!)
+- Restore the focus ring for the VSCodeButton component (thanks @pokutuna!)
+
+## [3.11.14] - 2025-04-11
+
+- Support symbolic links in rules folders to directories and other symbolic links (thanks @taisukeoe!)
+- Stronger enforcement of the setting to always read full files instead of doing partial reads
+
+## [3.11.13] - 2025-04-11
+
+- Loads of terminal improvements: command delay, PowerShell counter, and ZSH EOL mark (thanks @KJ7LNW!)
+- Add file context tracking system (thanks @samhvw8 and @canvrno!)
+- Improved display of diff errors + easy copying for investigation
+- Fixes to .vscodeignore (thanks @franekp!)
+- Fix a zh-CN translation for model capabilities (thanks @zhangtony239!)
+- Rename Amazon Bedrock to Amazon Bedrock (thanks @ronyblum!)
+- Update extension title and description (thanks @StevenTCramer!)
+
+## [3.11.12] - 2025-04-09
+
+- Make Grok3 streaming work with OpenAI Compatible (thanks @amittell!)
+- Tweak diff editing logic to make it more tolerant of model errors
+
+## [3.11.11] - 2025-04-09
+
+- Fix highlighting interaction with mode/profile dropdowns (thanks @atlasgong!)
+- Add the ability to set Host header and legacy OpenAI API in the OpenAI-compatible provider for better proxy support
+- Improvements to TypeScript, C++, Go, Java, Python tree-sitter parsers (thanks @KJ7LNW!)
+- Fixes to terminal working directory logic (thanks @KJ7LNW!)
+- Improve readFileTool XML output format (thanks @KJ7LNW!)
+- Add o1-pro support (thanks @arthurauffray!)
+- Follow symlinked rules files/directories to allow for more flexible rule setups
+- Focus Roo Code in the sidebar when running tasks in the sidebar via the API
+- Improve subtasks UI
+
+## [3.11.10] - 2025-04-08
+
+- Fix bug where nested .roo/rules directories are not respected properly (thanks @taisukeoe!)
+- Handle long command output more efficiently in the chat row (thanks @samhvw8!)
+- Fix cache usage tracking for OpenAI-compatible providers
+- Add custom translation instructions for zh-CN (thanks @System233!)
+- Code cleanup after making rate-limits per-profile (thanks @ross!)
+
+## [3.11.9] - 2025-04-07
+
+- Rate-limit setting updated to be per-profile (thanks @ross and @olweraltuve!)
+- You can now place multiple rules files in the .roo/rules/ and .roo/rules-{mode}/ folders (thanks @upamune!)
+- Prevent unnecessary autoscroll when buttons appear (thanks @shtse8!)
+- Add Gemini 2.5 Pro Preview to Vertex AI (thanks @nbihan-mediware!)
+- Tidy up following ClineProvider refactor (thanks @diarmidmackenzie!)
+- Clamp negative line numbers when reading files (thanks @KJ7LNW!)
+- Enhance Rust tree-sitter parser with advanced language structures (thanks @KJ7LNW!)
+- Persist settings on api.setConfiguration (thanks @gtaylor!)
+- Add deep links to settings sections
+- Add command to focus Roo Code input field (thanks @axkirillov!)
+- Add resize and hover actions to the browser (thanks @SplittyDev!)
+- Add resumeTask and isTaskInHistory to the API (thanks @franekp!)
+- Fix bug displaying boolean/numeric suggested answers
+- Dynamic Vite port detection for webview development (thanks @KJ7LNW!)
+
+## [3.11.8] - 2025-04-05
+
+- Improve combineApiRequests performance to reduce gray screens of death (thanks @kyle-apex!)
+- Add searchable dropdown to API config profiles on the settings screen (thanks @samhvw8!)
+- Add workspace tracking to history items in preparation for future filtering (thanks @samhvw8!)
+- Fix search highlighting UI in history search (thanks @samhvw8!)
+- Add support for .roorules and give deprecation warning for .clinerules (thanks @upamune!)
+- Fix nodejs version format in .tool-versions file (thanks @upamune!)
+
+## [3.11.7] - 2025-04-04
+
+- Improve file tool context formatting and diff error guidance
+- Improve zh-TW localization (thanks @PeterDaveHello!)
+- Implement reference counting for McpHub disposal
+- Update buttons to be more consistent (thanks @kyle-apex!)
+- Improve zh-CN localization (thanks @System233!)
+
+## [3.11.6] - 2025-04-04
+
+- Add the gemini 2.5 pro preview model with upper bound pricing
+
+## [3.11.5] - 2025-04-03
+
+- Add prompt caching for Amazon Bedrock (thanks @Smartsheet-JB-Brown!)
+- Add support for configuring the current working directory of MCP servers (thanks @shoopapa!)
+- Add profile management functions to API (thanks @gtaylor!)
+- Improvements to diff editing functionality, tests, and error messages (thanks @p12tic!)
+- Fix for follow-up questions grabbing the focus (thanks @diarmidmackenzie!)
+- Show menu buttons when popping the extension out into a new tab (thanks @benny123tw!)
+
+## [3.11.4] - 2025-04-02
+
+- Correctly post state to webview when the current task is cleared (thanks @wkordalski!)
+- Fix unit tests to run properly on Windows (thanks @StevenTCramer!)
+- Tree-sitter enhancements: TSX, TypeScript, JSON, and Markdown support (thanks @KJ7LNW!)
+- Fix issue with line number stripping for deletions in apply_diff
+- Update history selection mode button spacing (thanks @kyle-apex!)
+- Limit dropdown menu height to 80% of the viewport (thanks @axmo!)
+- Update dependencies via `npm audit fix` (thanks @PeterDaveHello!)
+- Enable model select when api fails (thanks @kyle-apex!)
+- Fix issue where prompts and settings tabs were not scrollable when accessed from dropdown menus
+- Update AWS region dropdown menu to the most recent data (thanks @Smartsheet-JB-Brown!)
+- Fix prompt enhancement for Bedrock (thanks @Smartsheet-JB-Brown!)
+- Allow processes to access the Roo Code API via a unix socket
+- Improve zh-TW Traditional Chinese translations (thanks @PeterDaveHello!)
+- Add support for Azure AI Inference Service with DeepSeek-V3 model (thanks @thomasjeung!)
+- Fix off-by-one error in tree-sitter line numbers
+- Remove the experimental unified diff
+- Make extension icon more visible in different themes
+
+## [3.11.3] - 2025-03-31
+
+- Revert mention changes in case they're causing performance issues/crashes
+
+## [3.11.2] - 2025-03-31
+
+- Fix bug in loading Requesty key balance
+- Fix bug with Bedrock inference profiles
+- Update the webview when changing settings via the API
+- Refactor webview messages code (thanks @diarmidmackenzie!)
+
+## [3.11.1] - 2025-03-30
+
+- Relax provider profiles schema and add telemetry
+
+## [3.11.0] - 2025-03-30
+
+- Replace single-block-diff with multi-block-diff fast editing strategy
+- Support project-level MCP config in .roo/mcp.json (thanks @aheizi!)
+- Show OpenRouter and Requesty key balance on the settings screen
+- Support import/export of settings
+- Add pinning and sorting for API configuration dropdown (thanks @jwcraig!)
+- Add Gemini 2.5 Pro to GCP Vertex AI provider (thanks @nbihan-mediware!)
+- Smarter retry logic for Gemini
+- Fix Gemini command escaping
+- Support @-mentions of files with spaces in the name (thanks @samhvw8!)
+- Improvements to partial file reads (thanks @KJ7LNW!)
+- Fix list_code_definition_names to support files (thanks @KJ7LNW!)
+- Refactor tool-calling logic to make the code a lot easier to work with (thanks @diarmidmackenzie, @bramburn, @KJ7LNW, and everyone else who helped!)
+- Prioritize “Add to Context” in the code actions and include line numbers (thanks @samhvw8!)
+- Add an activation command that other extensions can use to interface with Roo Code (thanks @gtaylor!)
+- Preserve language characters in file @-mentions (thanks @aheizi!)
+- Browser tool improvements (thanks @afshawnlotfi!)
+- Display info about partial reads in the chat row
+- Link to the settings page from the auto-approve toolbar
+- Link to provider docs from the API options
+- Fix switching profiles to ensure only the selected profile is switched (thanks @feifei325!)
+- Allow custom o3-mini-<reasoning> model from OpenAI-compatible providers (thanks @snoyiatk!)
+- Edit suggested answers before accepting them (thanks @samhvw8!)
+
+## [3.10.5] - 2025-03-25
+
+- Updated value of max tokens for gemini-2.5-pro-03-25 to 65,536 (thanks @linegel!)
+- Fix logic around when we fire task completion events
+
+## [3.10.4] - 2025-03-25
+
+- Dynamically fetch instructions for creating/editing custom modes and MCP servers (thanks @diarmidmackenzie!)
+- Added Gemini 2.5 Pro model to Google Gemini provider (thanks @samsilveira!)
+- Add settings to control whether to auto-approve reads and writes outside of the workspace
+- Update UX for chat text area (thanks @chadgauth!)
+- Support a custom storage path for tasks (thanks @Chenjiayuan195!)
+- Add a New Task command in the Command Palette (thanks @qdaxb!)
+- Add R1 support checkbox to Open AI compatible provider to support QWQ (thanks @teddyOOXX!)
+- Support test declarations in TypeScript tree-sitter queries (thanks @KJ7LNW!)
+- Add Bedrock support for application-inference-profile (thanks @maekawataiki!)
+- Rename and migrate global MCP and modes files (thanks @StevenTCramer!)
+- Add watchPaths option to McpHub for file change detection (thanks @01Rian!)
+- Read image responses from MCP calls (thanks @nevermorec!)
+- Add taskCreated event to API and subscribe to Cline events earlier (thanks @wkordalski!)
+- Fixes to numeric formatting suffix internationalization (thanks @feifei325!)
+- Fix open tab support in the context mention suggestions (thanks @aheizi!)
+- Better display of OpenRouter “overloaded” error messages
+- Fix browser tool visibility in system prompt preview (thanks @cannuri!)
+- Fix the supportsPromptCache value for OpenAI models (thanks @PeterDaveHello!)
+- Fix readme links to docs (thanks @kvokka!)
+- Run ‘npm audit fix’ on all of our libraries
+
+## [3.10.3] - 2025-03-23
+
+- Update the welcome page to provide 1-click OAuth flows with LLM routers (thanks @dtrugman!)
+- Switch to a more direct method of tracking OpenRouter tokens/spend
+- Make partial file reads backwards-compatible with custom system prompts and give users more control over the chunk size
+- Fix issues where questions and suggestions weren’t showing up for non-streaming models and were hard to read in some themes
+- A variety of fixes and improvements to experimental multi-block diff (thanks @KJ7LNW!)
+- Fix opacity of drop-down menus in settings (thanks @KJ7LNW!)
+- Fix bugs with reading and mentioning binary files like PDFs
+- Fix the pricing information for OpenRouter free models (thanks @Jdo300!)
+- Fix an issue with our unit tests on Windows (thanks @diarmidmackenzie!)
+- Fix a maxTokens issue for the Outbound provider (thanks @pugazhendhi-m!)
+- Fix a line number issue with partial file reads (thanks @samhvw8!)
+
+## [3.10.2] - 2025-03-21
+
+- Fixes to context mentions on Windows
+- Fixes to German translations (thanks @cannuri!)
+- Fixes to telemetry banner internationalization
+- Sonnet 3.7 non-thinking now correctly uses 8192 max output tokens
+
+## [3.10.1] - 2025-03-20
+
+- Make the suggested responses optional to not break overridden system prompts
+
+## [3.10.0] - 2025-03-20
+
+- Suggested responses to questions (thanks samhvw8!)
+- Support for reading large files in chunks (thanks samhvw8!)
+- More consistent @-mention lookups of files and folders
+- Consolidate code actions into a submenu (thanks samhvw8!)
+- Fix MCP error logging (thanks aheizi!)
+- Improvements to search_files tool formatting and logic (thanks KJ7LNW!)
+- Fix changelog formatting in GitHub Releases (thanks pdecat!)
+- Add fake provider for integration tests (thanks franekp!)
+- Reflect Cross-region inference option in ap-xx region (thanks Yoshino-Yukitaro!)
+- Fix bug that was causing task history to be lost when using WSL
+
+## [3.9.2] - 2025-03-19
+
+- Update GitHub Actions workflow to automatically create GitHub Releases (thanks @pdecat!)
+- Correctly persist the text-to-speech speed state (thanks @heyseth!)
+- Fixes to French translations (thanks @arthurauffray!)
+- Optimize build time for local development (thanks @KJ7LNW!)
+- VSCode theme fixes for select, dropdown and command components
+- Bring back the ability to manually enter a model name in the model picker
+- Fix internationalization of the announcement title and the browser
+
+## [3.9.1] - 2025-03-18
+
+- Pass current language to system prompt correctly so Roo thinks and speaks in the selected language
+
+## [3.9.0] - 2025-03-18
+
+- Internationalize Roo Code into Catalan, German, Spanish, French, Hindi, Italian, Japanese, Korean, Polish, Portuguese, Turkish, Vietnamese, Simplified Chinese, and Traditional Chinese (thanks @feifei325!)
+- Bring back support for MCP over SSE (thanks @aheizi!)
+- Add a text-to-speech option to have Roo talk to you as it works (thanks @heyseth!)
+- Choose a specific provider when using OpenRouter (thanks PhunkyBob!)
+- Support batch deletion of task history (thanks @aheizi!)
+- Internationalize Human Relay, adjust the layout, and make it work on the welcome screen (thanks @NyxJae!)
+- Fix shell integration race condition (thanks @KJ7LNW!)
+- Fix display updating for Bedrock custom ARNs that are prompt routers (thanks @Smartsheet-JB-Brown!)
+- Fix to exclude search highlighting when copying items from task history (thanks @im47cn!)
+- Fix context mentions to work with multiple-workspace projects (thanks @teddyOOXX!)
+- Fix to task history saving when running multiple Roos (thanks @samhvw8!)
+- Improve task deletion when underlying files are missing (thanks @GitlyHallows!)
+- Improve support for NixOS & direnv (thanks @wkordalski!)
+- Fix wheel scrolling when Roo is opened in editor tabs (thanks @GitlyHallows!)
+- Don’t automatically mention the file when using the "Add to context" code action (thanks @qdaxb!)
+- Expose task stack in `RooCodeAPI` (thanks @franekp!)
+- Give the models visibility into the current task's API cost
+
+## [3.8.6] - 2025-03-13
+
+- Revert SSE MCP support while we debug some config validation issues
+
+## [3.8.5] - 2025-03-12
+
+- Refactor terminal architecture to address critical issues with the current design (thanks @KJ7LNW!)
+- MCP over SSE (thanks @aheizi!)
+- Support for remote browser connections (thanks @afshawnlotfi!)
+- Preserve parent-child relationship when cancelling subtasks (thanks @cannuri!)
+- Custom baseUrl for Google AI Studio Gemini (thanks @dqroid!)
+- PowerShell-specific command handling (thanks @KJ7LNW!)
+- OpenAI-compatible DeepSeek/QwQ reasoning support (thanks @lightrabbit!)
+- Anthropic-style prompt caching in the OpenAI-compatible provider (thanks @dleen!)
+- Add Deepseek R1 for Amazon Bedrock (thanks @ATempsch!)
+- Fix MarkdownBlock text color for Dark High Contrast theme (thanks @cannuri!)
+- Add gemini-2.0-pro-exp-02-05 model to vertex (thanks @shohei-ihaya!)
+- Bring back progress status for multi-diff edits (thanks @qdaxb!)
+- Refactor alert dialog styles to use the correct vscode theme (thanks @cannuri!)
+- Custom ARNs in Amazon Bedrock (thanks @Smartsheet-JB-Brown!)
+- Update MCP servers directory path for platform compatibility (thanks @hannesrudolph!)
+- Fix browser system prompt inclusion rules (thanks @cannuri!)
+- Publish git tags to github from CI (thanks @pdecat!)
+- Fixes to OpenAI-style cost calculations (thanks @dtrugman!)
+- Fix to allow using an excluded directory as your working directory (thanks @Szpadel!)
+- Kotlin language support in list_code_definition_names tool (thanks @kohii!)
+- Better handling of diff application errors (thanks @qdaxb!)
+- Update Bedrock prices to the latest (thanks @Smartsheet-JB-Brown!)
+- Fixes to OpenRouter custom baseUrl support
+- Fix usage tracking for SiliconFlow and other providers that include usage on every chunk
+- Telemetry for checkpoint save/restore/diff and diff strategies
+
+## [3.8.4] - 2025-03-09
+
+- Roll back multi-diff progress indicator temporarily to fix a double-confirmation in saving edits
+- Add an option in the prompts tab to save tokens by disabling the ability to ask Roo to create/edit custom modes for you (thanks @hannesrudolph!)
+
+## [3.8.3] - 2025-03-09
+
+- Fix VS Code LM API model picker truncation issue
+
+## [3.8.2] - 2025-03-08
+
+- Create an auto-approval toggle for subtask creation and completion (thanks @shaybc!)
+- Show a progress indicator when using the multi-diff editing strategy (thanks @qdaxb!)
+- Add o3-mini support to the OpenAI-compatible provider (thanks @yt3trees!)
+- Fix encoding issue where unreadable characters were sometimes getting added to the beginning of files
+- Fix issue where settings dropdowns were getting truncated in some cases
+
+## [3.8.1] - 2025-03-07
+
+- Show the reserved output tokens in the context window visualization
+- Improve the UI of the configuration profile dropdown (thanks @DeXtroTip!)
+- Fix bug where custom temperature could not be unchecked (thanks @System233!)
+- Fix bug where decimal prices could not be entered for OpenAI-compatible providers (thanks @System233!)
+- Fix bug with enhance prompt on Sonnet 3.7 with a high thinking budget (thanks @moqimoqidea!)
+- Fix bug with the context window management for thinking models (thanks @ReadyPlayerEmma!)
+- Fix bug where checkpoints were no longer enabled by default
+- Add extension and VSCode versions to telemetry
+
+## [3.8.0] - 2025-03-07
+
+- Add opt-in telemetry to help us improve Roo Code faster (thanks Cline!)
+- Fix terminal overload / gray screen of death, and other terminal issues
+- Add a new experimental diff editing strategy that applies multiple diff edits at once (thanks @qdaxb!)
+- Add support for a .rooignore to prevent Roo Code from read/writing certain files, with a setting to also exclude them from search/lists (thanks Cline!)
+- Update the new_task tool to return results to the parent task on completion, supporting better orchestration (thanks @shaybc!)
+- Support running Roo in multiple editor windows simultaneously (thanks @samhvw8!)
+- Make checkpoints asynchronous and exclude more files to speed them up
+- Redesign the settings page to make it easier to navigate
+- Add credential-based authentication for Vertex AI, enabling users to easily switch between Google Cloud accounts (thanks @eonghk!)
+- Update the DeepSeek provider with the correct baseUrl and track caching correctly (thanks @olweraltuve!)
+- Add a new “Human Relay” provider that allows you to manually copy information to a Web AI when needed, and then paste the AI's response back into Roo Code (thanks @NyxJae)!
+- Add observability for OpenAI providers (thanks @refactorthis!)
+- Support speculative decoding for LM Studio local models (thanks @adamwlarson!)
+- Improve UI for mode/provider selectors in chat
+- Improve styling of the task headers (thanks @monotykamary!)
+- Improve context mention path handling on Windows (thanks @samhvw8!)
+
+## [3.7.12] - 2025-03-03
+
+- Expand max tokens of thinking models to 128k, and max thinking budget to over 100k (thanks @monotykamary!)
+- Fix issue where keyboard mode switcher wasn't updating API profile (thanks @aheizi!)
+- Use the count_tokens API in the Anthropic provider for more accurate context window management
+- Default middle-out compression to on for OpenRouter
+- Exclude MCP instructions from the prompt if the mode doesn't support MCP
+- Add a checkbox to disable the browser tool
+- Show a warning if checkpoints are taking too long to load
+- Update the warning text for the VS LM API
+- Correctly populate the default OpenRouter model on the welcome screen
+
+## [3.7.11] - 2025-03-02
+
+- Don't honor custom max tokens for non thinking models
+- Include custom modes in mode switching keyboard shortcut
+- Support read-only modes that can run commands
+
+## [3.7.10] - 2025-03-01
+
+- Add Gemini models on Vertex AI (thanks @ashktn!)
+- Keyboard shortcuts to switch modes (thanks @aheizi!)
+- Add support for Mermaid diagrams (thanks Cline!)
+
+## [3.7.9] - 2025-03-01
+
+- Delete task confirmation enhancements
+- Smarter context window management
+- Prettier thinking blocks
+- Fix maxTokens defaults for Claude 3.7 Sonnet models
+- Terminal output parsing improvements (thanks @KJ7LNW!)
+- UI fix to dropdown hover colors (thanks @SamirSaji!)
+- Add support for Claude Sonnet 3.7 thinking via Vertex AI (thanks @lupuletic!)
+
+## [3.7.8] - 2025-02-27
+
+- Add Vertex AI prompt caching support for Claude models (thanks @aitoroses and @lupuletic!)
+- Add gpt-4.5-preview
+- Add an advanced feature to customize the system prompt
+
+## [3.7.7] - 2025-02-27
+
+- Graduate checkpoints out of beta
+- Fix enhance prompt button when using Thinking Sonnet
+- Add tooltips to make what buttons do more obvious
+
+## [3.7.6] - 2025-02-26
+
+- Handle really long text better in the in the ChatRow similar to TaskHeader (thanks @joemanley201!)
+- Support multiple files in drag-and-drop
+- Truncate search_file output to avoid crashing the extension
+- Better OpenRouter error handling (no more "Provider Error")
+- Add slider to control max output tokens for thinking models
+
+## [3.7.5] - 2025-02-26
+
+- Fix context window truncation math (see [#1173](https://github.com/RooCodeInc/Roo-Code/issues/1173))
+- Fix various issues with the model picker (thanks @System233!)
+- Fix model input / output cost parsing (thanks @System233!)
+- Add drag-and-drop for files
+- Enable the "Thinking Budget" slider for Claude 3.7 Sonnet on OpenRouter
+
+## [3.7.4] - 2025-02-25
+
+- Fix a bug that prevented the "Thinking" setting from properly updating when switching profiles.
+
+## [3.7.3] - 2025-02-25
+
+- Support for ["Thinking"](https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking) Sonnet 3.7 when using the Anthropic provider.
+
+## [3.7.2] - 2025-02-24
+
+- Fix computer use and prompt caching for OpenRouter's `anthropic/claude-3.7-sonnet:beta` (thanks @cte!)
+- Fix sliding window calculations for Sonnet 3.7 that were causing a context window overflow (thanks @cte!)
+- Encourage diff editing more strongly in the system prompt (thanks @hannesrudolph!)
+
+## [3.7.1] - 2025-02-24
+
+- Add Amazon Bedrock support for Sonnet 3.7 and update some defaults to Sonnet 3.7 instead of 3.5
+
+## [3.7.0] - 2025-02-24
+
+- Introducing Roo Code 3.7, with support for the new Claude Sonnet 3.7. Because who cares about skipping version numbers anymore? Thanks @lupuletic and @cte for the PRs!
+
+## [3.3.26] - 2025-02-27
+
+- Adjust the default prompt for Debug mode to focus more on diagnosis and to require user confirmation before moving on to implementation
+
+## [3.3.25] - 2025-02-21
+
+- Add a "Debug" mode that specializes in debugging tricky problems (thanks [Ted Werbel](https://x.com/tedx_ai/status/1891514191179309457) and [Carlos E. Perez](https://x.com/IntuitMachine/status/1891516362486337739)!)
+- Add an experimental "Power Steering" option to significantly improve adherence to role definitions and custom instructions
+
+## [3.3.24] - 2025-02-20
+
+- Fixed a bug with region selection preventing Amazon Bedrock profiles from being saved (thanks @oprstchn!)
+- Updated the price of gpt-4o (thanks @marvijo-code!)
+
+## [3.3.23] - 2025-02-20
+
+- Handle errors more gracefully when reading custom instructions from files (thanks @joemanley201!)
+- Bug fix to hitting "Done" on settings page with unsaved changes (thanks @System233!)
+
+## [3.3.22] - 2025-02-20
+
+- Improve the Provider Settings configuration with clear Save buttons and warnings about unsaved changes (thanks @System233!)
+- Correctly parse `<think>` reasoning tags from Ollama models (thanks @System233!)
+- Add support for setting custom preferred languages on the Prompts tab, as well as adding Catalan to the list of languages (thanks @alarno!)
+- Add a button to delete MCP servers (thanks @hannesrudolph!)
+- Fix a bug where the button to copy the system prompt preview always copied the Code mode version
+- Fix a bug where the .roomodes file was not automatically created when adding custom modes from the Prompts tab
+- Allow setting a wildcard (`*`) to auto-approve all command execution (use with caution!)
+
+## [3.3.21] - 2025-02-17
+
+- Fix input box revert issue and configuration loss during profile switch (thanks @System233!)
+- Fix default preferred language for zh-cn and zh-tw (thanks @System233!)
+- Fix Mistral integration (thanks @d-oit!)
+- Feature to mention `@terminal` to pull terminal output into context (thanks Cline!)
+- Fix system prompt to make sure Roo knows about all available modes
+- Enable streaming mode for OpenAI o1
+
+## [3.3.20] - 2025-02-14
+
+- Support project-specific custom modes in a .roomodes file
+- Add more Mistral models (thanks @d-oit and @bramburn!)
+- By popular request, make it so Ask mode can't write to Markdown files and is purely for chatting with
+- Add a setting to control the number of open editor tabs to tell the model about (665 is probably too many!)
+- Fix race condition bug with entering API key on the welcome screen
+
+## [3.3.19] - 2025-02-12
+
+- Fix a bug where aborting in the middle of file writes would not revert the write
+- Honor the VS Code theme for dialog backgrounds
+- Make it possible to clear out the default custom instructions for built-in modes
+- Add a help button that links to our new documentation site (which we would love help from the community to improve!)
+- Switch checkpoints logic to use a shadow git repository to work around issues with hot reloads and polluting existing repositories (thanks Cline for the inspiration!)
+
+## [3.3.18] - 2025-02-11
+
+- Add a per-API-configuration model temperature setting (thanks @joemanley201!)
+- Add retries for fetching usage stats from OpenRouter (thanks @jcbdev!)
+- Fix bug where disabled MCP servers would not show up in the settings on initialization (thanks @MuriloFP!)
+- Add the Requesty provider and clean up a lot of shared model picker code (thanks @samhvw8!)
+- Add a button on the Prompts tab to copy the full system prompt to the clipboard (thanks @mamertofabian!)
+- Fix issue where Ollama/LMStudio URLs would flicker back to previous while entering them in settings
+- Fix logic error where automatic retries were waiting twice as long as intended
+- Rework the checkpoints code to avoid conflicts with file locks on Windows (sorry for the hassle!)
+
+## [3.3.17] - 2025-02-09
+
+- Fix the restore checkpoint popover
+- Unset git config that was previously set incorrectly by the checkpoints feature
+
+## [3.3.16] - 2025-02-09
+
+- Support Volcano Ark platform through the OpenAI-compatible provider
+- Fix jumpiness while entering API config by updating on blur instead of input
+- Add tooltips on checkpoint actions and fix an issue where checkpoints were overwriting existing git name/email settings - thanks for the feedback!
+
+## [3.3.15] - 2025-02-08
+
+- Improvements to MCP initialization and server restarts (thanks @MuriloFP and @hannesrudolph!)
+- Add a copy button to the recent tasks (thanks @hannesrudolph!)
+- Improve the user experience for adding a new API profile
+- Another significant fix to API profile switching on the settings screen
+- Opt-in experimental version of checkpoints in the advanced settings
+
+## [3.3.14]
+
+- Should have skipped floor 13 like an elevator. This fixes the broken 3.3.13 release by reverting some changes to the deployment scripts.
+
+## [3.3.13]
+
+- Ensure the DeepSeek r1 model works with Ollama (thanks @sammcj!)
+- Enable context menu commands in the terminal (thanks @samhvw8!)
+- Improve sliding window truncation strategy for models that do not support prompt caching (thanks @nissa-seru!)
+- First step of a more fundamental fix to the bugs around switching API profiles. If you've been having issues with this please try again and let us know if works any better! More to come soon, including fixing the laggy text entry in provider settings.
+
+## [3.3.12]
+
+- Bug fix to changing a mode's API configuration on the prompts tab
+- Add new Gemini models
+
+## [3.3.11]
+
+- Safer shell profile path check to avoid an error on Windows
+- Autocomplete for slash commands
+
+## [3.3.10]
+
+- Add shortcuts to the currently open tabs in the "Add File" section of @-mentions (thanks @olup!)
+- Fix pricing for o1-mini (thanks @hesara!)
+- Fix context window size calculation (thanks @MuriloFP!)
+- Improvements to experimental unified diff strategy and selection logic in code actions (thanks @nissa-seru!)
+- Enable markdown formatting in o3 and o1 (thanks @nissa-seru!)
+- Improved terminal shell detection logic (thanks @canvrno for the original and @nissa-seru for the port!)
+- Fix occasional errors when switching between API profiles (thanks @samhvw8!)
+- Visual improvements to the list of modes on the prompts tab
+- Fix double-scrollbar in provider dropdown
+- Visual cleanup to the list of modes on the prompts tab
+- Improvements to the default prompts for Architect and Ask mode
+- Allow switching between modes with slash messages like `/ask why is the sky blue?`
+
+## [3.3.9]
+
+- Add o3-mini-high and o3-mini-low
+
+## [3.3.8]
+
+- Fix o3-mini in the Glama provider (thanks @Punkpeye!)
+- Add the option to omit instructions for creating MCP servers from the system prompt (thanks @samhvw8!)
+- Fix a bug where renaming API profiles without actually changing the name would delete them (thanks @samhvw8!)
+
+## [3.3.7]
+
+- Support for o3-mini (thanks @shpigunov!)
+- Code Action improvements to allow selecting code and adding it to context, plus bug fixes (thanks @samhvw8!)
+- Ability to include a message when approving or rejecting tool use (thanks @napter!)
+- Improvements to chat input box styling (thanks @psv2522!)
+- Capture reasoning from more variants of DeepSeek R1 (thanks @Szpadel!)
+- Use an exponential backoff for API retries (if delay after first error is 5s, delay after second consecutive error will be 10s, then 20s, etc)
+- Add a slider in advanced settings to enable rate limiting requests to avoid overloading providers (i.e. wait at least 10 seconds between API requests)
+- Prompt tweaks to make Roo better at creating new custom modes for you
+
+## [3.3.6]
+
+- Add a "new task" tool that allows Roo to start new tasks with an initial message and mode
+- Fix a bug that was preventing the use of qwen-max and potentially other OpenAI-compatible providers (thanks @Szpadel!)
+- Add support for perplexity/sonar-reasoning (thanks @Szpadel!)
+- Visual fixes to dropdowns (thanks @psv2522!)
+- Add the [Unbound](https://getunbound.ai/) provider (thanks @vigneshsubbiah16!)
+
+## [3.3.5]
+
+- Make information about the conversation's context window usage visible in the task header for humans and in the environment for models (thanks @MuriloFP!)
+- Add checkboxes to auto-approve mode switch requests (thanks @MuriloFP!)
+- Add new experimental editing tools `insert_content` (for inserting blocks of text at a line number) and `search_and_replace` (for replacing all instances of a phrase or regex) to complement diff editing and whole file editing (thanks @samhvw8!)
+- Improved DeepSeek R1 support by capturing reasoning from DeepSeek API as well as more OpenRouter variants, not using system messages, and fixing a crash on empty chunks. Still depends on the DeepSeek API staying up but we'll be in a better place when it does! (thanks @Szpadel!)
+
+## [3.3.4]
+
+- Add per-server MCP network timeout configuration ranging from 15 seconds to an hour
+- Speed up diff editing (thanks @hannesrudolph and @KyleHerndon!)
+- Add option to perform explain/improve/fix code actions either in the existing task or a new task (thanks @samhvw8!)
+
+## [3.3.3]
+
+- Throw errors sooner when a mode tries to write a restricted file
+- Styling improvements to the mode/configuration dropdowns (thanks @psv2522!)
+
+## [3.3.2]
+
+- Add a dropdown to select the API configuration for a mode in the Prompts tab
+- Fix bug where always allow wasn't showing up for MCP tools
+- Improve OpenRouter DeepSeek-R1 integration by setting temperature to the recommended 0.6 and displaying the reasoning output (thanks @Szpadel - it's really fascinating to watch!)
+- Allow specifying a custom OpenRouter base URL (thanks @dairui1!)
+- Make the UI for nested settings nicer (thanks @PretzelVector!)
+
+## [3.3.1]
+
+- Fix issue where the terminal management system was creating unnecessary new terminals (thanks @evan-fannin!)
+- Fix bug where the saved API provider for a mode wasn't being selected after a mode switch command
+
+## [3.3.0]
+
+- Native VS Code code actions support with quick fixes and refactoring options
+- Modes can now request to switch to other modes when needed
+- Ask and Architect modes can now edit markdown files
+- Custom modes can now be restricted to specific file patterns (for example, a technical writer who can only edit markdown files 👋)
+- Support for configuring the Bedrock provider with AWS Profiles
+- New Roo Code community Discord at https://roocode.com/discord!
+
+## [3.2.8]
+
+- Fixed bug opening custom modes settings JSON
+- Reverts provider key entry back to checking onInput instead of onChange to hopefully address issues entering API keys (thanks @samhvw8!)
+- Added explicit checkbox to use Azure for OpenAI compatible providers (thanks @samhvw8!)
+- Fixed Glama usage reporting (thanks @punkpeye!)
+- Added Llama 3.3 70B Instruct model to the Amazon Bedrock provider options (thanks @Premshay!)
+
+## [3.2.7]
+
+- Fix bug creating new configuration profiles
+
+## [3.2.6]
+
+- Fix bug with role definition overrides for built-in modes
+
+## [3.2.5]
+
+- Added gemini flash thinking 01-21 model and a few visual fixes (thanks @monotykamary!)
+
+## [3.2.4]
+
+- Only allow use of the diff tool if it's enabled in settings
+
+## [3.2.3]
+
+- Fix bug where language selector wasn't working
+
+## [3.2.0 - 3.2.2]
+
+- **Name Change From Roo Cline to Roo Code:** We're excited to announce our new name! After growing beyond 50,000 installations, we've rebranded from Roo Cline to Roo Code to better reflect our identity as we chart our own course.
+
+- **Custom Modes:** Create your own personas for Roo Code! While our built-in modes (Code, Architect, Ask) are still here, you can now shape entirely new ones:
+    - Define custom prompts
+    - Choose which tools each mode can access
+    - Create specialized assistants for any workflow
+    - Just type "Create a new mode for <X>" or visit the Prompts tab in the top menu to get started
+
+Join us at https://www.reddit.com/r/RooCode to share your custom modes and be part of our next chapter!
+
+## [3.1.7]
+
+- DeepSeek-R1 support (thanks @philipnext!)
+- Experimental new unified diff algorithm can be enabled in settings (thanks @daniel-lxs!)
+- More fixes to configuration profiles (thanks @samhvw8!)
+
+## [3.1.6]
+
+- Add Mistral (thanks Cline!)
+- Fix bug with VSCode LM configuration profile saving (thanks @samhvw8!)
+
+## [3.1.4 - 3.1.5]
+
+- Bug fixes to the auto approve menu
+
+## [3.1.3]
+
+- Add auto-approve chat bar (thanks Cline!)
+- Fix bug with VS Code Language Models integration
+
+## [3.1.2]
+
+- Experimental support for VS Code Language Models including Copilot (thanks @RaySinner / @julesmons!)
+- Fix bug related to configuration profile switching (thanks @samhvw8!)
+- Improvements to fuzzy search in mentions, history, and model lists (thanks @samhvw8!)
+- PKCE support for Glama (thanks @punkpeye!)
+- Use 'developer' message for o1 system prompt
+
+## [3.1.1]
+
+- Visual fixes to chat input and settings for the light+ themes
+
+## [3.1.0]
+
+- You can now customize the role definition and instructions for each chat mode (Code, Architect, and Ask), either through the new Prompts tab in the top menu or mode-specific .clinerules-mode files. Prompt Enhancements have also been revamped: the "Enhance Prompt" button now works with any provider and API configuration, giving you the ability to craft messages with fully customizable prompts for even better results.
+- Add a button to copy markdown out of the chat
+
+## [3.0.3]
+
+- Update required vscode engine to ^1.84.0 to match cline
+
+## [3.0.2]
+
+- A couple more tiny tweaks to the button alignment in the chat input
+
+## [3.0.1]
+
+- Fix the reddit link and a small visual glitch in the chat input
+
+## [3.0.0]
+
+- This release adds chat modes! Now you can ask Roo Code questions about system architecture or the codebase without immediately jumping into writing code. You can even assign different API configuration profiles to each mode if you prefer to use different models for thinking vs coding. Would love feedback in the new Roo Code Reddit! https://www.reddit.com/r/RooCode
+
+## [2.2.46]
+
+- Only parse @-mentions in user input (not in files)
+
+## [2.2.45]
+
+- Save different API configurations to quickly switch between providers and settings (thanks @samhvw8!)
+
+## [2.2.44]
+
+- Automatically retry failed API requests with a configurable delay (thanks @RaySinner!)
+
+## [2.2.43]
+
+- Allow deleting single messages or all subsequent messages
+
+## [2.2.42]
+
+- Add a Git section to the context mentions
+
+## [2.2.41]
+
+- Checkbox to disable streaming for OpenAI-compatible providers
+
+## [2.2.40]
+
+- Add the Glama provider (thanks @punkpeye!)
+
+## [2.2.39]
+
+- Add toggle to enable/disable the MCP-related sections of the system prompt (thanks @daniel-lxs!)
+
+## [2.2.38]
+
+- Add a setting to control the number of terminal output lines to pass to the model when executing commands
+
+## [2.2.36 - 2.2.37]
+
+- Add a button to delete user messages
+
+## [2.2.35]
+
+- Allow selection of multiple browser viewport sizes and adjusting screenshot quality
+
+## [2.2.34]
+
+- Add the DeepSeek provider
+
+## [2.2.33]
+
+- "Enhance prompt" button (OpenRouter models only for now)
+- Support listing models for OpenAI compatible providers (thanks @samhvw8!)
+
+## [2.2.32]
+
+- More efficient workspace tracker
+
+## [2.2.31]
+
+- Improved logic for auto-approving chained commands
+
+## [2.2.30]
+
+- Fix bug with auto-approving commands
+
+## [2.2.29]
+
+- Add configurable delay after auto-writes to allow diagnostics to catch up
+
+## [2.2.28]
+
+- Use createFileSystemWatcher to more reliably update list of files to @-mention
+
+## [2.2.27]
+
+- Add the current time to the system prompt and improve browser screenshot quality (thanks @libertyteeth!)
+
+## [2.2.26]
+
+- Tweaks to preferred language (thanks @yongjer)
+
+## [2.2.25]
+
+- Add a preferred language dropdown
+
+## [2.2.24]
+
+- Default diff editing to on for new installs
+
+## [2.2.23]
+
+- Fix context window for gemini-2.0-flash-thinking-exp-1219 (thanks @student20880)
+
+## [2.2.22]
+
+- Add gemini-2.0-flash-thinking-exp-1219
+
+## [2.2.21]
+
+- Take predicted file length into account when detecting omissions
+
+## [2.2.20]
+
+- Make fuzzy diff matching configurable (and default to off)
+
+## [2.2.19]
+
+- Add experimental option to use a bigger browser (1280x800)
+
+## [2.2.18]
+
+- More targeted styling fix for Gemini chats
+
+## [2.2.17]
+
+- Improved regex for auto-execution of chained commands
+
+## [2.2.16]
+
+- Incorporate Premshay's [PR](https://github.com/RooCodeInc/Roo-Code/pull/60) to add support for Amazon Nova and Meta Llama Models via Bedrock (3, 3.1, 3.2) and unified Bedrock calls using BedrockClient and Bedrock Runtime API
+
+## [2.2.14 - 2.2.15]
+
+- Make diff editing more robust to transient errors / fix bugs
+
+## [2.2.13]
+
+- Fixes to sound playing and applying diffs
+
+## [2.2.12]
+
+- Better support for pure deletion and insertion diffs
+
+## [2.2.11]
+
+- Added settings checkbox for verbose diff debugging
+
+## [2.2.6 - 2.2.10]
+
+- More fixes to search/replace diffs
 
-- [#3868](https://github.com/Kilo-Org/kilocode/pull/3868) [`cf6ed3e`](https://github.com/Kilo-Org/kilocode/commit/cf6ed3ed3bc7dfe0268121f3e68d422f3ffadfff) Thanks [@iscekic](https://github.com/iscekic)! - add sessions support
+## [2.2.5]
 
-### Patch Changes
+- Allow MCP servers to be enabled/disabled
 
-- [#4059](https://github.com/Kilo-Org/kilocode/pull/4059) [`d47a3d5`](https://github.com/Kilo-Org/kilocode/commit/d47a3d52dfbf669fdf50be53c416b060cd537e40) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix error on task resumption with some providers when native tool calls are enabled
+## [2.2.4]
 
-- [#3565](https://github.com/Kilo-Org/kilocode/pull/3565) [`4a05694`](https://github.com/Kilo-Org/kilocode/commit/4a05694ac84007397a2b99c826151d6383506001) Thanks [@marcus-v-rodrigues](https://github.com/marcus-v-rodrigues)! - Fix 403 error for Gemini CLI by removing 'default' project fallback
+- Tweak the prompt to encourage diff edits when they're enabled
 
-- [#2540](https://github.com/Kilo-Org/kilocode/pull/2540) [`591da2b`](https://github.com/Kilo-Org/kilocode/commit/591da2b8dae2d4c72c0663302e19dfe6e30b1617) Thanks [@gerardbalaoro](https://github.com/gerardbalaoro)! - Support for MCP servers in `.cursor/mcp.json`
+## [2.2.3]
 
-- [#2324](https://github.com/Kilo-Org/kilocode/pull/2324) [`ab9b94b`](https://github.com/Kilo-Org/kilocode/commit/ab9b94b0d593bccd222c5cbb7fdffe968d4c6a40) Thanks [@mikkihugo](https://github.com/mikkihugo)! - Add VS Code Settings Sync integration
+- Clean up the settings screen
 
-- [#3193](https://github.com/Kilo-Org/kilocode/pull/3193) [`6a895de`](https://github.com/Kilo-Org/kilocode/commit/6a895dec08d6afccb21dc431c021200f52c4c7cf) Thanks [@siulong](https://github.com/siulong)! - Fix rules folder path when deleting the rules
+## [2.2.2]
 
-- [#3804](https://github.com/Kilo-Org/kilocode/pull/3804) [`5d4b38b`](https://github.com/Kilo-Org/kilocode/commit/5d4b38b67ed670da1de651de0491906a594174ac) Thanks [@skridlevsky](https://github.com/skridlevsky)! - fix(settings): codebase indexing toggle not persisting
+- Add checkboxes to auto-approve MCP tools
 
-- [#3484](https://github.com/Kilo-Org/kilocode/pull/3484) [`ac01ae3`](https://github.com/Kilo-Org/kilocode/commit/ac01ae30e735502b6cb265f79ab6f82bf954fb52) Thanks [@mental-lab](https://github.com/mental-lab)! - Add warning for ANTHROPIC_API_KEY conflicts with Claude Code provider
+## [2.2.1]
 
-- [#3087](https://github.com/Kilo-Org/kilocode/pull/3087) [`ebab11b`](https://github.com/Kilo-Org/kilocode/commit/ebab11b033dd354c175a4027657446b745a82d96) Thanks [@jinhan1414](https://github.com/jinhan1414)! - Unify slash command parsing and expand mention detection
+- Fix another diff editing indentation bug
 
-## 4.124.0
+## [2.2.0]
 
-### Minor Changes
+- Incorporate MCP changes from Cline 2.2.0
 
-- [#2587](https://github.com/Kilo-Org/kilocode/pull/2587) [`f3de1e7`](https://github.com/Kilo-Org/kilocode/commit/f3de1e713c3a61fe04a30aa26e33ef7431ed63f4) Thanks [@NaccOll](https://github.com/NaccOll)! - Add LanceDB vector store support
+## [2.1.21]
 
-### Patch Changes
+- Larger text area input + ability to drag images into it
 
-- [#4045](https://github.com/Kilo-Org/kilocode/pull/4045) [`b14afb1`](https://github.com/Kilo-Org/kilocode/commit/b14afb11363a62d45d1feb176d9b5054d75d43a9) Thanks [@eshurakov](https://github.com/eshurakov)! - Nano GPT provider support (by @b3nw)
+## [2.1.20]
 
-- [#4023](https://github.com/Kilo-Org/kilocode/pull/4023) [`5af4d01`](https://github.com/Kilo-Org/kilocode/commit/5af4d01b3e0d4467e8234c1c445d098c1f6756f2) Thanks [@markijbema](https://github.com/markijbema)! - Small redesign of the autocomplete statusbar/tooltip
+- Add Gemini 2.0
 
-## 4.123.0
+## [2.1.19]
 
-### Minor Changes
+- Better error handling for diff editing
 
-- [#3020](https://github.com/Kilo-Org/kilocode/pull/3020) [`147786c`](https://github.com/Kilo-Org/kilocode/commit/147786c81238c1adea9c2bddf649d0763dd449d2) Thanks [@CaiDingxian](https://github.com/CaiDingxian)! - Add independent provider setup for Fast Apply feature
+## [2.1.18]
 
-### Patch Changes
+- Diff editing bugfix to handle Windows line endings
 
-- [#4019](https://github.com/Kilo-Org/kilocode/pull/4019) [`f16c31b`](https://github.com/Kilo-Org/kilocode/commit/f16c31bf921a642e23d54fb2dfd768e07be8de71) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add Opus 4.5 to Claude Code provider
+## [2.1.17]
 
-- [#3445](https://github.com/Kilo-Org/kilocode/pull/3445) [`8065f7a`](https://github.com/Kilo-Org/kilocode/commit/8065f7a44958ec2584ee591d7e936eacdfe73951) Thanks [@jeanduplessis](https://github.com/jeanduplessis)! - fix: apply file limit after .kilocodeignore filtering instead of before
+- Switch to search/replace diffs in experimental diff editing mode
 
-- [#3988](https://github.com/Kilo-Org/kilocode/pull/3988) [`a169e6f`](https://github.com/Kilo-Org/kilocode/commit/a169e6fb0632f06b3271fdcb03d01d5ab7eebd69) Thanks [@dltechy](https://github.com/dltechy)! - Fix an issue where workflows are not working except as the initial prompt of a task
+## [2.1.16]
 
-## 4.122.1
+- Allow copying prompts from the history screen
 
-### Patch Changes
+## [2.1.15]
 
-- [#4000](https://github.com/Kilo-Org/kilocode/pull/4000) [`3ef2237`](https://github.com/Kilo-Org/kilocode/commit/3ef2237493f48ac212732a5b7d67eceb4af0d594) Thanks [@brianc](https://github.com/brianc)! - There was previously some debug log spam introduced for the Managed Indexing feature. This change removes those logs.
+- Incorporate dbasclpy's [PR](https://github.com/RooCodeInc/Roo-Code/pull/54) to add support for gemini-exp-1206
+- Make it clear that diff editing is very experimental
 
-- [#4005](https://github.com/Kilo-Org/kilocode/pull/4005) [`5aa56df`](https://github.com/Kilo-Org/kilocode/commit/5aa56df5123d33ba0ecadeabb3727b57974a842e) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add Claude Opus 4.5 support, including verbosity controls for Kilo Gateway, OpenRouter and Anthropic providers
+## [2.1.14]
 
-## 4.122.0
+- Fix bug where diffs were not being applied correctly and try Aider's [unified diff prompt](https://github.com/Aider-AI/aider/blob/3995accd0ca71cea90ef76d516837f8c2731b9fe/aider/coders/udiff_prompts.py#L75-L105)
+- If diffs are enabled, automatically reject write_to_file commands that lead to truncated output
 
-### Minor Changes
+## [2.1.13]
 
-- [#3609](https://github.com/Kilo-Org/kilocode/pull/3609) [`65191fd`](https://github.com/Kilo-Org/kilocode/commit/65191fd671e3b4b376efe572b4e605dbf9d3a5d2) Thanks [@mcowger](https://github.com/mcowger)! - Synthetic provider to use updated models endpoint and dynamic fetcher
+- Fix https://github.com/RooCodeInc/Roo-Code/issues/50 where sound effects were not respecting settings
 
-- [#3674](https://github.com/Kilo-Org/kilocode/pull/3674) [`cdd439a`](https://github.com/Kilo-Org/kilocode/commit/cdd439a098f0b1ccb75f8b8cad53a35494e6ab29) Thanks [@mental-lab](https://github.com/mental-lab)! - Kilo Code can now delete files and directories without using command line tools.
+## [2.1.12]
 
-### Patch Changes
+- Incorporate JoziGila's [PR](https://github.com/cline/cline/pull/158) to add support for editing through diffs
 
-- [#3925](https://github.com/Kilo-Org/kilocode/pull/3925) [`02abc84`](https://github.com/Kilo-Org/kilocode/commit/02abc84c41e4a12dd45ff15d003ce8fbb4a6bfed) Thanks [@jrf0110](https://github.com/jrf0110)! - Improve organization/managed indexing performance
+## [2.1.11]
 
-## 4.121.2
+- Incorporate lloydchang's [PR](https://github.com/RooCodeInc/Roo-Code/pull/42) to add support for OpenRouter compression
 
-### Patch Changes
+## [2.1.10]
 
-- [#3951](https://github.com/Kilo-Org/kilocode/pull/3951) [`1f4f9bd`](https://github.com/Kilo-Org/kilocode/commit/1f4f9bdf739d5b0dec0fdef366c1d58b6d3ffbcb) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add Gemini 3 Pro Image Preview
+- Incorporate HeavenOSK's [PR](https://github.com/cline/cline/pull/818) to add sound effects to Cline
 
-- [#3879](https://github.com/Kilo-Org/kilocode/pull/3879) [`d07e192`](https://github.com/Kilo-Org/kilocode/commit/d07e1924fe5be984a630442cfcc8e3bd3a4879b1) Thanks [@Maosghoul](https://github.com/Maosghoul)! - Optimized MiniMax M2 interleaved thinking by merging environment details into tool results.
+## [2.1.9]
 
-- [#3939](https://github.com/Kilo-Org/kilocode/pull/3939) [`189aee3`](https://github.com/Kilo-Org/kilocode/commit/189aee3a36906857d1e6fb02c05081382e87bf4e) Thanks [@ajspetner](https://github.com/ajspetner)! - Added grok-4-1-fast-reasoning and grok-4-1-fast-non-reasoning models
+- Add instructions for using .clinerules on the settings screen
 
-## [v4.121.1]
+## [2.1.8]
 
-- [#3601](https://github.com/Kilo-Org/kilocode/pull/3601) [`eaf1f5a`](https://github.com/Kilo-Org/kilocode/commit/eaf1f5ab7d2916c4845093d605e54301938d8383) Thanks [@hassoncs](https://github.com/hassoncs)! - Now items in the Chat context menu will not be auto selected if your cursor is already on the row when the items change
+- Roo Cline now allows configuration of which commands are allowed without approval!
 
-- [#3915](https://github.com/Kilo-Org/kilocode/pull/3915) [`c096af9`](https://github.com/Kilo-Org/kilocode/commit/c096af99d3eb6d18a7faa1bf7234250802225645) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improve file edit success rates for non-Claude models with native tool calling
+## [2.1.7]
 
-- [#3912](https://github.com/Kilo-Org/kilocode/pull/3912) [`6036695`](https://github.com/Kilo-Org/kilocode/commit/60366955f4a7b73fe0c32c592a324ce2b6b07e30) Thanks [@markijbema](https://github.com/markijbema)! - Do not show browser window when closing the browser
+- Updated extension icon and metadata
 
-- [#3911](https://github.com/Kilo-Org/kilocode/pull/3911) [`ae8f4c7`](https://github.com/Kilo-Org/kilocode/commit/ae8f4c7625168d64aab2e621516d47a15e874a0d) Thanks [@markijbema](https://github.com/markijbema)! - Fixed model search, now finds gemini again
+## [2.2.0]
 
-## [v4.121.0]
+- Add support for Model Context Protocol (MCP), enabling Cline to use custom tools like web-search tool or GitHub tool
+- Add MCP server management tab accessible via the server icon in the menu bar
+- Add ability for Cline to dynamically create new MCP servers based on user requests (e.g., "add a tool that gets the latest npm docs")
 
-- [#3886](https://github.com/Kilo-Org/kilocode/pull/3886) [`00e6fb5`](https://github.com/Kilo-Org/kilocode/commit/00e6fb59a42dcf827f7cfe72516052c561723cd0) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Improve XLSX support
+## [2.1.6]
 
-### Patch Changes
+- Roo Cline now runs in all VSCode-compatible editors
 
-- [#3872](https://github.com/Kilo-Org/kilocode/pull/3872) [`75509af`](https://github.com/Kilo-Org/kilocode/commit/75509af40f2daefda36c492fd87b5f40966ec835) Thanks [@ShivamB25](https://github.com/ShivamB25)! - Update default Gemini model to gemini-3-pro-preview
+## [2.1.5]
 
-- [#3878](https://github.com/Kilo-Org/kilocode/pull/3878) [`7b01fc8`](https://github.com/Kilo-Org/kilocode/commit/7b01fc880d76eb398c9cfca0c9a09478f69c3478) Thanks [@markijbema](https://github.com/markijbema)! - Fix manual configuration in welcome flow
+- Fix bug in browser action approval
 
-## [v4.120.0]
+## [2.1.4]
 
-- [#3778](https://github.com/Kilo-Org/kilocode/pull/3778) [`b9a9f70`](https://github.com/Kilo-Org/kilocode/commit/b9a9f70bc5963aa2a2d1cae4ef551c22b725a330) Thanks [@markijbema](https://github.com/markijbema)! - Made the dropdown searches more intuitive, search like vscode does
+- Roo Cline now can run side-by-side with Cline
 
-### Patch Changes
+## [2.1.3]
 
-- [#3867](https://github.com/Kilo-Org/kilocode/pull/3867) [`23b805b`](https://github.com/Kilo-Org/kilocode/commit/23b805b051d05d3610b9cadc9842f8d0345acf1e) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add Gemini 3 Pro Preview to Gemini and Vertex providers (thanks @Sn0wo2!)
+- Roo Cline now allows browser actions without approval when `alwaysAllowBrowser` is true
 
-- [#3832](https://github.com/Kilo-Org/kilocode/pull/3832) [`9d77cb1`](https://github.com/Kilo-Org/kilocode/commit/9d77cb1e62d277c2cd9a9d66373d582668e3dd09) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Reduced the incidence of unsuccessful edits with MiniMax M2
+## [2.1.2]
 
-## [v4.119.6]
-
-- [#3836](https://github.com/Kilo-Org/kilocode/pull/3836) [`b5cf145`](https://github.com/Kilo-Org/kilocode/commit/b5cf145c1542af1f317a51fb4f55d79960aad711) Thanks [@mcowger](https://github.com/mcowger)! - Add GPT-5.1 models for OpenAI provider
-
-- [#3732](https://github.com/Kilo-Org/kilocode/pull/3732) [`c75dd9f`](https://github.com/Kilo-Org/kilocode/commit/c75dd9f8d66b291259daa6ef2750168fe9727a70) Thanks [@markijbema](https://github.com/markijbema)! - When editting a profile is the settings, do not implicitly switch to that profile
-
-- [#3793](https://github.com/Kilo-Org/kilocode/pull/3793) [`20f0b71`](https://github.com/Kilo-Org/kilocode/commit/20f0b71ba8009269651f617127c4e8fdbd486f20) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Default GPT 5.x Codex to JSON style tool calls
-
-## [v4.119.5]
-
-- [#3794](https://github.com/Kilo-Org/kilocode/pull/3794) [`180998d`](https://github.com/Kilo-Org/kilocode/commit/180998d889e08258950ed1aa9eb220d9daf302e9) Thanks [@mcowger](https://github.com/mcowger)! - Fix LiteLLM Provider Config crash when uninitialized.
-
-- [#3792](https://github.com/Kilo-Org/kilocode/pull/3792) [`b8c85fe`](https://github.com/Kilo-Org/kilocode/commit/b8c85fed3c1060b724157523a7f1e03e59efbf54) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Prevent MiniMax provider from using ANTHROPIC_AUTH_TOKEN environment variable
-
-- [#3801](https://github.com/Kilo-Org/kilocode/pull/3801) [`cfc1ab8`](https://github.com/Kilo-Org/kilocode/commit/cfc1ab8b22327cdf079a0191af8fdb988ad5efca) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Potential fix for hanging chat
-
-- [#3613](https://github.com/Kilo-Org/kilocode/pull/3613) [`feda236`](https://github.com/Kilo-Org/kilocode/commit/feda2361b66a11cb2d5766dc2f0fd56e716de03e) Thanks [@mcowger](https://github.com/mcowger)! - Enable native tool calling for LiteLLM provider
-
-## [v4.119.4]
-
-- [#3788](https://github.com/Kilo-Org/kilocode/pull/3788) [`49131b7`](https://github.com/Kilo-Org/kilocode/commit/49131b78bef98e1a24b6bf9457e072c9acc1230f) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix hang when model wants to write JSON file with native tool calls enabled
-
-## [v4.119.3]
-
-- [#3766](https://github.com/Kilo-Org/kilocode/pull/3766) [`e2fb2a5`](https://github.com/Kilo-Org/kilocode/commit/e2fb2a57703c19b5ee9c10d6c35ccc68d3cdcfe7) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix Z.ai provider not working with JSON-style tool calls (thanks @mcowger for reporting)
-
-- [#3768](https://github.com/Kilo-Org/kilocode/pull/3768) [`72476d5`](https://github.com/Kilo-Org/kilocode/commit/72476d53dfdca589070db67ab6d826e52374515f) Thanks [@iscekic](https://github.com/iscekic)! - preapprove codebase_search
-
-- [#3750](https://github.com/Kilo-Org/kilocode/pull/3750) [`02832d7`](https://github.com/Kilo-Org/kilocode/commit/02832d70ab51b4bacd9608e8bdad271ccec9eddb) Thanks [@jrf0110](https://github.com/jrf0110)! - Fixes a bug where managed code indexing would not start due to mismatching org schemas.
-
-- [#3772](https://github.com/Kilo-Org/kilocode/pull/3772) [`5c5d207`](https://github.com/Kilo-Org/kilocode/commit/5c5d207c586af1bb5e5a0d97146e1e0e64db181c) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Prevent duplicate tool results when native tool calling is enabled
-
-- [#3754](https://github.com/Kilo-Org/kilocode/pull/3754) [`47b921b`](https://github.com/Kilo-Org/kilocode/commit/47b921b07768a1e6712b74c013222eac28ce0e6b) Thanks [@mcowger](https://github.com/mcowger)! - Synthetic provider now uses JSON tool calls by default
-
-## [v4.119.2]
-
-- [#3740](https://github.com/Kilo-Org/kilocode/pull/3740) [`61c6c9a`](https://github.com/Kilo-Org/kilocode/commit/61c6c9abf2b81f2eedf29aec074c1028abdee0ad) Thanks [@jrf0110](https://github.com/jrf0110)! - Managed codebase indexing is a new experimental feature that should be disabled by default. It is disabled on the backend, but the extension defaults to true. This change disables the feature by default.
-
-- [#3711](https://github.com/Kilo-Org/kilocode/pull/3711) [`097b1e3`](https://github.com/Kilo-Org/kilocode/commit/097b1e3fbaf04c7859c6c07a5bbf64b911b50d55) Thanks [@CyberRookie-X](https://github.com/CyberRookie-X)! - Add doubao-seed-code model to Doubao provider
-
-- [#3734](https://github.com/Kilo-Org/kilocode/pull/3734) [`2a6c171`](https://github.com/Kilo-Org/kilocode/commit/2a6c171db108609f778e422cbd6b772ddcc55ad4) Thanks [@ctsstc](https://github.com/ctsstc)! - Add model Kimi K2 Thinking to Fireworks provider
-
-- [#3724](https://github.com/Kilo-Org/kilocode/pull/3724) [`85731fb`](https://github.com/Kilo-Org/kilocode/commit/85731fb6c22cab6bbfccf0b11e42ddd3d7b72aa4) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix duplicated MiniMax settings
-
-## [v4.119.1]
-
-- [#3479](https://github.com/Kilo-Org/kilocode/pull/3479) [`499bf1a`](https://github.com/Kilo-Org/kilocode/commit/499bf1a52dcbfbd4e3d5f96cee00d672fbda021c) Thanks [@jrf0110](https://github.com/jrf0110)! - Introduces the managed codebase indexing feature for Kilo Code Teams and Enterprise organizations. This feature is currently gated to internal customers only. Managed codebase indexing is a branch-aware indexing and search product that does not require any configuration (as opposed to the current codebase indexing feature which relies on a local qdrant instance and configurating an embedding provider).
-
-- [#3733](https://github.com/Kilo-Org/kilocode/pull/3733) [`5e1f809`](https://github.com/Kilo-Org/kilocode/commit/5e1f809a67d9e11402f422ed70f9b8bdf1717720) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Reduce failure rate of the apply diff tool when native tool calls are used
-
-## [v4.119.0]
-
-- [#3498](https://github.com/Kilo-Org/kilocode/pull/3498) [`10fe57d`](https://github.com/Kilo-Org/kilocode/commit/10fe57dab94217c80ed03835ed71162d8a64c91e) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Include changes from Roo Code v3.29.0-v3.30.0
-
-    - Add token-budget based file reading with intelligent preview to avoid context overruns (thanks @daniel-lxs!)
-    - Fix: Respect nested .gitignore files in search_files (#7921 by @hannesrudolph, PR by @daniel-lxs)
-    - Fix: Preserve trailing newlines in stripLineNumbers for apply_diff (#8020 by @liyi3c, PR by @app/roomote)
-    - Fix: Exclude max tokens field for models that don't support it in export (#7944 by @hannesrudolph, PR by @elianiva)
-    - Retry API requests on stream failures instead of aborting task (thanks @daniel-lxs!)
-    - Improve auto-approve button responsiveness (thanks @daniel-lxs!)
-    - Add checkpoint initialization timeout settings and fix checkpoint timeout warnings (#7843 by @NaccOll, PR by @NaccOll)
-    - Always show checkpoint restore options regardless of change detection (thanks @daniel-lxs!)
-    - Improve checkpoint menu translations (thanks @daniel-lxs!)
-    - Update Mistral Medium model name (#8362 by @ThomsenDrake, PR by @ThomsenDrake)
-    - Remove GPT-5 instructions/reasoning_summary from UI message metadata to prevent ui_messages.json bloat (thanks @hannesrudolph!)
-    - Normalize docs-extractor audience tags; remove admin/stakeholder; strip tool invocations (thanks @hannesrudolph!)
-    - Try 5s status mutation timeout (thanks @cte!)
-    - Fix: Clean up max output token calculations to prevent context window overruns (#8821 by @enerage, PR by @roomote)
-    - Fix: Change Add to Context keybinding to avoid Redo conflict (#8652 by @swythan, PR by @roomote)
-    - Fix provider model loading race conditions (thanks @mrubens!)
-    - Fix: Remove specific Claude model version from settings descriptions to avoid outdated references (#8435 by @rwydaegh, PR by @roomote)
-    - Fix: Ensure free models don't display pricing information in the UI (thanks @mrubens!)
-    - Add reasoning support for Z.ai GLM binary thinking mode (#8465 by @BeWater799, PR by @daniel-lxs)
-    - Add settings to configure time and cost display in system prompt (#8450 by @jaxnb, PR by @roomote)
-    - Fix: Use max_output_tokens when available in LiteLLM fetcher (#8454 by @fabb, PR by @roomote)
-    - Fix: Process queued messages after context condensing completes (#8477 by @JosXa, PR by @roomote)
-    - Fix: Resolve checkpoint menu popover overflow (thanks @daniel-lxs!)
-    - Fix: LiteLLM test failures after merge (thanks @daniel-lxs!)
-    - Improve UX: Focus textbox and add newlines after adding to context (thanks @mrubens!)
-    - Fix: prevent infinite loop when canceling during auto-retry (#8901 by @mini2s, PR by @app/roomote)
-    - Fix: Enhanced codebase index recovery and reuse ('Start Indexing' button now reuses existing Qdrant index) (#8129 by @jaroslaw-weber, PR by @heyseth)
-    - Fix: make code index initialization non-blocking at activation (#8777 by @cjlawson02, PR by @daniel-lxs)
-    - Fix: remove search_and_replace tool from codebase (#8891 by @hannesrudolph, PR by @app/roomote)
-    - Fix: custom modes under custom path not showing (#8122 by @hannesrudolph, PR by @elianiva)
-    - Fix: prevent MCP server restart when toggling tool permissions (#8231 by @hannesrudolph, PR by @heyseth)
-    - Fix: truncate type definition to match max read line (#8149 by @chenxluo, PR by @elianiva)
-    - Fix: auto-sync enableReasoningEffort with reasoning dropdown selection (thanks @daniel-lxs!)
-    - Prevent a noisy cloud agent exception (thanks @cte!)
-    - Feat: improve @ file search for large projects (#5721 by @Naituw, PR by @daniel-lxs)
-    - Feat: rename MCP Errors tab to Logs for mixed-level messages (#8893 by @hannesrudolph, PR by @app/roomote)
-    - docs(vscode-lm): clarify VS Code LM API integration warning (thanks @hannesrudolph!)
-    - Fix: Resolve Qdrant codebase_search error by adding keyword index for type field (#8963 by @rossdonald, PR by @app/roomote)
-    - Fix cost and token tracking between provider styles to ensure accurate usage metrics (thanks @mrubens!)
-    - Feat: Add OpenRouter embedding provider support (#8972 by @dmarkey, PR by @dmarkey)
-    - Feat: Add GLM-4.6 model to Fireworks provider (#8752 by @mmealman, PR by @app/roomote)
-    - Feat: Add MiniMax M2 model to Fireworks provider (#8961 by @dmarkey, PR by @app/roomote)
-    - Feat: Add preserveReasoning flag to include reasoning in API history (thanks @daniel-lxs!)
-    - Fix: Prevent message loss during queue drain race condition (#8536 by @hannesrudolph, PR by @daniel-lxs)
-    - Fix: Capture the reasoning content in base-openai-compatible for GLM 4.6 (thanks @mrubens!)
-    - Fix: Create new Requesty profile during OAuth (thanks @Thibault00!)
-    - Fix: Cleanup terminal settings tab and change default terminal to inline (thanks @hannesrudolph!)
-
-- [#3643](https://github.com/Kilo-Org/kilocode/pull/3643) [`89d5135`](https://github.com/Kilo-Org/kilocode/commit/89d513569481ed1a6c1cfb5f7cd049dc8276a72c) Thanks [@iscekic](https://github.com/iscekic)! - add smart yolo mode
-
-### Patch Changes
-
-- [#3659](https://github.com/Kilo-Org/kilocode/pull/3659) [`44732df`](https://github.com/Kilo-Org/kilocode/commit/44732dff31b4d3737203548ac4022eccfd21e354) Thanks [@Maosghoul](https://github.com/Maosghoul)! - MiniMax M2 now uses JSON-style tools by default
-
-- [#3653](https://github.com/Kilo-Org/kilocode/pull/3653) [`c79efb1`](https://github.com/Kilo-Org/kilocode/commit/c79efb1b19399ef0572d10829843732e08cd08e8) Thanks [@ctsstc](https://github.com/ctsstc)! - Added GLM 4.6 to Fireworks provider
-
-- [#3693](https://github.com/Kilo-Org/kilocode/pull/3693) [`825e7c4`](https://github.com/Kilo-Org/kilocode/commit/825e7c41f9ceeb3abcc7b1fa68a586c9f1cad384) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix API error when returning from subtask with native tool calls enabled
-
-- [#3680](https://github.com/Kilo-Org/kilocode/pull/3680) [`fc76487`](https://github.com/Kilo-Org/kilocode/commit/fc7648749bacc2f4e1b4988af3011b399b392027) Thanks [@markijbema](https://github.com/markijbema)! - Dont show autocomplete suggestions which aren't useful
-
-## [v4.118.0]
-
-- [#3638](https://github.com/Kilo-Org/kilocode/pull/3638) [`49e44fc`](https://github.com/Kilo-Org/kilocode/commit/49e44fc1c3c02648a534f737c6df0d7d4964810c) Thanks [@mcowger](https://github.com/mcowger)! - Enable Moonshot for native tool calling
-
-- [#3295](https://github.com/Kilo-Org/kilocode/pull/3295) [`5a155a9`](https://github.com/Kilo-Org/kilocode/commit/5a155a9825e20f10bfc752baff37cd5de53980b2) Thanks [@Maosghoul](https://github.com/Maosghoul)! - MiniMax provider added. MiniMax provider preserves reasoning blocks and has experimental support for native tool calling.
-
-- [#3632](https://github.com/Kilo-Org/kilocode/pull/3632) [`d7fad58`](https://github.com/Kilo-Org/kilocode/commit/d7fad58673da95de682bf5d7f38a90a288daae03) Thanks [@iscekic](https://github.com/iscekic)! - Introduces "YOLO" mode, where all approval requests are automatically approved. Initially used for `--auto` mode in the CLI, now available in the extension as well in `Settings > Auto-Approval`.
-
-- [#3605](https://github.com/Kilo-Org/kilocode/pull/3605) [`03fccd3`](https://github.com/Kilo-Org/kilocode/commit/03fccd3a3c75186c320aad3754547bf1619cf424) Thanks [@viktorxhzj](https://github.com/viktorxhzj)! - OpenRouter and Kilo Gateway providers now preserve reasoning blocks between API requests. This should improve performance of reasoning models, especially MiniMax M2.
-
-- [#3597](https://github.com/Kilo-Org/kilocode/pull/3597) [`ea3c0bd`](https://github.com/Kilo-Org/kilocode/commit/ea3c0bda8055f3ad3370c5794803ae176fefadd4) Thanks [@mcowger](https://github.com/mcowger)! - Add Kimi K2 Thinking to Moonshot.ai provider.
-
-### Patch Changes
-
-- [#3500](https://github.com/Kilo-Org/kilocode/pull/3500) [`2e1a536`](https://github.com/Kilo-Org/kilocode/commit/2e1a53678fc1c331d98a63f0ab15b02b53fc1625) Thanks [@iscekic](https://github.com/iscekic)! - improves windows support
-
-- [#3629](https://github.com/Kilo-Org/kilocode/pull/3629) [`fefc671`](https://github.com/Kilo-Org/kilocode/commit/fefc671535bbfb1036c7088219d45e45d00cbad1) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Anthropic provider now preserves reasoning blocks and has (experimental) support for native (JSON-style) tool calls. This greatly improves support for Claude Haiku 4.5
-
-- [#3612](https://github.com/Kilo-Org/kilocode/pull/3612) [`970e799`](https://github.com/Kilo-Org/kilocode/commit/970e799473111922eee13d859fd29cb3f7abf715) Thanks [@burkostya](https://github.com/burkostya)! - fix(native-tools): Make read_file_multi pattern JSON Schema compliant
-
-## [v4.117.0]
-
-- [#3568](https://github.com/Kilo-Org/kilocode/pull/3568) [`18dfc86`](https://github.com/Kilo-Org/kilocode/commit/18dfc86e5f00e0d722f448450574ec444d3c894a) Thanks [@mcowger](https://github.com/mcowger)! - Add Kimi K2-Thinking to Synthetic Provider
-
-## [v4.116.1]
-
-- [#3533](https://github.com/Kilo-Org/kilocode/pull/3533) [`f5bb82d`](https://github.com/Kilo-Org/kilocode/commit/f5bb82ddf4038ed2d9e5a1266c9e6b0dc09c0af5) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix hang at startup
-
-## [v4.116.0]
-
-- [#3288](https://github.com/Kilo-Org/kilocode/pull/3288) [`afeca17`](https://github.com/Kilo-Org/kilocode/commit/afeca176f4ef7d227831715b5e5a672fcf3fe58f) Thanks [@mcowger](https://github.com/mcowger)! - Add Native MCP Support for JSON Tool Calling
-
-### Patch Changes
-
-- [#3471](https://github.com/Kilo-Org/kilocode/pull/3471) [`9895a95`](https://github.com/Kilo-Org/kilocode/commit/9895a959b9bb8a14aab6ec11267a2bb0e12fb78c) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Allow native tool calling fro Qwen Code provider
-
-- [#3513](https://github.com/Kilo-Org/kilocode/pull/3513) [`ff2e459`](https://github.com/Kilo-Org/kilocode/commit/ff2e4595777683265559f81f82dd9cbb0dc2e9f3) Thanks [@markijbema](https://github.com/markijbema)! - Prevent autocomplete from suggesting duplicating the previous or next line
-
-- [#3523](https://github.com/Kilo-Org/kilocode/pull/3523) [`ba5416a`](https://github.com/Kilo-Org/kilocode/commit/ba5416ae3083fb5225ed7e9f0e1018203e611b84) Thanks [@markijbema](https://github.com/markijbema)! - Removed the gutter animation for autocomplete
-
-- [#2893](https://github.com/Kilo-Org/kilocode/pull/2893) [`37d8493`](https://github.com/Kilo-Org/kilocode/commit/37d8493a4d2629d0498f089b40f850ddae0c91fc) Thanks [@ivanarifin](https://github.com/ivanarifin)! - fix(virtual-quota): display active model in UI for the frontend
-
-    When the backend switches the model, it now sends out a "model has changed" signal by emitting event.
-    The main application logic catches this signal and immediately tells the user interface to refresh itself.
-    The user interface then updates the display to show the name of the new, currently active model.
-    This will also keep the backend and the frontend active model in sync
-
-## [v4.115.0]
-
-- [#3486](https://github.com/Kilo-Org/kilocode/pull/3486) [`2b89d84`](https://github.com/Kilo-Org/kilocode/commit/2b89d8472123e48db866e10a88b5b6160812d73e) Thanks [@markijbema](https://github.com/markijbema)! - Show MCP tool instead of server name when asked to approve a tool
-
-- [#3466](https://github.com/Kilo-Org/kilocode/pull/3466) [`e623ce1`](https://github.com/Kilo-Org/kilocode/commit/e623ce146bbad7453355ee84a4b4bb2fc894b031) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Thanks @pranjaldatta! Added support for Inception as a provider
-
-- [#2435](https://github.com/Kilo-Org/kilocode/pull/2435) [`c13fe3c`](https://github.com/Kilo-Org/kilocode/commit/c13fe3c634496b9e1fc08371822a4071407ff9bc) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Auto Cleanup automatically manages your task history by removing old tasks to free up disk space and improve performance - https://kilocode.ai/docs/advanced-usage/auto-cleanup
-
-### Patch Changes
-
-- [#3428](https://github.com/Kilo-Org/kilocode/pull/3428) [`b3c0e10`](https://github.com/Kilo-Org/kilocode/commit/b3c0e102cad5e48fe1389dc55a287dfc0072ed33) Thanks [@markijbema](https://github.com/markijbema)! - Do less requests for autocomplete when no completion could be found
-
-- [#3502](https://github.com/Kilo-Org/kilocode/pull/3502) [`94552b8`](https://github.com/Kilo-Org/kilocode/commit/94552b8704efa80a9f7aee8ad601a3f291ffe7f2) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Revert orphaned partial ask messages fix
-
-## [v4.114.1]
-
-- [#3188](https://github.com/Kilo-Org/kilocode/pull/3188) [`131fa0e`](https://github.com/Kilo-Org/kilocode/commit/131fa0ee68d6f47172a968489129071a7da88de3) Thanks [@NikoDi2000](https://github.com/NikoDi2000)! - Add missing enable/disable word wrap tooltips
-
-- [#3357](https://github.com/Kilo-Org/kilocode/pull/3357) [`d2bb122`](https://github.com/Kilo-Org/kilocode/commit/d2bb122a8b0e80044a66fe141de39489f7098bb5) Thanks [@mollux](https://github.com/mollux)! - Now only available MCP server capabilities are fetched
-
-- [#2817](https://github.com/Kilo-Org/kilocode/pull/2817) [`0da1bc7`](https://github.com/Kilo-Org/kilocode/commit/0da1bc772a700874f8ec3fbad039fed1ea4d89dc) Thanks [@dennismeister93](https://github.com/dennismeister93)! - Updated MCP SDK to 1.13.3
-
-- [#2849](https://github.com/Kilo-Org/kilocode/pull/2849) [`642cec5`](https://github.com/Kilo-Org/kilocode/commit/642cec502c9fecd297dce8cb1cc708ad3e9c7d12) Thanks [@Ralph-Abejuela](https://github.com/Ralph-Abejuela)! - Added option to start rate limiting after the API stream ends
-
-- [#3468](https://github.com/Kilo-Org/kilocode/pull/3468) [`8f8ef10`](https://github.com/Kilo-Org/kilocode/commit/8f8ef107dd2751e4141473d33e098d6f28faa6d1) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Resolve orphaned partial ask messages
-
-- [#3213](https://github.com/Kilo-Org/kilocode/pull/3213) [`7238628`](https://github.com/Kilo-Org/kilocode/commit/7238628bc24058eb352ff231090c08d99a8a8961) Thanks [@siulong](https://github.com/siulong)! - Fixed the GitHub feedback link at the bottom of the marketplace not being clickable.
-
-## [v4.114.0]
-
-- [#3435](https://github.com/Kilo-Org/kilocode/pull/3435) [`bd4f19d`](https://github.com/Kilo-Org/kilocode/commit/bd4f19da040462b6477087d76cffe1006ef8d444) Thanks [@markijbema](https://github.com/markijbema)! - Cmd-L now directly inserts instead of showing as ghost text
-
-### Patch Changes
-
-- [#3435](https://github.com/Kilo-Org/kilocode/pull/3435) [`7f018d8`](https://github.com/Kilo-Org/kilocode/commit/7f018d8428a994c6ada6ecbda95a75336150946b) Thanks [@markijbema](https://github.com/markijbema)! - Minor improvements to autocomplete internal state handling
-
-- [#3379](https://github.com/Kilo-Org/kilocode/pull/3379) [`9c7b99c`](https://github.com/Kilo-Org/kilocode/commit/9c7b99c716d92deabc49ec07f5771c03b3507b2c) Thanks [@TsFreddie](https://github.com/TsFreddie)! - Update pricing for DeepSeek V3.2
-
-- [#3342](https://github.com/Kilo-Org/kilocode/pull/3342) [`8827792`](https://github.com/Kilo-Org/kilocode/commit/88277927f69e1baae6f61f0e76f3a43862abd31e) Thanks [@mcowger](https://github.com/mcowger)! - Improved messaging when VS Code LM is unavailable
-
-- [#3437](https://github.com/Kilo-Org/kilocode/pull/3437) [`829f052`](https://github.com/Kilo-Org/kilocode/commit/829f052d199ef80136713922ce70230048dde6e0) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add zai-glm-4.6 model to Cerebras and set gpt-oss-120b as default (thanks Roo)
-
-- [#3411](https://github.com/Kilo-Org/kilocode/pull/3411) [`2dc2a32`](https://github.com/Kilo-Org/kilocode/commit/2dc2a32d9db54cfe3908263eb5f594c99058dde5) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Fix @ mentions when editing messages
-
-## [v4.113.1]
-
-- [#3408](https://github.com/Kilo-Org/kilocode/pull/3408) [`5aee3ad`](https://github.com/Kilo-Org/kilocode/commit/5aee3ad6ee200eefd5dd12933ba650989ccc0857) Thanks [@brianc](https://github.com/brianc)! - Fix auto-complete indicator. It now hides properly if the autocomplete request errors in the background.
-
-## [v4.113.0]
-
-- [#3382](https://github.com/Kilo-Org/kilocode/pull/3382) [`98c4d89`](https://github.com/Kilo-Org/kilocode/commit/98c4d89f414394de0b5ab579e9216c860b4a1d30) Thanks [@hassoncs](https://github.com/hassoncs)! - Add descriptions to the MCP and modes marketplace headers
-
-- [#2442](https://github.com/Kilo-Org/kilocode/pull/2442) [`34b04ae`](https://github.com/Kilo-Org/kilocode/commit/34b04ae0c5763757c41bfbd3132aed3a67d2ac7a) Thanks [@hassoncs](https://github.com/hassoncs)! - Added AI powered commit message generation to Jetbrains IDEs
-
-### Patch Changes
-
-- [#3373](https://github.com/Kilo-Org/kilocode/pull/3373) [`3cb7d20`](https://github.com/Kilo-Org/kilocode/commit/3cb7d20fc79707f901c8429c971ed86500b0b527) Thanks [@markijbema](https://github.com/markijbema)! - Fix: restored cmd-l functionality
-
-## [v4.112.1]
-
-- [#3375](https://github.com/Kilo-Org/kilocode/pull/3375) [`52d39dd`](https://github.com/Kilo-Org/kilocode/commit/52d39ddaadf3b3ce8388db02078b004b6573e6da) Thanks [@RSO](https://github.com/RSO)! - Fixed autocomplete enabling/disabling
-
-## [v4.112.0]
-
-- [#3346](https://github.com/Kilo-Org/kilocode/pull/3346) [`5d82884`](https://github.com/Kilo-Org/kilocode/commit/5d828842b502b6accd2e0423db99ef8bdc0dbf33) Thanks [@mcowger](https://github.com/mcowger)! - Fixed Anthropic models not working on Google Vertex Global
-
-## [v4.111.2]
-
-- [#3363](https://github.com/Kilo-Org/kilocode/pull/3363) [`233334c`](https://github.com/Kilo-Org/kilocode/commit/233334cd284477290b67359add7e0f703d8707b7) Thanks [@markijbema](https://github.com/markijbema)! - Various improvements to the autocomplete functionality
-
-## [v4.111.1]
-
-- [#3282](https://github.com/Kilo-Org/kilocode/pull/3282) [`ed4399b`](https://github.com/Kilo-Org/kilocode/commit/ed4399b7d82d735895fbf4d85cfaefff5002571a) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improved handling of tool calls in the API conversation history
-
-- [#3270](https://github.com/Kilo-Org/kilocode/pull/3270) [`2b35053`](https://github.com/Kilo-Org/kilocode/commit/2b350530367bb0a14a0fdc7c11a030c2943c6cf6) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Claude Haiku 4.5 now uses a simplified read file tool for reduced error rate
-
-## [v4.111.0]
-
-- [#3256](https://github.com/Kilo-Org/kilocode/pull/3256) [`f81b48b`](https://github.com/Kilo-Org/kilocode/commit/f81b48b8dec9cd276c3c7ba994d0512036abfa96) Thanks [@markijbema](https://github.com/markijbema)! - Switched autocomplete to showing completions inline
-
-### Patch Changes
-
-- [#3261](https://github.com/Kilo-Org/kilocode/pull/3261) [`bae048f`](https://github.com/Kilo-Org/kilocode/commit/bae048f914712439e54f29363d52dc24860000e7) Thanks [@mcowger](https://github.com/mcowger)! - Improve native tool calling consistency
-
-- [#3281](https://github.com/Kilo-Org/kilocode/pull/3281) [`2586e9b`](https://github.com/Kilo-Org/kilocode/commit/2586e9b4f6cbea9734ff10df7086f2d999713448) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix broken sign-in links
-
-- [#3313](https://github.com/Kilo-Org/kilocode/pull/3313) [`2e61e91`](https://github.com/Kilo-Org/kilocode/commit/2e61e9152ae3be43ce12e9fd3c2f94c0d603d771) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Running commands are no longer sometimes shown twice in the chat
-
-## [v4.110.0]
-
-### Patch Changes
-
-- [#3249](https://github.com/Kilo-Org/kilocode/pull/3249) [`ccee64c`](https://github.com/Kilo-Org/kilocode/commit/ccee64cf1676f51a6b9dae49aad994d9f834b3e8) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Remove credit status bar until we can retrieve the up to date balance from the proxy response.
-
-- [#3235](https://github.com/Kilo-Org/kilocode/pull/3235) [`0108896`](https://github.com/Kilo-Org/kilocode/commit/010889619121159a8993ad5846ac2cccecd91bd8) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed some "not a function" crashes
-
-- [#3226](https://github.com/Kilo-Org/kilocode/pull/3226) [`e13a99c`](https://github.com/Kilo-Org/kilocode/commit/e13a99c67bd644e7ab9372757227aab3f72da1d4) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Reverted "Update base URL for Vertex Anthropic models to work around outdated library." because it is causing issues for some users.
-
-- [#2663](https://github.com/Kilo-Org/kilocode/pull/2663) [`43140c9`](https://github.com/Kilo-Org/kilocode/commit/43140c950719d9718c089e45f9ae63b334dd9a6e) Thanks [@NaccOll](https://github.com/NaccOll)! - Fix listCodeDefinitionNamesTool for annotated Java methods
-
-- [#3242](https://github.com/Kilo-Org/kilocode/pull/3242) [`8604c83`](https://github.com/Kilo-Org/kilocode/commit/8604c838b205eaa1bdf510b8b64083a8c9c15377) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improved support for HTTP proxy environment variables
-
-## [v4.109.2]
-
-- [#3216](https://github.com/Kilo-Org/kilocode/pull/3216) [`3f34635`](https://github.com/Kilo-Org/kilocode/commit/3f3463554f7cf016db9b2851c40217e38a048840) Thanks [@markijbema](https://github.com/markijbema)! - Do not accept an autocomplete suggestion with shift-tab or ctrl-tab (only plain tab)
-
-- [#3214](https://github.com/Kilo-Org/kilocode/pull/3214) [`b271af9`](https://github.com/Kilo-Org/kilocode/commit/b271af9c51da9a8f6ec3a6f4caf78ff18db9b3a8) Thanks [@mcowger](https://github.com/mcowger)! - Update Synthetic Provider to support GLM 4.6, and enable native tool calling
-
-- [#3199](https://github.com/Kilo-Org/kilocode/pull/3199) [`14bbc5f`](https://github.com/Kilo-Org/kilocode/commit/14bbc5f9b5a61cbf2016c7b6a784fdc546fa6a0e) Thanks [@possible055](https://github.com/possible055)! - Improve Chinese translation of autocomplete-related terms
-
-## [v4.109.1]
-
-- [#3203](https://github.com/Kilo-Org/kilocode/pull/3203) [`aeb8bf3`](https://github.com/Kilo-Org/kilocode/commit/aeb8bf37df44532517db96511e3f0f85861f55b8) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix Z.ai provider giving an Unauthorized error
-
-## [v4.109.0]
-
-- [#3088](https://github.com/Kilo-Org/kilocode/pull/3088) [`84a1fa3`](https://github.com/Kilo-Org/kilocode/commit/84a1fa3f84eac42fa76da9be09270cdb57b19b34) Thanks [@mcowger](https://github.com/mcowger)! - Update base URL for Vertex Anthropic models to work around outdated library.
-
-- [#3192](https://github.com/Kilo-Org/kilocode/pull/3192) [`7015c23`](https://github.com/Kilo-Org/kilocode/commit/7015c2367c0ddf45d40b4adf96386f3ca5005bc1) Thanks [@markijbema](https://github.com/markijbema)! - Fix bug: autocomplete no longer suggests strange XML
-
-### Patch Changes
-
-- [#3159](https://github.com/Kilo-Org/kilocode/pull/3159) [`935bbae`](https://github.com/Kilo-Org/kilocode/commit/935bbae3a080c8475671b97440eacf2ead939198) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.28.18
-
-    - Fix: Remove request content from UI messages to improve performance and reduce clutter (#5601 by @MuriloFP, #8594 by @multivac2x, #8690 by @hannesrudolph, PR by @mrubens)
-    - Fix: Add userAgent to Bedrock client for version tracking (#8660 by @ajjuaire, PR by @app/roomote)
-    - Feat: Z AI now uses only two coding endpoints for better performance (#8687 by @hannesrudolph)
-    - Feat: Update image generation model selection for improved quality (thanks @chrarnoldus!)
-
-- [#3194](https://github.com/Kilo-Org/kilocode/pull/3194) [`b566965`](https://github.com/Kilo-Org/kilocode/commit/b56696581e82652086564503f7743e9e82585823) Thanks [@markijbema](https://github.com/markijbema)! - Do not trigger autocomplete for external events, like git changes
-
-- [#3100](https://github.com/Kilo-Org/kilocode/pull/3100) [`3e409b8`](https://github.com/Kilo-Org/kilocode/commit/3e409b84310f481d1c3be4095d887f5cf6d15282) Thanks [@markijbema](https://github.com/markijbema)! - Added Amazon Bedrock as a provider for autocomplete
-
-- [#3149](https://github.com/Kilo-Org/kilocode/pull/3149) [`79c7d60`](https://github.com/Kilo-Org/kilocode/commit/79c7d60a10a765da8195fde80e6a89630993b918) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Jetbrains - Update framework (Plugin now requires IntelliJ IDEA 2024.3 or later)
-
-- [#3195](https://github.com/Kilo-Org/kilocode/pull/3195) [`93371d0`](https://github.com/Kilo-Org/kilocode/commit/93371d08f1c1b88eeb9f567af9ae74188fe7e379) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed crash when browser tool is used with native tool calling enabled
-
-## [v4.108.0]
-
-- [#2674](https://github.com/Kilo-Org/kilocode/pull/2674) [`2836aed`](https://github.com/Kilo-Org/kilocode/commit/2836aeddbbd6884f2c6f2421ca79387c25f5cd94) Thanks [@mcowger](https://github.com/mcowger)! - add send message on enter setting with configurable behavior
-
-- [#3090](https://github.com/Kilo-Org/kilocode/pull/3090) [`261889f`](https://github.com/Kilo-Org/kilocode/commit/261889f1d4fa853aea0ddb261856b6d4c63e1159) Thanks [@mcowger](https://github.com/mcowger)! - Allow the use of native function calling for OpenAI-compatible, LM Studio, Chutes, DeepInfra, xAI and Z.ai providers.
-
-### Patch Changes
-
-- [#3155](https://github.com/Kilo-Org/kilocode/pull/3155) [`6242b03`](https://github.com/Kilo-Org/kilocode/commit/6242b03e9fb58eff8da9f637fa448b35aeaae3a3) Thanks [@NikoDi2000](https://github.com/NikoDi2000)! - Improved the Chinese translation of "run" from '命令' to '运行'
-
-- [#3120](https://github.com/Kilo-Org/kilocode/pull/3120) [`ced4857`](https://github.com/Kilo-Org/kilocode/commit/ced48571894311e3350b9603071e5e2becc9473f) Thanks [@mcowger](https://github.com/mcowger)! - The apply_diff tool was implemented for experimental JSON-style tool calling
-
-## [v4.107.0]
-
-### Patch Changes
-
-- [#3082](https://github.com/Kilo-Org/kilocode/pull/3082) [`d82e684`](https://github.com/Kilo-Org/kilocode/commit/d82e6842d423861d7c5725ebfdba491438b3302a) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The "Enable browser tool" setting is now honored when using experimental JSON style tool calls.
-
-- [#3059](https://github.com/Kilo-Org/kilocode/pull/3059) [`d71f1d6`](https://github.com/Kilo-Org/kilocode/commit/d71f1d67e372fab1186ec07eda97c6d950338ec2) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix bug preventing the agent from editing files properly when git diff views are open
-
-- [#3105](https://github.com/Kilo-Org/kilocode/pull/3105) [`b0c7475`](https://github.com/Kilo-Org/kilocode/commit/b0c7475a5f086171dbff162cbfa4761937617f27) Thanks [@metju90](https://github.com/metju90)! - Fix button styling on Let's Go CTA
-
-- [#3107](https://github.com/Kilo-Org/kilocode/pull/3107) [`c58c4ac`](https://github.com/Kilo-Org/kilocode/commit/c58c4ac9bed8af1a9c18250e759ee4b93873f86b) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.28.16-v3.28.17
-
-    - Fix: Update zh-TW run command title translation (thanks @PeterDaveHello!)
-    - feat: Add Claude Sonnet 4.5 1M context window support for Claude Code (thanks @ColbySerpa!)
-
-## [v4.106.0]
-
-- [#2833](https://github.com/Kilo-Org/kilocode/pull/2833) [`0b8ef46`](https://github.com/Kilo-Org/kilocode/commit/0b8ef4632cab8cbf1da7a90a2f9b228861b41be8) Thanks [@mcowger](https://github.com/mcowger)! - (also thanks to @NaccOll for paving the way) - Preliminary support for native tool calling (a.k.a native function calling) was added.
-
-    This feature is currently experimental and mostly intended for users interested in contributing to its development.
-    It is so far only supported when using OpenRouter or Kilo Code providers. There are possible issues including, but not limited to:
-
-    - Missing tools (e.g. apply_diff tool)
-    - Tools calls not updating the UI until they are complete
-    - Tools being used even though they are disabled (e.g. browser tool)
-    - MCP servers not working
-    - Errors specific to certain inference providers
-
-    Native tool calling can be enabled in Providers Settings > Advanced Settings > Tool Call Style > JSON.
-    It is enabled by default for Claude Haiku 4.5, because that model does not work at all otherwise.
-
-- [#3050](https://github.com/Kilo-Org/kilocode/pull/3050) [`357d438`](https://github.com/Kilo-Org/kilocode/commit/357d4385c0a5e609a408c5842047c0e6593b8153) Thanks [@markijbema](https://github.com/markijbema)! - CMD-I now invokes the agent so you can give it more complex prompts
-
-## [v4.105.0]
-
-- [#3005](https://github.com/Kilo-Org/kilocode/pull/3005) [`b87ae9c`](https://github.com/Kilo-Org/kilocode/commit/b87ae9ca29ca632ec0d324dae469a75c8005e876) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Improve the edit chat area to allow context and file drag and drop when editing messages. Align more with upstream edit functionality
-
-### Patch Changes
-
-- [#2983](https://github.com/Kilo-Org/kilocode/pull/2983) [`93e8243`](https://github.com/Kilo-Org/kilocode/commit/93e8243686488ecf61476f854cd19eb67706f7cb) Thanks [@jrf0110](https://github.com/jrf0110)! - Adds project usage tracking for Teams and Enterprise customers. Organization members can view and filter usage by project. Project identifier is automatically inferred from `.git/config`. It can be overwritten by writing a `.kilocode/config.json` file with the following contents:
-
-    ```json
-    {
-    	"project": {
-    		"id": "my-project-id"
-    	}
-    }
-    ```
-
-- [#3057](https://github.com/Kilo-Org/kilocode/pull/3057) [`69f5a18`](https://github.com/Kilo-Org/kilocode/commit/69f5a182cf42361e659e94c95969e3bd3641176f) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Thanks Roo, support for Claude Haiku 4.5 to Anthropic, Bedrock and Vertex providers was added
-
-- [#3046](https://github.com/Kilo-Org/kilocode/pull/3046) [`1bd934f`](https://github.com/Kilo-Org/kilocode/commit/1bd934f784034ec29d10ae7b42d67f768e0883b1) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - A warning is now shown when the webview memory usage crosses 90% of the limit (gray screen territory)
-
-- [#2885](https://github.com/Kilo-Org/kilocode/pull/2885) [`a34dab0`](https://github.com/Kilo-Org/kilocode/commit/a34dab09d2cbcc9732698f21e824b6773b30fa2b) Thanks [@shameez-struggles-to-commit](https://github.com/shameez-struggles-to-commit)! - Update VS Code Language Model API provider metadata to reflect current model limits:
-
-    - Align context windows, prompt/input limits, and max output tokens with the latest provider data for matching models: gpt-3.5-turbo, gpt-4o-mini, gpt-4, gpt-4-0125-preview, gpt-4o, o3-mini, claude-3.5-sonnet, claude-sonnet-4, gemini-2.0-flash-001, gemini-2.5-pro, o4-mini-2025-04-16, gpt-4.1, gpt-5-mini, gpt-5.
-    - Fixes an issue where a default 128k context was assumed for all models.
-    - Notable: GPT-5 family now uses 264k context; o3-mini/o4-mini, Gemini, Claude, and 4o families have updated output and image support flags. GPT-5-mini max output explicitly set to 127,805.
-
-    This ensures Kilo Code correctly enforces model token budgets with the VS Code LM integration.
-
-## [v4.104.0]
-
-- [#2673](https://github.com/Kilo-Org/kilocode/pull/2673) [`cf1aca2`](https://github.com/Kilo-Org/kilocode/commit/cf1aca2fb6c0f16414d42737a4ebf90357f5a796) Thanks [@mcowger](https://github.com/mcowger)! - Update Gemini provider to support dynamic model retrieval.
-
-- [#2749](https://github.com/Kilo-Org/kilocode/pull/2749) [`7e493ec`](https://github.com/Kilo-Org/kilocode/commit/7e493ec35c01687b78cb2fb54b3f92c6b42662aa) Thanks [@mcowger](https://github.com/mcowger)! - Improved OpenAI compatible parser's ability to yield reasoning content
-
-## [v4.103.1]
-
-- [#2962](https://github.com/Kilo-Org/kilocode/pull/2962) [`a424824`](https://github.com/Kilo-Org/kilocode/commit/a424824269b3cafdf58bcdb1acf7ed6151f32e0b) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improved the error message when an unsupported reasoning effort value is chosen
-
-- [#2960](https://github.com/Kilo-Org/kilocode/pull/2960) [`254e21b`](https://github.com/Kilo-Org/kilocode/commit/254e21b29df46dab3048ecd792625eadc20beafb) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The reasoning effort setting is no longer ignored for GLM 4.6 when using the Kilo Code or OpenRouter providers. Some inference providers on OpenRouter have trouble when reasoning is enabled, but this is now less of a problem, because more providers have come online. Most providers do not expose reasoning tokens for GLM 4.6, regardless of reasoning effort.
-
-## [v4.103.0]
-
-- [#2528](https://github.com/Kilo-Org/kilocode/pull/2528) [`14d5060`](https://github.com/Kilo-Org/kilocode/commit/14d506025a9374f54409768629fc4ebd57f8f628) Thanks [@mcowger](https://github.com/mcowger)! - Add timestamps to Chat view.
-
-### Patch Changes
-
-- [#2861](https://github.com/Kilo-Org/kilocode/pull/2861) [`279d7cf`](https://github.com/Kilo-Org/kilocode/commit/279d7cff9d19ec908681318fbe929b45fbf94393) Thanks [@jrf0110](https://github.com/jrf0110)! - Organization modes selection. This feature allows organizations to create
-  new modes and send them to the KiloCode extension. It also allows for
-  overwriting Kilo Code's built-in modes. Organization modes are readonly
-  from the extension and must be edited from the dashboard.
-
-- [#2858](https://github.com/Kilo-Org/kilocode/pull/2858) [`154722b`](https://github.com/Kilo-Org/kilocode/commit/154722be5a73143231e95ccbc2679b8a4eaaa5ab) Thanks [@hassoncs](https://github.com/hassoncs)! - Make all text-based links the same visual style
-
-## [v4.102.0]
-
-- [#2854](https://github.com/Kilo-Org/kilocode/pull/2854) [`bd5d7fc`](https://github.com/Kilo-Org/kilocode/commit/bd5d7fc5f0c67ac2b040dbdefbd90d0396e0b60e) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.28.14-v3.28.15
-
-    - Fix: properly reset cost limit tracking when user clicks "Reset and Continue" (#6889 by @alecoot, PR by app/roomote)
-    - Fix: improve save button activation in prompts settings (#5780 by @beccare, PR by app/roomote)
-    - Fix: overeager 'there are unsaved changes' dialog in settings (thanks @brunobergher!)
-    - Fix: Claude Sonnet 4.5 compatibility improvements (thanks @mrubens!)
-    - Remove unsupported Gemini 2.5 Flash Image Preview free model (thanks @SannidhyaSah!)
-
-- [#1652](https://github.com/Kilo-Org/kilocode/pull/1652) [`b3caf38`](https://github.com/Kilo-Org/kilocode/commit/b3caf38e44f2f6ccd58f3e92cd68edce48a96844) Thanks [@hassoncs](https://github.com/hassoncs)! - Add a display setting that hides costs below a user-defined threshold
-
-### Patch Changes
-
-- [#2871](https://github.com/Kilo-Org/kilocode/pull/2871) [`0403f82`](https://github.com/Kilo-Org/kilocode/commit/0403f820a8413656eecbe3bbfe252a52c2999e37) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improved Fast Apply error messages
-
-- [#2851](https://github.com/Kilo-Org/kilocode/pull/2851) [`9e6a897`](https://github.com/Kilo-Org/kilocode/commit/9e6a89796f04f6215e31ac7950669783387a11de) Thanks [@eliasto](https://github.com/eliasto)! - Add custom base URL support to OVHcloud provider
-
-- [#2870](https://github.com/Kilo-Org/kilocode/pull/2870) [`4730e08`](https://github.com/Kilo-Org/kilocode/commit/4730e080f99bcd414a3eb0a71a04ab5fd6dbcb6e) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - A checkpoint is now created before _every_ tool call
-
-## [v4.101.0]
-
-- [#2518](https://github.com/Kilo-Org/kilocode/pull/2518) [`01106a8`](https://github.com/Kilo-Org/kilocode/commit/01106a8d35159ccea34e290a2174d44d83fecd64) Thanks [@eliasto](https://github.com/eliasto)! - OVHcloud AI Endpoints provider added
-
-### Patch Changes
-
-- [#2852](https://github.com/Kilo-Org/kilocode/pull/2852) [`a707e1d`](https://github.com/Kilo-Org/kilocode/commit/a707e1db5b4f8ee3ca80f259217f521a02ddbd50) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Autocomplete now honors .kilocodeignore
-
-- [#2829](https://github.com/Kilo-Org/kilocode/pull/2829) [`75acbab`](https://github.com/Kilo-Org/kilocode/commit/75acbabd1f0d39488bc252e8559e39a4b8daed19) Thanks [@hassoncs](https://github.com/hassoncs)! - Potentially fix missing Kilo Code icon by removing 'when' condition from the extension's activitybar config
-
-- [#2831](https://github.com/Kilo-Org/kilocode/pull/2831) [`9d457f0`](https://github.com/Kilo-Org/kilocode/commit/9d457f0bc3eef1c1f07eb80070e0ecf69355b38a) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - When using Kilo Code or OpenRouter, the inference provider used is now shown in a tooltip on "API Request"
-
-## [v4.100.0]
-
-- [#2787](https://github.com/Kilo-Org/kilocode/pull/2787) [`9c16d14`](https://github.com/Kilo-Org/kilocode/commit/9c16d14c4b8455041b16e5ffa0787014d5154d19) Thanks [@b3nw](https://github.com/b3nw)! - Chutes model list is now dynamically loaded
-
-- [#2806](https://github.com/Kilo-Org/kilocode/pull/2806) [`5d1cda9`](https://github.com/Kilo-Org/kilocode/commit/5d1cda99a5c3872dae526db9b3c8cefbabe69de0) Thanks [@EamonNerbonne](https://github.com/EamonNerbonne)! - Removed the option to use custom provider for autocomplete.
-
-    Using a custom provider defaults to using a your globally configured provider without any context-window cap, and using a custom provider with no further restrictions like that means that per-autocomplete request costs are sometimes extremely high and responses very slow.
-
-- [#2790](https://github.com/Kilo-Org/kilocode/pull/2790) [`d0f6fa0`](https://github.com/Kilo-Org/kilocode/commit/d0f6fa0531e5abfb39f2e99c7a637ead54bfe8be) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Zero Data Retention can now be enabled for Kilo Code and OpenRouter under the Provider Routing settings.
-
-- [#2567](https://github.com/Kilo-Org/kilocode/pull/2567) [`68ea97f`](https://github.com/Kilo-Org/kilocode/commit/68ea97fc02861e932cf0357d60d73a3204ed19ef) Thanks [@billycao](https://github.com/billycao)! - Add provider support for Synthetic (https://synthetic.new)
-
-- [#2807](https://github.com/Kilo-Org/kilocode/pull/2807) [`3375470`](https://github.com/Kilo-Org/kilocode/commit/337547095ff64fbdd1294a22b19c7dd6b41e37bb) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The See All Changes button when a task completes is now accompanied by a Revert All Changes button to be able to easily revert all changes.
-
-### Patch Changes
-
-- [#2798](https://github.com/Kilo-Org/kilocode/pull/2798) [`bb3baca`](https://github.com/Kilo-Org/kilocode/commit/bb3baca433ce77419abd8d3f4814278a05f8c631) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The API Request timeout for Ollama and LM Studio is now configurable (VS Code Extensions panel -> Kilo Code gear menu -> Settings -> API Request Timeout)
-
-## [v4.99.2]
-
-- [#2729](https://github.com/Kilo-Org/kilocode/pull/2729) [`bda1ef4`](https://github.com/Kilo-Org/kilocode/commit/bda1ef4a6ece7532db4e07359cfae640b1080d3c) Thanks [@ivanarifin](https://github.com/ivanarifin)! - Update the environment variables of Gemini CLI when OAuth path changes
-
-- [#2755](https://github.com/Kilo-Org/kilocode/pull/2755) [`82ffeb4`](https://github.com/Kilo-Org/kilocode/commit/82ffeb4bcfbf1ff6b4cc50413e7dbc57fd82c7cd) Thanks [@b3nw](https://github.com/b3nw)! - Add zai-org/GLM-4.6-turbo model to Chutes provider
-
-## [v4.99.1]
-
-- [#2731](https://github.com/Kilo-Org/kilocode/pull/2731) [`36cf88f`](https://github.com/Kilo-Org/kilocode/commit/36cf88f868eee2a322b35b37032f98d199e0f91a) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - A recommendation to disable Editing Through Diffs or Fast Apply is now included in the error message when a model fails to use them properly
-
-- [#2751](https://github.com/Kilo-Org/kilocode/pull/2751) [`6ebf0bb`](https://github.com/Kilo-Org/kilocode/commit/6ebf0bbe38be7d737546f8975cff927d95e85751) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed some untranslated text being shown in the Ollama settings
-
-## [v4.99.0]
-
-- [#2719](https://github.com/Kilo-Org/kilocode/pull/2719) [`345947f`](https://github.com/Kilo-Org/kilocode/commit/345947f29978045209a82687843c28059b339dc0) Thanks [@mcowger](https://github.com/mcowger)! - Prevent race conditions from stopping agent progress during indexing.
-
-- [#2716](https://github.com/Kilo-Org/kilocode/pull/2716) [`41a6dbf`](https://github.com/Kilo-Org/kilocode/commit/41a6dbf1a54a699e358a24ecd167f692f3a2aef5) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.28.8-v3.28.13
-
-    - Fix: Remove topP parameter from Bedrock inference config (#8377 by @ronyblum, PR by @daniel-lxs)
-    - Fix: Correct Vertex AI Sonnet 4.5 model configuration (#8387 by @nickcatal, PR by @mrubens!)
-    - Fix: Correct Anthropic Sonnet 4.5 model ID and add Bedrock 1M context checkbox (thanks @daniel-lxs!)
-    - Fix: Correct AWS Bedrock Claude Sonnet 4.5 model identifier (#8371 by @sunhyung, PR by @app/roomote)
-    - Fix: Correct Claude Sonnet 4.5 model ID format (thanks @daniel-lxs!)
-    - Fix: Make chat icons properly sized with shrink-0 class (thanks @mrubens!)
-    - The free Supernova model now has a 1M token context window (thanks @mrubens!)
-    - Fix: Remove <thinking> tags from prompts for cleaner output and fewer tokens (#8318 by @hannesrudolph, PR by @app/roomote)
-    - Correct tool use suggestion to improve model adherence to suggestion (thanks @hannesrudolph!)
-    - Removing user hint when refreshing models (thanks @requesty-JohnCosta27!)
-    - Fix: Resolve frequent "No tool used" errors by clarifying tool-use rules (thanks @hannesrudolph!)
-    - Fix: Include initial ask in condense summarization (thanks @hannesrudolph!)
-
-- [#2701](https://github.com/Kilo-Org/kilocode/pull/2701) [`0593631`](https://github.com/Kilo-Org/kilocode/commit/05936316c0bedfb62a0c1851dd4abfe1882fe3a4) Thanks [@mcowger](https://github.com/mcowger)! - Added additional supported models to the Fast Apply experimental feature for a total of three: Morph V3 Fast, Morph V3 Large and Relace Apply 3
-
-### Patch Changes
-
-- [#2656](https://github.com/Kilo-Org/kilocode/pull/2656) [`4e1b4ed`](https://github.com/Kilo-Org/kilocode/commit/4e1b4edb06ba3894bba86abd63853c167f1b4eb0) Thanks [@SnHaku](https://github.com/SnHaku)! - Fixed JetBrains PowerShell integration
-
-- [#2725](https://github.com/Kilo-Org/kilocode/pull/2725) [`2ae6a7c`](https://github.com/Kilo-Org/kilocode/commit/2ae6a7c3a9531ad6418cc3858aa43f96fc849072) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed GLM 4.6 always getting stuck in loops with Kilo Code and OpenRouter providers
-
-- [#2659](https://github.com/Kilo-Org/kilocode/pull/2659) [`318edd6`](https://github.com/Kilo-Org/kilocode/commit/318edd639b38f65dfdab0695f481322ea90ce2cc) Thanks [@akhil41](https://github.com/akhil41)! - Update Chutes AI provider model list
-
-## [v4.98.2]
-
-- [#2704](https://github.com/Kilo-Org/kilocode/pull/2704) [`6b6af0a`](https://github.com/Kilo-Org/kilocode/commit/6b6af0a2113cd106f08b1538172d5ba5d19a80ff) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed duplicated cost display
-
-- [#2705](https://github.com/Kilo-Org/kilocode/pull/2705) [`e65557d`](https://github.com/Kilo-Org/kilocode/commit/e65557dcfb880f70c6d18a6f511454c234b70ee4) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Added "Command Timeout Allowlist" and "Prevent Completion with Open Todos" to Extension Settings.
-
-- [#2707](https://github.com/Kilo-Org/kilocode/pull/2707) [`55ff2dc`](https://github.com/Kilo-Org/kilocode/commit/55ff2dcf6bccfcc9d70ba631ba57c99269ebe716) Thanks [@Ed4ward](https://github.com/Ed4ward)! - Added GLM 4.6 support to the Z.AI provider
-
-## [v4.98.1]
-
-- [#2695](https://github.com/Kilo-Org/kilocode/pull/2695) [`ab49c14`](https://github.com/Kilo-Org/kilocode/commit/ab49c141ca397a0af985341a1cfe907d586430ef) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add Claude 4.5 Sonnet to all supported providers (thanks Roo Code)
-
-## [v4.98.0]
-
-- [#2623](https://github.com/Kilo-Org/kilocode/pull/2623) [`da834dd`](https://github.com/Kilo-Org/kilocode/commit/da834ddcd24ee334ec97c1a5ca398b87d624adc0) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.28.2-v3.28.7
-
-    - UX: Collapse thinking blocks by default with UI settings to always show them (thanks @brunobergher!)
-    - Fix: Resolve checkpoint restore popover positioning issue (#8219 by @NaccOll, PR by @app/roomote)
-    - Add support for zai-org/GLM-4.5-turbo model in Chutes provider (#8155 by @mugnimaestra, PR by @app/roomote)
-    - Fix: Improve reasoning block formatting for better readability (thanks @daniel-lxs!)
-    - Fix: Respect Ollama Modelfile num_ctx configuration (#7797 by @hannesrudolph, PR by @app/roomote)
-    - Fix: Prevent checkpoint text from wrapping in non-English languages (#8206 by @NaccOll, PR by @app/roomote)
-    - Fix: Bare metal evals fixes (thanks @cte!)
-    - Fix: Follow-up questions should trigger the "interactive" state (thanks @cte!)
-    - Fix: Resolve duplicate rehydrate during reasoning; centralize rehydrate and preserve cancel metadata (#8153 by @hannesrudolph, PR by @hannesrudolph)
-    - Fix: Support dash prefix in parseMarkdownChecklist for todo lists (#8054 by @NaccOll, PR by app/roomote)
-    - Fix: Apply tiered pricing for Gemini models via Vertex AI (#8017 by @ikumi3, PR by app/roomote)
-    - Update SambaNova models to latest versions (thanks @snova-jorgep!)
-    - UX: Redesigned Message Feed (thanks @brunobergher!)
-    - UX: Responsive Auto-Approve (thanks @brunobergher!)
-    - Add telemetry retry queue for network resilience (thanks @daniel-lxs!)
-    - Fix: Filter out Claude Code built-in tools (ExitPlanMode, BashOutput, KillBash) (#7817 by @juliettefournier-econ, PR by @roomote)
-    - Fix: Corrected C# tree-sitter query (#5238 by @vadash, PR by @mubeen-zulfiqar)
-    - Add keyboard shortcut for "Add to Context" action (#7907 by @hannesrudolph, PR by @roomote)
-    - Fix: Context menu is obscured when edit message (#7759 by @mini2s, PR by @NaccOll)
-    - Fix: Handle ByteString conversion errors in OpenAI embedders (#7959 by @PavelA85, PR by @daniel-lxs)
-    - Bring back a way to temporarily and globally pause auto-approve without losing your toggle state (thanks @brunobergher!)
-
-- [#2221](https://github.com/Kilo-Org/kilocode/pull/2221) [`bcb4c69`](https://github.com/Kilo-Org/kilocode/commit/bcb4c69f92c833e3c6cfc10d64b80077613386f1) Thanks [@Ffinnis](https://github.com/Ffinnis)! - Add ability to cancel code indexing process
-
-### Patch Changes
-
-- [#2665](https://github.com/Kilo-Org/kilocode/pull/2665) [`7b100d5`](https://github.com/Kilo-Org/kilocode/commit/7b100d5473e28aeafa832bcc3bbca3699c5ad9b1) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The "See New Changes" button is now hidden when checkpoints are disabled.
-
-## [v4.97.2]
-
-- [#2655](https://github.com/Kilo-Org/kilocode/pull/2655) [`3f83727`](https://github.com/Kilo-Org/kilocode/commit/3f8372708344171f4b379b90ad04693e1f67be39) Thanks [@PierreAncey](https://github.com/PierreAncey)! - Add Grok 4 Fast model to xAI provider
-
-- [#2648](https://github.com/Kilo-Org/kilocode/pull/2648) [`6f3f9fb`](https://github.com/Kilo-Org/kilocode/commit/6f3f9fba397ad34430c98a6db7ef535fe32622e8) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Fix error logging behavior in JetBrains plugin by updating console bridge log levels
-
-- [#2617](https://github.com/Kilo-Org/kilocode/pull/2617) [`a94bf01`](https://github.com/Kilo-Org/kilocode/commit/a94bf01f7df542ffd372bbb0d385b39941187b0d) Thanks [@RSO](https://github.com/RSO)! - JetBrains: Fix terminal not having complete path
-
-## [v4.97.1]
-
-- [#2625](https://github.com/Kilo-Org/kilocode/pull/2625) [`3409665`](https://github.com/Kilo-Org/kilocode/commit/340966544bda3a069f9cf2478658bf58f5e2cf3c) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add fix for Gemini CLI not being able to refresh access token anymore
-
-- [#2536](https://github.com/Kilo-Org/kilocode/pull/2536) [`1a01114`](https://github.com/Kilo-Org/kilocode/commit/1a011145572333d053b8999c3f38bf718bbedf66) Thanks [@mcowger](https://github.com/mcowger)! - Only validate embedders when they match the currently configured provider
-
-- [#2491](https://github.com/Kilo-Org/kilocode/pull/2491) [`06afc76`](https://github.com/Kilo-Org/kilocode/commit/06afc769d29740083027a1caa6195edcfbbb94e2) Thanks [@Thireus](https://github.com/Thireus)! - Increase OpenAI Compatible timeout
-
-## [v4.97.0]
-
-- [#2505](https://github.com/Kilo-Org/kilocode/pull/2505) [`a59e7f5`](https://github.com/Kilo-Org/kilocode/commit/a59e7f565478c7405e62c59448bf7667e4b26c8f) Thanks [@markijbema](https://github.com/markijbema)! - Added option to the Display tab of the settings to disable autocomplete gutter animation
-
-- [#2602](https://github.com/Kilo-Org/kilocode/pull/2602) [`0807e5f`](https://github.com/Kilo-Org/kilocode/commit/0807e5ffdfcef1f90e6469a964d47ec177cca706) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add GPT-5-Codex to OpenAI provider (thanks Roo / @daniel-lxs)
-
-### Patch Changes
-
-- [#2583](https://github.com/Kilo-Org/kilocode/pull/2583) [`0c13d2d`](https://github.com/Kilo-Org/kilocode/commit/0c13d2db8391f194150001a2fc1e247573a95db2) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The rate limiter no longer generates timeouts longer than the configured limit.
-
-- [#2596](https://github.com/Kilo-Org/kilocode/pull/2596) [`38f4547`](https://github.com/Kilo-Org/kilocode/commit/38f45478d4183f375e8a717a3564d3ac91fd6daa) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Reasoning can now be disabled for DeepSeek V3.1 models when using Kilo Code or OpenRouter providers by setting Reasoning Effort to minimal
-
-- [#2586](https://github.com/Kilo-Org/kilocode/pull/2586) [`0b4025d`](https://github.com/Kilo-Org/kilocode/commit/0b4025df4c44d86a0aba20d19d5b32f2eaa214c6) Thanks [@b3nw](https://github.com/b3nw)! - New Chutes AI models added and pricing updated
-
-- [#2603](https://github.com/Kilo-Org/kilocode/pull/2603) [`b5325a8`](https://github.com/Kilo-Org/kilocode/commit/b5325a82abe94e195b580ac27cd0a8bf7f8577a7) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Reasoning can now be disabled for Grok 4 Fast on OpenRouter by setting Reasoning Effort to minimal. Note that Grok 4 Fast does not expose its reasoning tokens.
-
-- [#2570](https://github.com/Kilo-Org/kilocode/pull/2570) [`18963de`](https://github.com/Kilo-Org/kilocode/commit/18963de4dce86be883c03ceeb418e820bd2c0635) Thanks [@snova-jorgep](https://github.com/snova-jorgep)! - Update available SambaNova models
-
-## [v4.96.2]
-
-- [#2521](https://github.com/Kilo-Org/kilocode/pull/2521) [`9304511`](https://github.com/Kilo-Org/kilocode/commit/9304511cb001114886f026744c3492f6a6a839f2) Thanks [@mcowger](https://github.com/mcowger)! - Update loop error message to refer to model instead of Kilo Code as the cause.
-
-- [#2532](https://github.com/Kilo-Org/kilocode/pull/2532) [`8103ad4`](https://github.com/Kilo-Org/kilocode/commit/8103ad4b59135888861b06c2cff7fc35ba965607) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The description of the read_file tool was tweaked to make it more likely a vision-capable model will use it for image reading.
-
-- [#2558](https://github.com/Kilo-Org/kilocode/pull/2558) [`3044c43`](https://github.com/Kilo-Org/kilocode/commit/3044c43479b7d64599af536d3df90251b850ea24) Thanks [@ivanarifin](https://github.com/ivanarifin)! - Fix env path resolution for custom gemini cli oauth path
-
-## [v4.96.1]
-
-- [#2452](https://github.com/Kilo-Org/kilocode/pull/2452) [`d4cfbe9`](https://github.com/Kilo-Org/kilocode/commit/d4cfbe98a7ca4e2ce389fe221875f6158688ff69) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Jetbrains - Fix reload extension when switch project
-
-## [v4.96.0]
-
-- [#2504](https://github.com/Kilo-Org/kilocode/pull/2504) [`4927414`](https://github.com/Kilo-Org/kilocode/commit/4927414d0737312796a0c5ae9b0e5a9d7629fbbc) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Include changes from Roo Code v3.28.0-v3.28.2:
-
-    - Improve auto-approve UI with smaller and more subtle design (thanks @brunobergher!)
-    - Fix: Message queue re-queue loop in Task.ask() causing performance issues (#7861 by @hannesrudolph, PR by @daniel-lxs)
-    - Fix: Restrict @-mention parsing to line-start or whitespace boundaries to prevent false triggers (#7875 by @hannesrudolph, PR by @app/roomote)
-    - Fix: Make nested git repository warning persistent with path info for better visibility (#7884 by @hannesrudolph, PR by @app/roomote)
-    - Fix: Include API key in Ollama /api/tags requests for authenticated instances (#7902 by @ItsOnlyBinary, PR by @app/roomote)
-    - Fix: Preserve original first message context during conversation condensing (thanks @daniel-lxs!)
-    - Make Posthog telemetry the default (thanks @mrubens!)
-    - Bust cache in generated image preview (thanks @mrubens!)
-    - Fix: Center active mode in selector dropdown on open (#7882 by @hannesrudolph, PR by @app/roomote)
-    - Fix: Preserve first message during conversation condensing (thanks @daniel-lxs!)
-    - feat: Add click-to-edit, ESC-to-cancel, and fix padding consistency for chat messages (#7788 by @hannesrudolph, PR by @app/roomote)
-    - feat: Make reasoning more visible (thanks @app/roomote!)
-    - fix: Fix Groq context window display (thanks @mrubens!)
-    - fix: Add GIT_EDITOR env var to merge-resolver mode for non-interactive rebase (thanks @daniel-lxs!)
-    - fix: Resolve chat message edit/delete duplication issues (thanks @daniel-lxs!)
-    - fix: Reduce CodeBlock button z-index to prevent overlap with popovers (#7703 by @A0nameless0man, PR by @daniel-lxs)
-    - fix: Revert PR #7188 - Restore temperature parameter to fix TabbyApi/ExLlamaV2 crashes (#7581 by @drknyt, PR by @daniel-lxs)
-    - fix: Make ollama models info transport work like lmstudio (#7674 by @ItsOnlyBinary, PR by @ItsOnlyBinary)
-    - fix: Update DeepSeek pricing to new unified rates effective Sept 5, 2025 (#7685 by @NaccOll, PR by @app/roomote)
-    - feat: Update Vertex AI models and regions (#7725 by @ssweens, PR by @ssweens)
-
-### Patch Changes
-
-- [#2484](https://github.com/Kilo-Org/kilocode/pull/2484) [`f57fa9c`](https://github.com/Kilo-Org/kilocode/commit/f57fa9c58baca627a84003f0da133286212dba92) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix the autocomplete status bar appearing when autocomplete is not enabled
-
-- [#2260](https://github.com/Kilo-Org/kilocode/pull/2260) [`9d4b078`](https://github.com/Kilo-Org/kilocode/commit/9d4b078c867c5b160af7a3f4629adfb016f9c2d9) Thanks [@anhhct](https://github.com/anhhct)! - The follow_up parameter of the ask_followup_question tool is now optional
-
-- [#2458](https://github.com/Kilo-Org/kilocode/pull/2458) [`6a79d3b`](https://github.com/Kilo-Org/kilocode/commit/6a79d3b640f8c7e3f24e54bcf17ce63127fbce57) Thanks [@NaccOll](https://github.com/NaccOll)! - Fix Highlight is on the wrong places when referencing context
-
-## [v4.95.0]
-
-- [#2437](https://github.com/Kilo-Org/kilocode/pull/2437) [`5591bcb`](https://github.com/Kilo-Org/kilocode/commit/5591bcbb68d2e8e5af49baf45b8614982ab71e2f) Thanks [@hassoncs](https://github.com/hassoncs)! - You can now auto-start a task in a given profile/mode by creating a `.kilocode/launchConfig.json` before starting VS Code.
-
-    See the docs for more information!
-
-- [#2394](https://github.com/Kilo-Org/kilocode/pull/2394) [`94ce7ca`](https://github.com/Kilo-Org/kilocode/commit/94ce7ca174c4569d8e31fe11d075f04631fc42f4) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The Task History tab is now paginated. This should help with reducing memory consumption.
-
-- [#2417](https://github.com/Kilo-Org/kilocode/pull/2417) [`0d4a18f`](https://github.com/Kilo-Org/kilocode/commit/0d4a18fd0ff5a1948405405644ff30b9cbfa3e43) Thanks [@hassoncs](https://github.com/hassoncs)! - Inline assist / autocomplete suggestions now support colorized code highlighting
-
-### Patch Changes
-
-- [#2421](https://github.com/Kilo-Org/kilocode/pull/2421) [`825f7df`](https://github.com/Kilo-Org/kilocode/commit/825f7df5da5a6bbdbfe26739cd5adfc2836fb7a1) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improved proxy support in cases where previously the Kilo Code and OpenRouter model lists would remain empty
-
-## [v4.94.0]
-
-- [#2361](https://github.com/Kilo-Org/kilocode/pull/2361) [`9b553d3`](https://github.com/Kilo-Org/kilocode/commit/9b553d32940736fec49dde8de75faba1e0890471) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Jetbrains - Improve Light Theme
-
-- [#2407](https://github.com/Kilo-Org/kilocode/pull/2407) [`aacf662`](https://github.com/Kilo-Org/kilocode/commit/aacf662030e25c64fbc8800bcf514832949f74ec) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Re-add codeblock menu bar for easy copying and syntax highlighting toggling
-
-### Patch Changes
-
-- [#2423](https://github.com/Kilo-Org/kilocode/pull/2423) [`ed12b48`](https://github.com/Kilo-Org/kilocode/commit/ed12b4897bc65df822fa994c13bf325c12055842) Thanks [@mcowger](https://github.com/mcowger)! - Improved the behavior of the Virtual Quota Fallback provider when there are no limits configured.
-
-- [#2412](https://github.com/Kilo-Org/kilocode/pull/2412) [`e7fc4b4`](https://github.com/Kilo-Org/kilocode/commit/e7fc4b473b105ce8a6d92df17f1893f724c158a1) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Change default mode on first start from architect to code and tweak mode selector menu to show all default modes
-
-- [#2402](https://github.com/Kilo-Org/kilocode/pull/2402) [`cb44445`](https://github.com/Kilo-Org/kilocode/commit/cb44445574a43179968656ade28bfce666973f9d) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The Z.ai provider now supports their coding plan (subscription)
-
-- [#2408](https://github.com/Kilo-Org/kilocode/pull/2408) [`53b387c`](https://github.com/Kilo-Org/kilocode/commit/53b387ce388dbd0c51547934c308d305128f9e5a) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add support for Qwen3-Next-80B-A3B-Instruct and Qwen3-Next-80B-A3B-Thinking to Chutes provider
-
-## [v4.93.2]
-
-- [#2401](https://github.com/Kilo-Org/kilocode/pull/2401) [`4c0c434`](https://github.com/Kilo-Org/kilocode/commit/4c0c434fce4bd8ce9c31a396c98e21b62cb300c1) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Commit Message Generation and Enhance Prompt now support billing through Kilo for Teams
-
-## [v4.93.1]
-
-- [#2388](https://github.com/Kilo-Org/kilocode/pull/2388) [`484ced4`](https://github.com/Kilo-Org/kilocode/commit/484ced4df8f6bc24091268d1850c8eba752e7cc8) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Kilo Code Provider Routing settings are now hidden when managed by an organization
-
-## [v4.93.0]
-
-- [#2353](https://github.com/Kilo-Org/kilocode/pull/2353) [`75f8f7b`](https://github.com/Kilo-Org/kilocode/commit/75f8f7b21671ddfba4bdfb441fe3e8fd215530d1) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.27.0
-
-    Added from Roo Code v3.26.5-v3.27.0:
-
-    - Add: Kimi K2-0905 model support in Chutes provider (#7700 by @pwilkin, PR by @app/roomote)
-    - Fix: Prevent stack overflow in codebase indexing for large projects (#7588 by @StarTrai1, PR by @daniel-lxs)
-    - Fix: Resolve race condition in Gemini Grounding Sources by improving code design (#6372 by @daniel-lxs, PR by @HahaBill)
-    - Fix: Preserve conversation context by retrying with full conversation on invalid previous_response_id (thanks @daniel-lxs!)
-    - Fix: Identify MCP and slash command config path in multiple folder workspaces (#6720 by @kfuglsang, PR by @NaccOll)
-    - Fix: Handle array paths from VSCode terminal profiles correctly (#7695 by @Amosvcc, PR by @app/roomote)
-    - Fix: Improve WelcomeView styling and readability (thanks @daniel-lxs!)
-    - Fix: Resolve CI e2e test ETIMEDOUT errors when downloading VS Code (thanks @daniel-lxs!)
-    - Feature: Add OpenAI Responses API service tiers (flex/priority) with UI selector and pricing (thanks @hannesrudolph!)
-    - Feature: Add DeepInfra as a model provider in Roo Code (#7661 by @Thachnh, PR by @Thachnh)
-    - Feature: Update kimi-k2-0905-preview and kimi-k2-turbo-preview models on the Moonshot provider (thanks @CellenLee!)
-    - Feature: Add kimi-k2-0905-preview to Groq, Moonshot, and Fireworks (thanks @daniel-lxs and Cline!)
-    - Fix: Prevent countdown timer from showing in history for answered follow-up questions (#7624 by @XuyiK, PR by @daniel-lxs)
-    - Fix: Moonshot's maximum return token count limited to 1024 issue resolved (#6936 by @greyishsong, PR by @wangxiaolong100)
-    - Fix: Add error transform to cryptic OpenAI SDK errors when API key is invalid (#7483 by @A0nameless0man, PR by @app/roomote)
-    - Fix: Validate MCP tool exists before execution (#7631 by @R-omk, PR by @app/roomote)
-    - Fix: Handle zsh glob qualifiers correctly (thanks @mrubens!)
-    - Fix: Handle zsh process substitution correctly (thanks @mrubens!)
-    - Fix: Minor zh-TW Traditional Chinese locale typo fix (thanks @PeterDaveHello!)
-    - Fix: use askApproval wrapper in insert_content and search_and_replace tools (#7648 by @hannesrudolph, PR by @app/roomote)
-    - Add Kimi K2 Turbo model configuration to moonshotModels (thanks @wangxiaolong100!)
-    - Fix: preserve scroll position when switching tabs in settings (thanks @DC-Dancao!)
-    - feat: Add support for Qwen3 235B A22B Thinking 2507 model in chutes (thanks @mohamad154!)
-    - feat: Add auto-approve support for MCP access_resource tool (#7565 by @m-ibm, PR by @daniel-lxs)
-    - feat: Add configurable embedding batch size for code indexing (#7356 by @BenLampson, PR by @app/roomote)
-    - fix: Add cache reporting support for OpenAI-Native provider (thanks @hannesrudolph!)
-    - feat: Move message queue to the extension host for better performance (thanks @cte!)
-
-### Patch Changes
-
-- [#2375](https://github.com/Kilo-Org/kilocode/pull/2375) [`5b634bc`](https://github.com/Kilo-Org/kilocode/commit/5b634bc5933eca19abc8f9bb4e011d0dae486b76) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Removed the arbitrary 8192 output limit for Anthropic models
-
-- [#2368](https://github.com/Kilo-Org/kilocode/pull/2368) [`5f4071b`](https://github.com/Kilo-Org/kilocode/commit/5f4071b64d9cbd7a8b37b806a678e0f70457ebee) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed context windows being too small when using Ollama Turbo
-
-## [v4.92.1]
-
-- [#2364](https://github.com/Kilo-Org/kilocode/pull/2364) [`7573854`](https://github.com/Kilo-Org/kilocode/commit/75738541270db6702aac649730472c92e8084444) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Remove some nonexistent models from the model selector
-
-## [v4.92.0]
-
-- [#2299](https://github.com/Kilo-Org/kilocode/pull/2299) [`1ab5cc7`](https://github.com/Kilo-Org/kilocode/commit/1ab5cc7d0f9d7748137791043508253af70704a9) Thanks [@catrielmuller](https://github.com/catrielmuller)! - MacOS - System Terminal Notifier Support
-
-### Patch Changes
-
-- [#2352](https://github.com/Kilo-Org/kilocode/pull/2352) [`e343439`](https://github.com/Kilo-Org/kilocode/commit/e34343916be94d0f4374753e0c130b911cfbf20e) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Better error messages are shown when the model currently in use disappears (this will be relevant shortly for Sonoma)
-
-## [v4.91.2]
-
-- [#2342](https://github.com/Kilo-Org/kilocode/pull/2342) [`6641568`](https://github.com/Kilo-Org/kilocode/commit/6641568fedba0b5f0a76ce9c5d88182b58b327a5) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Fix Jetbrains editor detection
-
-## [v4.91.1]
-
-- [#2310](https://github.com/Kilo-Org/kilocode/pull/2310) [`29c7af6`](https://github.com/Kilo-Org/kilocode/commit/29c7af60d8c5c285b28ce2f9bd1bfeff1d59dc40) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Thanks @Qiiks! - Remove duplicate Qwen Code provider settings
-
-- [#2322](https://github.com/Kilo-Org/kilocode/pull/2322) [`669713e`](https://github.com/Kilo-Org/kilocode/commit/669713e6a66ce6599664e15450bf2c917861df51) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed the maximum output size of Claude Opus 4.1, which was inadvertenly set to 8192 rather than 32k
-
-- [#2332](https://github.com/Kilo-Org/kilocode/pull/2332) [`e3eea75`](https://github.com/Kilo-Org/kilocode/commit/e3eea758975c2ef3da34dec167ea373277ab5928) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed an HTTP 500 error with OpenAI-compatible providers when no custom temperature is set
-
-## [v4.91.0]
-
-- [#2289](https://github.com/Kilo-Org/kilocode/pull/2289) [`13c45e5`](https://github.com/Kilo-Org/kilocode/commit/13c45e59adc7d4f337dacb8eda5e35127639c241) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Added support for Kimi K2 0905 to Chutes, Fireworks, Groq and Moonshot providers
-
-- [#2294](https://github.com/Kilo-Org/kilocode/pull/2294) [`980a253`](https://github.com/Kilo-Org/kilocode/commit/980a253ccc906c7a40ef65ab4a7513097b99648b) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Jetbrains - MultiDiff / See New Changes support
-
-### Patch Changes
-
-- [#2281](https://github.com/Kilo-Org/kilocode/pull/2281) [`71334fc`](https://github.com/Kilo-Org/kilocode/commit/71334fcb9556fc8ada02b707bef9dd09aedf3864) Thanks [@hassoncs](https://github.com/hassoncs)! - Clear images when changing to a model that does not support them
-
-- [#2280](https://github.com/Kilo-Org/kilocode/pull/2280) [`0713b0d`](https://github.com/Kilo-Org/kilocode/commit/0713b0dbfe047ac7f68727d6dd77b780c9006c6b) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix organization switching not saving properly
-
-- [#2287](https://github.com/Kilo-Org/kilocode/pull/2287) [`b5a8550`](https://github.com/Kilo-Org/kilocode/commit/b5a8550a106fcafa31d332f5b76febc34ffc43ec) Thanks [@Qiiks](https://github.com/Qiiks)! - Fix Gemini CLI integration to handle nested response structures
-
-## [v4.90.0]
-
-- [#2275](https://github.com/Kilo-Org/kilocode/pull/2275) [`4ae9acc`](https://github.com/Kilo-Org/kilocode/commit/4ae9acc00a90331944333356e8b936a0dcc06e77) Thanks [@jeske](https://github.com/jeske)! - fixes an intermittent async race that discards user-chat-input during structured approve/reject
-
-- [#2129](https://github.com/Kilo-Org/kilocode/pull/2129) [`984b5c4`](https://github.com/Kilo-Org/kilocode/commit/984b5c4151945fc483ca1fd08e07c12f61a372da) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Jetbrains Extension Beta
-
-### Patch Changes
-
-- [#2274](https://github.com/Kilo-Org/kilocode/pull/2274) [`24d0c9f`](https://github.com/Kilo-Org/kilocode/commit/24d0c9f679e33c899f74c06440a80e4ea50b07ed) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The API Provider (Kilo Code or OpenRouter) for image generation is now an explicit choice
-
-## [v4.89.0]
-
-- [#2242](https://github.com/Kilo-Org/kilocode/pull/2242) [`f474c89`](https://github.com/Kilo-Org/kilocode/commit/f474c89e3881955d2f41b8912b728e91eddb87f8) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.26.4
-
-    - Optimize memory usage for image handling in webview (thanks @daniel-lxs!)
-    - Fix: Special tokens should not break task processing (#7539 by @pwilkin, PR by @pwilkin)
-    - Add Ollama API key support for Turbo mode (#7147 by @LivioGama, PR by @app/roomote)
-    - Add optional input image parameter to image generation tool (thanks @roomote!)
-    - Refactor: Flatten image generation settings structure (thanks @daniel-lxs!)
-    - Show console logging in vitests when the --no-silent flag is set (thanks @hassoncs!)
-    - feat: Add experimental image generation tool with OpenRouter integration (thanks @daniel-lxs!)
-    - Fix: Resolve GPT-5 Responses API issues with condensing and image support (#7334 by @nlbuescher, PR by @daniel-lxs)
-    - Fix: Hide .kilocodeignore'd files from environment details by default (#7368 by @AlexBlack772, PR by @app/roomote)
-    - Fix: Exclude browser scroll actions from repetition detection (#7470 by @cgrierson-smartsheet, PR by @app/roomote)
-    - Add Vercel AI Gateway provider integration (thanks @joshualipman123!)
-    - Add support for Vercel embeddings (thanks @mrubens!)
-    - Enable on-disk storage for Qdrant vectors and HNSW index (thanks @daniel-lxs!)
-    - Update tooltip component to match native VSCode tooltip shadow styling (thanks @roomote!)
-    - Fix: remove duplicate cache display in task header (thanks @mrubens!)
-    - Random chat text area cleanup (thanks @cte!)
-    - feat: Add Deepseek v3.1 to Fireworks AI provider (#7374 by @dmarkey, PR by @app/roomote)
-    - Fix: Make auto approve toggle trigger stay (#3909 by @kyle-apex, PR by @elianiva)
-    - Fix: Preserve user input when selecting follow-up choices (#7316 by @teihome, PR by @daniel-lxs)
-    - Fix: Handle Mistral thinking content as reasoning chunks (#6842 by @Biotrioo, PR by @app/roomote)
-    - Fix: Resolve newTaskRequireTodos setting not working correctly (thanks @hannesrudolph!)
-    - Fix: Requesty model listing (#7377 by @dtrugman, PR by @dtrugman)
-    - feat: Hide static providers with no models from provider list (thanks @daniel-lxs!)
-    - Add todos parameter to new_task tool usage in issue-fixer mode (thanks @hannesrudolph!)
-    - Handle substitution patterns in command validation (thanks @mrubens!)
-    - Mark code-workspace files as protected (thanks @mrubens!)
-    - Update list of default allowed commands (thanks @mrubens!)
-    - Follow symlinks in rooignore checks (thanks @mrubens!)
-    - Show cache read and write prices for OpenRouter inference providers (thanks @chrarnoldus!)
-
-## [v4.88.0]
-
-- [#2235](https://github.com/Kilo-Org/kilocode/pull/2235) [`fbf4e42`](https://github.com/Kilo-Org/kilocode/commit/fbf4e42125cef538387301be784ede7d2609fe16) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Rename Inline Assist to Kilo Code Autocomplete
-
-- [#2202](https://github.com/Kilo-Org/kilocode/pull/2202) [`92ef190`](https://github.com/Kilo-Org/kilocode/commit/92ef190d8d9e5ec0df3cbdd8488c98f4190f57b2) Thanks [@hassoncs](https://github.com/hassoncs)! - Show a warning when trying to paste an image when the current model does not support images
-
-### Patch Changes
-
-- [#2244](https://github.com/Kilo-Org/kilocode/pull/2244) [`6a83c5a`](https://github.com/Kilo-Org/kilocode/commit/6a83c5acdd8153a2d8c89aff9644883061c7efe6) Thanks [@hassoncs](https://github.com/hassoncs)! - Prevent writing to files outside the workspace by default
-
-    This should mitigate supply chain compromise attacks via prompt injection. Thank you, Evan Harris from MCP Security Research for finding this!
-
-- [#2245](https://github.com/Kilo-Org/kilocode/pull/2245) [`fff884f`](https://github.com/Kilo-Org/kilocode/commit/fff884fd6f2f1be4906e3d4494adeed3017e8d57) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix Kilo Code Marketplace header missing background color
-
-- [#2237](https://github.com/Kilo-Org/kilocode/pull/2237) [`06c6e8b`](https://github.com/Kilo-Org/kilocode/commit/06c6e8b013b54fc7706a9862af9ddabc86fb8781) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Kilo Code now shows an error message when a model reaches its maximum ouput
-
-- [#2238](https://github.com/Kilo-Org/kilocode/pull/2238) [`b5de938`](https://github.com/Kilo-Org/kilocode/commit/b5de93836338c0398dfa6dede89dbb92f525ceef) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed 500 error with Chutes when no custom temperature is specified.
-
-- [#2248](https://github.com/Kilo-Org/kilocode/pull/2248) [`b8c6f27`](https://github.com/Kilo-Org/kilocode/commit/b8c6f2780757f16e1599b989bb88d235c26233c4) Thanks [@hassoncs](https://github.com/hassoncs)! - Remove the Inline Assist experiment, enabling it by default
-
-    The individual commands and keyboard shortcuts can still be enabled/disabled individually in the settings.
-
-## [v4.87.0]
-
-- [#2010](https://github.com/Kilo-Org/kilocode/pull/2010) [`a7b89d3`](https://github.com/Kilo-Org/kilocode/commit/a7b89d3cf173e6f5d1915aece598489d63652b5f) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - There is now a "See New Changes" button below a Task Completed message. Use this button to see all file changes made since the previous Task Completed message. This feature requires checkpoints to be enabled.
-
-### Patch Changes
-
-- [#2215](https://github.com/Kilo-Org/kilocode/pull/2215) [`4b102aa`](https://github.com/Kilo-Org/kilocode/commit/4b102aaeb42e776e224d71d5fc55033ff0388442) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The Data Provider Collection setting in the Kilo Code and OpenRouter provider settings is now enabled even when a specific inference provider is selected.
-
-- [#2228](https://github.com/Kilo-Org/kilocode/pull/2228) [`5bd17b9`](https://github.com/Kilo-Org/kilocode/commit/5bd17b9ff2b44282200992befad618729e2c1e8e) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Warning messages for common cases where checkpoints do not work were added
-
-- [#2174](https://github.com/Kilo-Org/kilocode/pull/2174) [`a1d0972`](https://github.com/Kilo-Org/kilocode/commit/a1d097294a2fd64bd86a6260169d450fb36966f0) Thanks [@TimAidley](https://github.com/TimAidley)! - Add GPT-5 support to LiteLLM provider
-
-- [#2216](https://github.com/Kilo-Org/kilocode/pull/2216) [`479821f`](https://github.com/Kilo-Org/kilocode/commit/479821f84d64d91412996a24d4ed9314f7373839) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The OLLAMA_CONTEXT_LENGTH environment variable is now prioritized over the model's num_ctx parameter.
-
-- [#2191](https://github.com/Kilo-Org/kilocode/pull/2191) [`6fcde72`](https://github.com/Kilo-Org/kilocode/commit/6fcde72c3470d5634a8091dc92191a50f07bab40) Thanks [@hassoncs](https://github.com/hassoncs)! - Explicitly disable the web version of the extension since it is not compatible (vscode.dev)
-
-## [v4.86.0]
-
-- [#2012](https://github.com/Kilo-Org/kilocode/pull/2012) [`1fd698a`](https://github.com/Kilo-Org/kilocode/commit/1fd698ad2025946519a0ce2d516ec528ea92eea4) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Improve Inline Assist model compatibility and performance
-
-- [#2199](https://github.com/Kilo-Org/kilocode/pull/2199) [`a19f72c`](https://github.com/Kilo-Org/kilocode/commit/a19f72c05f2bed48106b33c6eaa9f4e9e6d4d020) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Thanks @Thachnh! - Added DeepInfra provider with dynamic model fetching and prompt caching
-
-### Patch Changes
-
-- [#2170](https://github.com/Kilo-Org/kilocode/pull/2170) [`58987e3`](https://github.com/Kilo-Org/kilocode/commit/58987e36377724b639d4b19a2d92162b34bc5eaa) Thanks [@mcowger](https://github.com/mcowger)! - Remove the forced override of the context limit for Ollama API
-
-## [v4.85.0]
-
-- [#2119](https://github.com/Kilo-Org/kilocode/pull/2119) [`19dc45d`](https://github.com/Kilo-Org/kilocode/commit/19dc45d1b1578a41c41ecb787e7945513f6554d9) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.25.23
-
-    - feat: add custom base URL support for Requesty provider (thanks @requesty-JohnCosta27!)
-    - feat: add DeepSeek V3.1 model to Chutes AI provider (#7294 by @dmarkey, PR by @app/roomote)
-    - Add prompt caching support for Kimi K2 on Groq (thanks @daniel-lxs and @benank!)
-    - Add documentation links for global custom instructions in UI (thanks @app/roomote!)
-    - Ensure subtask results are provided to GPT-5 in OpenAI Responses API
-    - Promote the experimental AssistantMessageParser to the default parser
-    - Update DeepSeek models context window to 128k (thanks @JuanPerezReal)
-    - Enable grounding features for Vertex AI (thanks @anguslees)
-    - Allow orchestrator to pass TODO lists to subtasks
-    - Improved MDM handling
-    - Handle nullish token values in ContextCondenseRow to prevent UI crash (thanks @s97712)
-    - Improved context window error handling for OpenAI and other providers
-    - Add "installed" filter to Marketplace (thanks @semidark)
-    - Improve filesystem access checks (thanks @elianiva)
-    - Add Featherless provider (thanks @DarinVerheijke)
-
-### Patch Changes
-
-- [#2184](https://github.com/Kilo-Org/kilocode/pull/2184) [`0be6743`](https://github.com/Kilo-Org/kilocode/commit/0be6743e08540d1671c10f79b49f17eeac82397e) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Fix: add favorite button back to tasks
-
-- [#2125](https://github.com/Kilo-Org/kilocode/pull/2125) [`5828254`](https://github.com/Kilo-Org/kilocode/commit/5828254d47e9073c0f0fc9c9db5ef38eb6358036) Thanks [@nitinprajwal](https://github.com/nitinprajwal)! - Added support to Qwen Code for a custom OAuth credential storage path
-
-## [v4.84.1]
-
-- [#2113](https://github.com/Kilo-Org/kilocode/pull/2113) [`d40b35a`](https://github.com/Kilo-Org/kilocode/commit/d40b35a3a1efcc2fbfca51d4ca64a8da2aa321e5) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The model selector below the chat now shows the correct model list for Qwen Code and some other providers
-
-- [#2116](https://github.com/Kilo-Org/kilocode/pull/2116) [`61e18d6`](https://github.com/Kilo-Org/kilocode/commit/61e18d60f54d11d63a64cd674474a68fa398c3b9) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Checkpoints now work when using Morph fast apply
-
-- [#2130](https://github.com/Kilo-Org/kilocode/pull/2130) [`78aaf7c`](https://github.com/Kilo-Org/kilocode/commit/78aaf7c4607c5a98174a26b99973e379b87e5893) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Added support for Grok Code Fast to the xAI provider
-
-- [#2109](https://github.com/Kilo-Org/kilocode/pull/2109) [`173ecf4`](https://github.com/Kilo-Org/kilocode/commit/173ecf4983449a4b7766ba900f736a57b7d5d525) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - A solitary "0" that was sometimes shown on the Kilo Code and OpenRouter API provider settings page was removed.
-
-## [v4.84.0]
-
-- [#1961](https://github.com/Kilo-Org/kilocode/pull/1961) [`d4a7cb6`](https://github.com/Kilo-Org/kilocode/commit/d4a7cb6300d8e00d5889e1079057e43de19ff95e) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Updates to the experimental Morph FastApply support
-
-    - A visual indication is now included in the task view whenever Morph is used.
-    - The traditional file editing tools are now disabled to ensure Morph is used to edit files.
-    - Morph is now automatically disabled when the API provider does not support it and no Morph API key is configured.
-    - The Morph API key is no longer lost when switching provider profiles.
-
-- [#1886](https://github.com/Kilo-Org/kilocode/pull/1886) [`0221aaa`](https://github.com/Kilo-Org/kilocode/commit/0221aaa4febea9dfeea8cfbb26fa355204e75d1b) Thanks [@mcowger](https://github.com/mcowger)! - Add collapsible MCP tool calls with memory management
-
-### Patch Changes
-
-- [#2095](https://github.com/Kilo-Org/kilocode/pull/2095) [`8623bb8`](https://github.com/Kilo-Org/kilocode/commit/8623bb8516a7453d299512bd11c5000f43ecb952) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Kilo Code provider now falls back to the default model when the selected model no longer exists
-
-- [#2090](https://github.com/Kilo-Org/kilocode/pull/2090) [`fd147b8`](https://github.com/Kilo-Org/kilocode/commit/fd147b8ed35c8963ec66c5fae89f37829529574f) Thanks [@Mats4k](https://github.com/Mats4k)! - Improvements to German language translation
-
-- [#2030](https://github.com/Kilo-Org/kilocode/pull/2030) [`11e8c7d`](https://github.com/Kilo-Org/kilocode/commit/11e8c7dda9f03b769e22f233b5ea487c9a12bd66) Thanks [@ivanarifin](https://github.com/ivanarifin)! - Show message when Virtual Quota Fallback Provider switches profiles
-
-- [#2100](https://github.com/Kilo-Org/kilocode/pull/2100) [`5ed3d7b`](https://github.com/Kilo-Org/kilocode/commit/5ed3d7be3273fef7ff0eeede8db064fc9bdb4fe0) Thanks [@RSO](https://github.com/RSO)! - Changed the API domain for the Kilo Code provider
-
-- [#1964](https://github.com/Kilo-Org/kilocode/pull/1964) [`6b0dfbf`](https://github.com/Kilo-Org/kilocode/commit/6b0dfbf10a397063f02e0dd6964d1fb1b773cf12) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The Kilo Code API Provider settings now also shows the average cost per request in addition to the average cost per million tokens for a particular model.
-
-## [v4.83.1]
-
-- [#2073](https://github.com/Kilo-Org/kilocode/pull/2073) [`a4b8770`](https://github.com/Kilo-Org/kilocode/commit/a4b8770ba82cbb366bb986a36026b6860129f799) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Ensured free model usage is reported as free
-
-- [#2066](https://github.com/Kilo-Org/kilocode/pull/2066) [`62624d2`](https://github.com/Kilo-Org/kilocode/commit/62624d21f4f3408a552b5f0308d35be154d403b3) Thanks [@mcowger](https://github.com/mcowger)! - Fixed "'messages' field is required" error in LMStudio
-
-- [#2064](https://github.com/Kilo-Org/kilocode/pull/2064) [`8655a71`](https://github.com/Kilo-Org/kilocode/commit/8655a712d7fc84fce1a7aa8c928fa2b32a68cf24) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improved the "language model did not provide any assistant messages" error message to indicate that it likely involves rate limiting
-
-## [v4.83.0]
-
-- [#2063](https://github.com/Kilo-Org/kilocode/pull/2063) [`e844c5f`](https://github.com/Kilo-Org/kilocode/commit/e844c5f3a43c0808a037156e44f621b36a529abd) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add marketplace for modes
-
-- [#2050](https://github.com/Kilo-Org/kilocode/pull/2050) [`0ffe951`](https://github.com/Kilo-Org/kilocode/commit/0ffe951af4d356984608df623c410327cee7f130) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.25.20
-
-    - Fix: respect enableReasoningEffort setting when determining reasoning usage (#7048 by @ikbencasdoei, PR by @app/roomote)
-    - Fix: prevent duplicate LM Studio models with case-insensitive deduplication (#6954 by @fbuechler, PR by @daniel-lxs)
-    - Feat: simplify ask_followup_question prompt documentation (thanks @daniel-lxs!)
-    - Feat: simple read_file tool for single-file-only models (thanks @daniel-lxs!)
-    - Fix: Add missing zaiApiKey and doubaoApiKey to SECRET_STATE_KEYS (#7082 by @app/roomote)
-    - Feat: Add new models and update configurations for vscode-lm (thanks @NaccOll!)
-    - Fix: Resolve terminal reuse logic issues
-    - Add support for OpenAI gpt-5-chat-latest model (#7057 by @PeterDaveHello, PR by @app/roomote)
-    - Fix: Use native Ollama API instead of OpenAI compatibility layer (#7070 by @LivioGama, PR by @daniel-lxs)
-    - Fix: Prevent XML entity decoding in diff tools (#7107 by @indiesewell, PR by @app/roomote)
-    - Fix: Add type check before calling .match() on diffItem.content (#6905 by @pwilkin, PR by @app/roomote)
-    - Refactor task execution system: improve call stack management (thanks @catrielmuller!)
-    - Fix: Enable save button for provider dropdown and checkbox changes (thanks @daniel-lxs!)
-    - Add an API for resuming tasks by ID (thanks @mrubens!)
-    - Emit event when a task ask requires interaction (thanks @cte!)
-    - Make enhance with task history default to true (thanks @liwilliam2021!)
-    - Fix: Use cline.cwd as primary source for workspace path in codebaseSearchTool (thanks @NaccOll!)
-    - Hotfix multiple folder workspace checkpoint (thanks @NaccOll!)
-    - Fix: Remove 500-message limit to prevent scrollbar jumping in long conversations (#7052, #7063 by @daniel-lxs, PR by @app/roomote)
-    - Fix: Reset condensing state when switching tasks (#6919 by @f14XuanLv, PR by @f14XuanLv)
-    - Fix: Implement sitemap generation in TypeScript and remove XML file (#5231 by @abumalick, PR by @abumalick)
-    - Fix: allowedMaxRequests and allowedMaxCost values not showing in the settings UI (thanks @chrarnoldus!)
-
-## [v4.82.3]
-
-- [#2047](https://github.com/Kilo-Org/kilocode/pull/2047) [`077b774`](https://github.com/Kilo-Org/kilocode/commit/077b774deaf1a65d7864db0c1248cfa9574b93b9) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed an issue that caused the same error to be reported multiple times
-
-## [v4.82.2]
-
-- [#1811](https://github.com/Kilo-Org/kilocode/pull/1811) [`5f7afe6`](https://github.com/Kilo-Org/kilocode/commit/5f7afe6ffeb1078428b0b43c6d9a4e9252e78bc8) Thanks [@gerardbalaoro](https://github.com/gerardbalaoro)! - Adjust position within context menus to be below default items
-
-- [#2033](https://github.com/Kilo-Org/kilocode/pull/2033) [`8aef7ef`](https://github.com/Kilo-Org/kilocode/commit/8aef7efc9597613010339a667f87328cf70c9ce1) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Thanks @daniel-lxs! - Added a single-file read tool that works better with Sonic than the default multi-file read tool.
-
-## [v4.82.1]
-
-- [#2021](https://github.com/Kilo-Org/kilocode/pull/2021) [`02adf7c`](https://github.com/Kilo-Org/kilocode/commit/02adf7c4780170125e0f54beaeb5a3cbbd972669) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - OpenRouter inference providers whose context window is smaller than that of the top provider for a particular model are now automatically ignored by default. They can still be used by selecting them specifically in the Provider Routing settings.
-
-- [#2015](https://github.com/Kilo-Org/kilocode/pull/2015) [`e5c7641`](https://github.com/Kilo-Org/kilocode/commit/e5c76411cc3ff6f5aae53e5d1e39775d6830e03e) Thanks [@mcowger](https://github.com/mcowger)! - Add API key support to the Ollama provider, enabling usage of Ollama Turbo
-
-- [#2029](https://github.com/Kilo-Org/kilocode/pull/2029) [`64c6955`](https://github.com/Kilo-Org/kilocode/commit/64c695517dd8a5556c418d88c8338ea090ea09a9) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add search to provider list and sort it alphabetically
-
-## [v4.82.0]
-
-- [#1974](https://github.com/Kilo-Org/kilocode/pull/1974) [`ec18e51`](https://github.com/Kilo-Org/kilocode/commit/ec18e51d7f38c2f5ee21a02cf2290be21223119b) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code 3.25.14
-
-    - Fix: Only include verbosity parameter for models that support it (#7054 by @eastonmeth, PR by @app/roomote)
-    - Fix: AWS Bedrock 1M context - Move anthropic_beta to additionalModelRequestFields (thanks @daniel-lxs!)
-    - Fix: Make cancelling requests more responsive by reverting recent changes
-    - Add Sonnet 1M context checkbox to Bedrock
-    - Fix: add --no-messages flag to ripgrep to suppress file access errors (#6756 by @R-omk, PR by @app/roomote)
-    - Add support for AGENT.md alongside AGENTS.md (#6912 by @Brendan-Z, PR by @app/roomote)
-    - Remove deprecated GPT-4.5 Preview model (thanks @PeterDaveHello!)
-    - Update: Claude Sonnet 4 context window configurable to 1 million tokens in Anthropic provider (thanks @daniel-lxs!)
-    - Add: Minimal reasoning support to OpenRouter (thanks @daniel-lxs!)
-    - Fix: Add configurable API request timeout for local providers (#6521 by @dabockster, PR by @app/roomote)
-    - Fix: Add --no-sandbox flag to browser launch options (#6632 by @QuinsZouls, PR by @QuinsZouls)
-    - Fix: Ensure JSON files respect .kilocodeignore during indexing (#6690 by @evermoving, PR by @app/roomote)
-    - Add: New Chutes provider models (#6698 by @fstandhartinger, PR by @app/roomote)
-    - Add: OpenAI gpt-oss models to Amazon Bedrock dropdown (#6752 by @josh-clanton-powerschool, PR by @app/roomote)
-    - Fix: Correct tool repetition detector to not block first tool call when limit is 1 (#6834 by @NaccOll, PR by @app/roomote)
-    - Fix: Improve checkpoint service initialization handling (thanks @NaccOll!)
-    - Update: Improve zh-TW Traditional Chinese locale (thanks @PeterDaveHello!)
-    - Add: Task expand and collapse translations (thanks @app/roomote!)
-    - Update: Exclude GPT-5 models from 20% context window output token cap (thanks @app/roomote!)
-    - Fix: Truncate long model names in model selector to prevent overflow (thanks @app/roomote!)
-    - Add: Requesty base url support (thanks @requesty-JohnCosta27!)
-    - Add: Native OpenAI provider support for Codex Mini model (#5386 by @KJ7LNW, PR by @daniel-lxs)
-    - Add: IO Intelligence Provider support (thanks @ertan2002!)
-    - Fix: MCP startup issues and remove refresh notifications (thanks @hannesrudolph!)
-    - Fix: Improvements to GPT-5 OpenAI provider configuration (thanks @hannesrudolph!)
-    - Fix: Clarify codebase_search path parameter as optional and improve tool descriptions (thanks @app/roomote!)
-    - Fix: Bedrock provider workaround for LiteLLM passthrough issues (thanks @jr!)
-    - Fix: Token usage and cost being underreported on cancelled requests (thanks @chrarnoldus!)
-
-## [v4.81.0]
-
-- [#1868](https://github.com/Kilo-Org/kilocode/pull/1868) [`50638b4`](https://github.com/Kilo-Org/kilocode/commit/50638b4226aa3de24f5a9b825a8ef7f1e4d376f6) Thanks [@Toukaiteio](https://github.com/Toukaiteio)! - Add Support For Qwen Code
-
-### Patch Changes
-
-- [#1968](https://github.com/Kilo-Org/kilocode/pull/1968) [`e7680cc`](https://github.com/Kilo-Org/kilocode/commit/e7680cc7f9563a52d4a4babe70ca300ce67aef4a) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - OpenRouter routing settings are no longer randomly reset
-
-- [#1948](https://github.com/Kilo-Org/kilocode/pull/1948) [`ecc81c6`](https://github.com/Kilo-Org/kilocode/commit/ecc81c61db648f2701aa7d71f70cefc71a553300) Thanks [@hassoncs](https://github.com/hassoncs)! - Support drag-to-pan in the Task Timeline header
-
-- [#1899](https://github.com/Kilo-Org/kilocode/pull/1899) [`22c59ba`](https://github.com/Kilo-Org/kilocode/commit/22c59ba824199f9be7662e56fa71a74ca042c7bd) Thanks [@ivanarifin](https://github.com/ivanarifin)! - Improve virtual quota fallback handler initialization and error handling
-
-- [#1955](https://github.com/Kilo-Org/kilocode/pull/1955) [`553033a`](https://github.com/Kilo-Org/kilocode/commit/553033af3220c66e177f516df1bc6b7ee431192e) Thanks [@hassoncs](https://github.com/hassoncs)! - Add Max Cost input to the AutoApprove menu in the ChatView
-
-## [v4.80.0]
-
-- [#1893](https://github.com/Kilo-Org/kilocode/pull/1893) [`d36b1c1`](https://github.com/Kilo-Org/kilocode/commit/d36b1c17fa9d5cb06d13865b4d1ba1e66500a85c) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - More price details are now shown for Kilo Code Provider and OpenRouter. Average Kilo Code cost is the average cost of a model when using Kilo Code, after applying caching discounts. A breakdown of provider prices is also available.
-
-- [#1893](https://github.com/Kilo-Org/kilocode/pull/1893) [`d36b1c1`](https://github.com/Kilo-Org/kilocode/commit/d36b1c17fa9d5cb06d13865b4d1ba1e66500a85c) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Provider Routing options have been added to Kilo Code and OpenRouter settings. It is now possible to select a sorting preference (e.g. prefer lower price) and data policy (e.g. deny data collection).
-
-### Patch Changes
-
-- [#1924](https://github.com/Kilo-Org/kilocode/pull/1924) [`f7d54ee`](https://github.com/Kilo-Org/kilocode/commit/f7d54eee006c21e3b7760e2ee88f144760731892) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The dedicated Big Model API provider was removed. Instead, you can use the Z.AI provider with open.bigmodel.cn endpoint.
-
-## [v4.79.3]
-
-- [#1911](https://github.com/Kilo-Org/kilocode/pull/1911) [`62018d4`](https://github.com/Kilo-Org/kilocode/commit/62018d4cb0dff0386bdccc68ce4a9dbb21834e8f) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed Enhance Prompt and Commit Message Generation not working with GPT-5 on the OpenAI provider
-
-## [v4.79.2]
-
-- [#1892](https://github.com/Kilo-Org/kilocode/pull/1892) [`c5cfb6c`](https://github.com/Kilo-Org/kilocode/commit/c5cfb6cc0af6b7de2a33832b6b1b56b60b950edc) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed not being able to set the Max Auto-Approve Cost
-
-- [#1889](https://github.com/Kilo-Org/kilocode/pull/1889) [`2bbebd0`](https://github.com/Kilo-Org/kilocode/commit/2bbebd09c27a00c197de9dfcc384f34880fdb46f) Thanks [@unitythemaker](https://github.com/unitythemaker)! - Chutes model list updated
-
-- [#1879](https://github.com/Kilo-Org/kilocode/pull/1879) [`e348ea1`](https://github.com/Kilo-Org/kilocode/commit/e348ea18cbbfc76abece9cbe9e54bc477e764e99) Thanks [@possible055](https://github.com/possible055)! - Update Traditional Chinese translations for Settings UI
-
-## [v4.79.1]
-
-- [#1871](https://github.com/Kilo-Org/kilocode/pull/1871) [`fe0b1ce`](https://github.com/Kilo-Org/kilocode/commit/fe0b1ce7141e6fb07f4c4816fd1895a663ce13e7) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.25.10
-
-    - Improved support for GPT-5 (thanks Cline and @app/roomote!)
-    - Fix: Use CDATA sections in XML examples to prevent parser errors (#4852 by @hannesrudolph, PR by @hannesrudolph)
-    - Fix: Add missing MCP error translation keys (thanks @app/roomote!)
-    - Fix: Resolve rounding issue with max tokens (#6806 by @markp018, PR by @mrubens)
-    - Add support for GLM-4.5 and OpenAI gpt-oss models in Fireworks provider (#6753 by @alexfarlander, PR by @app/roomote)
-    - Improve UX by focusing chat input when clicking plus button in extension menu (thanks @app/roomote!)
-
-## [v4.79.0]
-
-- [#1862](https://github.com/Kilo-Org/kilocode/pull/1862) [`43c7179`](https://github.com/Kilo-Org/kilocode/commit/43c71796a58e25805217c520a9d612d56b2f11d5) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.25.8
-
-    - Fix: Prevent disabled MCP servers from starting processes and show correct status (#6036 by @hannesrudolph, PR by @app/roomote)
-    - Fix: Handle current directory path "." correctly in codebase_search tool (#6514 by @hannesrudolph, PR by @app/roomote)
-    - Fix: Trim whitespace from OpenAI base URL to fix model detection (#6559 by @vauhochzett, PR by @app/roomote)
-    - Feat: Reduce Gemini 2.5 Pro minimum thinking budget to 128 (thanks @app/roomote!)
-    - Fix: Improve handling of net::ERR_ABORTED errors in URL fetching (#6632 by @QuinsZouls, PR by @app/roomote)
-    - Fix: Recover from error state when Qdrant becomes available (#6660 by @hannesrudolph, PR by @app/roomote)
-    - Fix: Resolve memory leak in ChatView virtual scrolling implementation (thanks @xyOz-dev!)
-    - Add: Swift files to fallback list (#5857 by @niteshbalusu11, #6555 by @sealad886, PR by @niteshbalusu11)
-    - Feat: Clamp default model max tokens to 20% of context window (thanks @mrubens!)
-    - Add support for Claude Opus 4.1
-    - Add code indexing support for multiple folders similar to task history (#6197 by @NaccOll, PR by @NaccOll)
-    - Make mode selection dropdowns responsive (#6423 by @AyazKaan, PR by @AyazKaan)
-    - Redesigned task header and task history (thanks @brunobergher!)
-    - Fix checkpoints timing and ensure checkpoints work properly (#4827 by @mrubens, PR by @NaccOll)
-    - Fix empty mode names from being saved (#5766 by @kfxmvp, PR by @app/roomote)
-    - Fix MCP server creation when setting is disabled (#6607 by @characharm, PR by @app/roomote)
-    - Update highlight layer style and align to textarea (#6647 by @NaccOll, PR by @NaccOll)
-    - Fix UI for approving chained commands
-    - Use assistantMessageParser class instead of parseAssistantMessage (#5340 by @qdaxb, PR by @qdaxb)
-    - Conditionally include reminder section based on todo list config (thanks @NaccOll!)
-    - Task and TaskProvider event emitter cleanup with new events (thanks @cte!)
-    - Set horizon-beta model max tokens to 32k for OpenRouter (requested by @hannesrudolph, PR by @app/roomote)
-    - Add support for syncing provider profiles from the cloud
-    - Fix: Improve Claude Code ENOENT error handling with installation guidance (#5866 by @JamieJ1, PR by @app/roomote)
-    - Fix: LM Studio model context length (#5075 by @Angular-Angel, PR by @pwilkin)
-    - Fix: VB.NET indexing by implementing fallback chunking system (#6420 by @JensvanZutphen, PR by @daniel-lxs)
-    - Add auto-approved cost limits (thanks @hassoncs!)
-    - Add Qwen 3 Coder from Cerebras (thanks @kevint-cerebras!)
-    - Fix: Handle Qdrant deletion errors gracefully to prevent indexing interruption (thanks @daniel-lxs!)
-    - Fix: Restore message sending when clicking save button (thanks @daniel-lxs!)
-    - Fix: Linter not applied to locales/\*/README.md (thanks @liwilliam2021!)
-    - Handle more variations of chaining and subshell command validation
-    - More tolerant search/replace match
-    - Clean up the auto-approve UI (thanks @mrubens!)
-    - Skip interpolation for non-existent slash commands (thanks @app/roomote!)
-
-### Patch Changes
-
-- [#1856](https://github.com/Kilo-Org/kilocode/pull/1856) [`9c8423e`](https://github.com/Kilo-Org/kilocode/commit/9c8423ef902cf68566185dbf96dae92f4fcac9b3) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed Enhance Prompt and Commit Generation Message not working with GPT-5 on the OpenAI provider
-
-- [#1822](https://github.com/Kilo-Org/kilocode/pull/1822) [`79efaea`](https://github.com/Kilo-Org/kilocode/commit/79efaeaa3da8881310feb4a711f475810df5f84e) Thanks [@tejaschokhawala](https://github.com/tejaschokhawala)! - Thinking Budget value parsing and boundary handling corrected
-
-- [#1850](https://github.com/Kilo-Org/kilocode/pull/1850) [`b9714db`](https://github.com/Kilo-Org/kilocode/commit/b9714dbbdde7e6ec628d32657329fe82c01cfb42) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed "Failed to load Kilo Code provider model list" error
-
-- [#1829](https://github.com/Kilo-Org/kilocode/pull/1829) [`2bdeaa0`](https://github.com/Kilo-Org/kilocode/commit/2bdeaa05074e5e87ffa2af1bbed149864dbd3785) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Improve memory allocation on webview
-
-## [v4.78.0]
-
-- [#1836](https://github.com/Kilo-Org/kilocode/pull/1836) [`1cc5edd`](https://github.com/Kilo-Org/kilocode/commit/1cc5edd003434fcd3d1fd66e652099165b077ac6) Thanks [@hassoncs](https://github.com/hassoncs)! - The task timeline now scrolls horizontally using the mouse wheel (thanks @ABODFTW!)
-
-### Patch Changes
-
-- [#1814](https://github.com/Kilo-Org/kilocode/pull/1814) [`3e7290e`](https://github.com/Kilo-Org/kilocode/commit/3e7290e49974d26ee55bcaef743edb527e214735) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Removed "Press Ctrl+Shift+G to generate terminal commands" message
-
-- [#1832](https://github.com/Kilo-Org/kilocode/pull/1832) [`80b0f20`](https://github.com/Kilo-Org/kilocode/commit/80b0f209ad823ac23f30838ba3989dbf877fce73) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add GPT-5 model support to OpenAI provider
-
-## [v4.77.1]
-
-- [#1792](https://github.com/Kilo-Org/kilocode/pull/1792) [`ee300bc`](https://github.com/Kilo-Org/kilocode/commit/ee300bcd9138049182f9979ea9794996c96ee3d1) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Fix infinite spinning initial API request
-
-## [v4.77.0]
-
-- [#1784](https://github.com/Kilo-Org/kilocode/pull/1784) [`bf5bd8e`](https://github.com/Kilo-Org/kilocode/commit/bf5bd8e22e34191730512f0f793d45b6f3a0a694) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Inline Assist - Improve compatibility with more models (JSON Parsing)
-
-### Patch Changes
-
-- [#1786](https://github.com/Kilo-Org/kilocode/pull/1786) [`26cb921`](https://github.com/Kilo-Org/kilocode/commit/26cb92172d361bb274cb30d81f400136bff06f1e) Thanks [@hellosunghyun](https://github.com/hellosunghyun)! - Update Cerebras models with latest offerings
-
-## [v4.76.0]
-
-- [#1738](https://github.com/Kilo-Org/kilocode/pull/1738) [`0d3643b`](https://github.com/Kilo-Org/kilocode/commit/0d3643b4926fb1d77c865eb96ab9bcfdc49e1ea3) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Inline Assistant: Auto trigger - automatically show code suggestions after a configurable delay
-
-- [#1631](https://github.com/Kilo-Org/kilocode/pull/1631) [`b4f6e09`](https://github.com/Kilo-Org/kilocode/commit/b4f6e09ad57a9e00b5b64f7d75311c647cdf5fce) Thanks [@mcowger](https://github.com/mcowger)! - Add support for virtual provider usage tracking, and fix a selection race condition.
-
-### Patch Changes
-
-- [#1776](https://github.com/Kilo-Org/kilocode/pull/1776) [`7a705a2`](https://github.com/Kilo-Org/kilocode/commit/7a705a26a9b1bb56579e44f01810c42585c75e53) Thanks [@ipkalid](https://github.com/ipkalid)! - add GPT-OSS 120b and 20b models to Groq provider
-
-## [v4.75.0]
-
-- [#1750](https://github.com/Kilo-Org/kilocode/pull/1750) [`4e48339`](https://github.com/Kilo-Org/kilocode/commit/4e48339bb1651e83fe40f481a66c97720afe9900) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Increased maximum system prompt length for Claude Code
-
-### Patch Changes
-
-- [#1761](https://github.com/Kilo-Org/kilocode/pull/1761) [`c13bf0c`](https://github.com/Kilo-Org/kilocode/commit/c13bf0c03cd26f40a705fde2dc0ce67a1e1cc622) Thanks [@Ed4ward](https://github.com/Ed4ward)! - adjust the configurations of BigModel provider for GLM-4.5, added tiers for models prices
-
-- [#1755](https://github.com/Kilo-Org/kilocode/pull/1755) [`9054e23`](https://github.com/Kilo-Org/kilocode/commit/9054e23bd9ca05f920845b8e24d1785fcf9a0e2e) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add support for GLM-4.5-Flash, Zhipu's most advanced free model to date, to the BigModel and Z.AI providers.
-
-- [#1741](https://github.com/Kilo-Org/kilocode/pull/1741) [`8ae7c1f`](https://github.com/Kilo-Org/kilocode/commit/8ae7c1f7558cff4370976d347ddc532ecf48fc45) Thanks [@tejaschokhawala](https://github.com/tejaschokhawala)! - feat(gemini): Add Gemma 3 27B to Gemini Provider
-
-- [#1744](https://github.com/Kilo-Org/kilocode/pull/1744) [`b8f3267`](https://github.com/Kilo-Org/kilocode/commit/b8f3267e584ea0399e1bdb89b2b03fd08b8c1f1b) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Fix Message queue #1736
-
-- [#1763](https://github.com/Kilo-Org/kilocode/pull/1763) [`d3cfbcd`](https://github.com/Kilo-Org/kilocode/commit/d3cfbcd8ccd3820837ba86ee9f7c25a2d4fd44e0) Thanks [@ershang-fireworks](https://github.com/ershang-fireworks)! - Fix fireworks provider
-
-## [v4.74.0]
-
-- [#1721](https://github.com/Kilo-Org/kilocode/pull/1721) [`3f816a8`](https://github.com/Kilo-Org/kilocode/commit/3f816a8e65b7c94d7212130f1312c9d77ff84ebf) Thanks [@damonto](https://github.com/damonto)! - Remove shortcut notation from activity bar title that was present in some languages
-
-- [#1731](https://github.com/Kilo-Org/kilocode/pull/1731) [`8aa1cd3`](https://github.com/Kilo-Org/kilocode/commit/8aa1cd3cd6fa462d8dce4961ff13080d4683161d) Thanks [@Ed4ward](https://github.com/Ed4ward)! - Added Z.AI & BigModel providers for GLM-4.5 Serials
-
-### Patch Changes
-
-- [#1717](https://github.com/Kilo-Org/kilocode/pull/1717) [`529c0d6`](https://github.com/Kilo-Org/kilocode/commit/529c0d61da1f45e93604dd98ed10bf74f694f02f) Thanks [@hassoncs](https://github.com/hassoncs)! - Only show the terminal generation tip once per session
-
-- [#1743](https://github.com/Kilo-Org/kilocode/pull/1743) [`b5a50d1`](https://github.com/Kilo-Org/kilocode/commit/b5a50d198306dcf24d16437ccf409e54fd3972cc) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix bug preventing Orchestrator mode sub-tasks from reporting their results properly
-
-- [#1720](https://github.com/Kilo-Org/kilocode/pull/1720) [`23dfe72`](https://github.com/Kilo-Org/kilocode/commit/23dfe7256bdf95a3be8db4dcc9d8dc6c9ac1d37a) Thanks [@k9evin](https://github.com/k9evin)! - Fix MCP Marketplace installation modal state issue
-
-- [#1735](https://github.com/Kilo-Org/kilocode/pull/1735) [`783e291`](https://github.com/Kilo-Org/kilocode/commit/783e2915bf8795f39f8d63615dd48d79cbd1760a) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix workflows don't work
-
-- [#1734](https://github.com/Kilo-Org/kilocode/pull/1734) [`e2de39f`](https://github.com/Kilo-Org/kilocode/commit/e2de39f9082b26336992248ce4cc0ee5d191d4df) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Added missing "Generate terminal command" label on the prompts settings page
-
-- [#1713](https://github.com/Kilo-Org/kilocode/pull/1713) [`54b88f3`](https://github.com/Kilo-Org/kilocode/commit/54b88f3869e1fa07ae0467b557c7a33adcad0cc9) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The timeout for Ollama and LM Studio was increased from 5 minutes to 1 hour
-
-## [v4.73.1]
-
-- [#1707](https://github.com/Kilo-Org/kilocode/pull/1707) [`d2af1bd`](https://github.com/Kilo-Org/kilocode/commit/d2af1bd779f8e5480355eeceaeaba91679696d95) Thanks [@possible055](https://github.com/possible055)! - Refine Traditional Chinese translation
-
-- [#1710](https://github.com/Kilo-Org/kilocode/pull/1710) [`8d5c647`](https://github.com/Kilo-Org/kilocode/commit/8d5c647e8fd39b5dd528ea959d7e14e28b29d6e6) Thanks [@NaccOll](https://github.com/NaccOll)! - Todo reminders are no longer included in the prompt when todo lists are disabled
-
-- [#1711](https://github.com/Kilo-Org/kilocode/pull/1711) [`e71ca57`](https://github.com/Kilo-Org/kilocode/commit/e71ca578c2935085213ad41bf24226c55f4cf4f5) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix missing padding in the Profile selector
-
-## [v4.73.0]
-
-- [#1654](https://github.com/Kilo-Org/kilocode/pull/1654) [`c4ed29a`](https://github.com/Kilo-Org/kilocode/commit/c4ed29acdabfd131dae82c5ccd06ebe1ecbce058) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.25.4
-
-    - feat: add SambaNova provider integration (#6077 by @snova-jorgep, PR by @snova-jorgep)
-    - feat: add Doubao provider integration (thanks @AntiMoron!)
-    - feat: set horizon-alpha model max tokens to 32k for OpenRouter (thanks @app/roomote!)
-    - feat: add zai-org/GLM-4.5-FP8 model to Chutes AI provider (#6440 by @leakless21, PR by @app/roomote)
-    - feat: add symlink support for AGENTS.md file loading (thanks @app/roomote!)
-    - feat: optionally add task history context to prompt enhancement (thanks @liwilliam2021!)
-    - fix: remove misleading task resumption message (#5850 by @KJ7LNW, PR by @KJ7LNW)
-    - feat: add pattern to support Databricks /invocations endpoints (thanks @adambrand!)
-    - fix: resolve navigator global error by updating mammoth and bluebird dependencies (#6356 by @hishtadlut, PR by @app/roomote)
-    - feat: enhance token counting by extracting text from messages using VSCode LM API (#6112 by @sebinseban, PR by @NaccOll)
-    - feat: auto-refresh marketplace data when organization settings change (thanks @app/roomote!)
-    - fix: kill button for execute_command tool (thanks @daniel-lxs!)
-    - Allow queueing messages with images
-    - Increase Claude Code default max output tokens to 16k (#6125 by @bpeterson1991, PR by @app/roomote)
-    - Add docs link for slash commands
-    - Hide Gemini checkboxes on the welcome view
-    - Clarify apply_diff tool descriptions to emphasize surgical edits
-    - Fix: Prevent input clearing when clicking chat buttons (thanks @hassoncs!)
-    - Update PR reviewer rules and mode configuration (thanks @daniel-lxs!)
-    - Add translation check action to pull_request.opened event (thanks @app/roomote!)
-    - Remove event types mention from PR reviewer rules (thanks @daniel-lxs!)
-    - Fix: Show diff view before approval when background edits are disabled (thanks @daniel-lxs!)
-    - Add support for organization-level MCP controls
-    - Fix zap icon hover state
-    - Add support for GLM-4.5-Air model to Chutes AI provider (#6376 by @matbgn, PR by @app/roomote)
-    - Improve subshell validation for commands
-    - Add message queueing (thanks @app/roomote!)
-    - Add options for URL Context and Grounding with Google Search to the Gemini provider (thanks @HahaBill!)
-    - Add image support to read_file tool (thanks @samhvw8!)
-    - Add experimental setting to prevent editor focus disruption (#4784 by @hannesrudolph, PR by @app/roomote)
-    - Add prompt caching support for LiteLLM (#5791 by @steve-gore-snapdocs, PR by @MuriloFP)
-    - Add markdown table rendering support
-    - Fix list_files recursive mode now works for dot directories (#2992 by @avtc, #4807 by @zhang157686, #5409 by @MuriloFP, PR by @MuriloFP)
-    - Add search functionality to mode selector popup and reorganize layout
-    - Sync API config selector style with mode selector
-    - Fix keyboard shortcuts for non-QWERTY layouts (#6161 by @shlgug, PR by @app/roomote)
-    - Add ESC key handling for modes, API provider, and indexing settings popovers (thanks @app/roomote!)
-    - Make task mode sticky to task (thanks @app/roomote!)
-    - Add text wrapping to command patterns in Manage Command Permissions (thanks @app/roomote!)
-    - Update list-files test for fixed hidden files bug (thanks @daniel-lxs!)
-    - Fix normalize Windows paths to forward slashes in mode export (#6307 by @hannesrudolph, PR by @app/roomote)
-    - Ensure form-data >= 4.0.4
-    - Fix filter out non-text tab inputs (Kilo-Org/kilocode#712 by @szermatt, PR by @hassoncs)
-
-## [v4.72.1]
-
-- [#1697](https://github.com/Kilo-Org/kilocode/pull/1697) [`bcea22c`](https://github.com/Kilo-Org/kilocode/commit/bcea22c5cf6c446a73edbaeabcae8bce62da6441) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - A note on where to find the MCP Marketplace was added
-
-## [v4.72.0]
-
-- [#1663](https://github.com/Kilo-Org/kilocode/pull/1663) [`b043643`](https://github.com/Kilo-Org/kilocode/commit/b043643fe067e415ef28375554e24b8829fa5600) Thanks [@hassoncs](https://github.com/hassoncs)! - Add descriptions to the Mode Selector menu
-
-### Patch Changes
-
-- [#1662](https://github.com/Kilo-Org/kilocode/pull/1662) [`57e5c3e`](https://github.com/Kilo-Org/kilocode/commit/57e5c3eb8f2a86167e121f2d459b74dea987b804) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Some UI text related to pricing and cost has been improved
-
-- [#1684](https://github.com/Kilo-Org/kilocode/pull/1684) [`ccd8a63`](https://github.com/Kilo-Org/kilocode/commit/ccd8a6387c7123f3cb904a1327eaa775e3f87953) Thanks [@NyxJae](https://github.com/NyxJae)! - Standardize brand names in localizations
-
-- [#1666](https://github.com/Kilo-Org/kilocode/pull/1666) [`c59029a`](https://github.com/Kilo-Org/kilocode/commit/c59029a57b820f3cf684476f56a30dc49509d9ea) Thanks [@kevint-cerebras](https://github.com/kevint-cerebras)! - Update available Cerebras models
-
-- [#1655](https://github.com/Kilo-Org/kilocode/pull/1655) [`a3276c0`](https://github.com/Kilo-Org/kilocode/commit/a3276c0feab4300731d9294bbfc44c0bf85db98a) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Credits Store Improvements
-
-- [#1688](https://github.com/Kilo-Org/kilocode/pull/1688) [`de00d50`](https://github.com/Kilo-Org/kilocode/commit/de00d5014e57a602aaee0b21a97a6352bdcdf4c5) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Ollama requests no longer time out after 5 minutes
-
-- [#1677](https://github.com/Kilo-Org/kilocode/pull/1677) [`8a0d0e8`](https://github.com/Kilo-Org/kilocode/commit/8a0d0e830fe56439ce343a743a702c8fa1d02744) Thanks [@possible055](https://github.com/possible055)! - Refine Traditional Chinese translation
-
-## [v4.71.0]
-
-- [#1656](https://github.com/Kilo-Org/kilocode/pull/1656) [`68a3f4a`](https://github.com/Kilo-Org/kilocode/commit/68a3f4a583751ae70ecb5fbd83db119375c4d5bd) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Disable terminal shell integration by default
-
-- [#1596](https://github.com/Kilo-Org/kilocode/pull/1596) [`3e918a2`](https://github.com/Kilo-Org/kilocode/commit/3e918a299c10796805880121844c4841ab56da7c) Thanks [@hassoncs](https://github.com/hassoncs)! - # Terminal Command Generator
-
-    New AI-powered terminal command generator- helps users create terminal commands using natural language
-
-    ## New Features
-
-    - **Terminal Command Generator**: Press `Ctrl+Shift+G` (or `Cmd+Shift+G` on Mac) to generate terminal commands from natural language descriptions
-    - **Terminal Welcome Messages**: New terminals now show helpful tips about the command generator feature
-    - **API Configuration Selection**: Choose which AI provider configuration to use for terminal command generation in settings
-
-    ## How to Use
-
-    1. Open any terminal in VSCode
-    2. Press `Ctrl+Shift+G` (Windows/Linux) or `Cmd+Shift+G` (Mac)
-    3. Describe the command you want in plain English (e.g., "list all files in current directory", "find large files", "install npm package")
-    4. The AI will generate and execute the appropriate terminal command
-
-    ## Settings
-
-    Navigate to Kilo Code settings → Terminal to configure:
-
-    - **API Configuration**: Select which AI provider to use for command generation (defaults to your current configuration)
-
-- [#1628](https://github.com/Kilo-Org/kilocode/pull/1628) [`4913a39`](https://github.com/Kilo-Org/kilocode/commit/4913a39e6cc6342c896352ed8eaa56831812810c) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Thanks @bhaktatejas922! Add experimental support for Morph Fast Apply
-
-### Patch Changes
-
-- [#1658](https://github.com/Kilo-Org/kilocode/pull/1658) [`962c90a`](https://github.com/Kilo-Org/kilocode/commit/962c90a2d057a72081cb271949cbf780c80a3555) Thanks [@hassoncs](https://github.com/hassoncs)! - Control Kilo Code programmatically from the command line using IPC with the `KILO_CODE_IPC_SOCKET_PATH` var
-
-- [#1647](https://github.com/Kilo-Org/kilocode/pull/1647) [`12a7a5a`](https://github.com/Kilo-Org/kilocode/commit/12a7a5a21ed34ce68694452d7d6bb67a59ca8904) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Simplify the Welcome/Login screen
-
-- [#1649](https://github.com/Kilo-Org/kilocode/pull/1649) [`b3d3fc4`](https://github.com/Kilo-Org/kilocode/commit/b3d3fc4c08a0c1023a37ddeb5823d12d30490727) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The rule toggle UI works again, rules can be disabled.
-
-## [v4.70.2]
-
-- [#1645](https://github.com/Kilo-Org/kilocode/pull/1645) [`81e20ef`](https://github.com/Kilo-Org/kilocode/commit/81e20ef2168b966f8757acf009b27a7374a29386) Thanks [@catrielmuller](https://github.com/catrielmuller)! - You can now buy credits straight from the profile tab
-
-- [#1643](https://github.com/Kilo-Org/kilocode/pull/1643) [`0e99eae`](https://github.com/Kilo-Org/kilocode/commit/0e99eaec42f8111dc75bcd5b273871db0ddc1298) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Optimized memory usage of the chat view
-
-- [#1623](https://github.com/Kilo-Org/kilocode/pull/1623) [`7e29e32`](https://github.com/Kilo-Org/kilocode/commit/7e29e32f40ef3447edf3e5d356235cae6c497e32) Thanks [@hassoncs](https://github.com/hassoncs)! - Add webview memory metrics to telemetry
-
-## [v4.70.1]
-
-- [#1614](https://github.com/Kilo-Org/kilocode/pull/1614) [`2f9d064`](https://github.com/Kilo-Org/kilocode/commit/2f9d064b0370bfa4da92ceffec0026a16feb178a) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - GitHub accounts now show their avatar on the profile page
-
-## [v4.70.0]
-
-- [#1588](https://github.com/Kilo-Org/kilocode/pull/1588) [`96be5a5`](https://github.com/Kilo-Org/kilocode/commit/96be5a5f82111ac2357112a04d3c0adc42103592) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Add warning when Github Copilot conflicts with Kilo's Inline Assist keyboard commands
-
-### Patch Changes
-
-- [#1606](https://github.com/Kilo-Org/kilocode/pull/1606) [`b518ee7`](https://github.com/Kilo-Org/kilocode/commit/b518ee7a577edb61bedcf235bb03164a29719891) Thanks [@hassoncs](https://github.com/hassoncs)! - Put all Inline Assist features behind a new Experiment
-
-## [v4.69.0]
-
-- [#1514](https://github.com/Kilo-Org/kilocode/pull/1514) [`3d09426`](https://github.com/Kilo-Org/kilocode/commit/3d0942667c80cb0e9a185fe1bf1b2dc67f82a694) Thanks [@mcowger](https://github.com/mcowger)! - Show a toast to the user when the active handler changes in the virtual quota fallback provider.
-
-### Patch Changes
-
-- [#1603](https://github.com/Kilo-Org/kilocode/pull/1603) [`dd60d57`](https://github.com/Kilo-Org/kilocode/commit/dd60d57d49e6d0cd62126b869368f6bd8118202f) Thanks [@namaku](https://github.com/namaku)! - fix(ollama): prefer num_ctx from model.parameters over context_length from model.info
-
-## [v4.68.0]
-
-- [#1579](https://github.com/Kilo-Org/kilocode/pull/1579) [`4e5d90a`](https://github.com/Kilo-Org/kilocode/commit/4e5d90a78b99ed5dca750446733aef36d3381680) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.24.0
-
-    - Add Hugging Face provider with support for open source models (thanks @TGlide!)
-    - Add terminal command permissions UI to chat interface
-    - Add support for Agent Rules standard via AGENTS.md (thanks @sgryphon!)
-    - Add settings to control diagnostic messages
-    - Fix auto-approve checkbox to be toggled at any time (thanks @KJ7LNW!)
-    - Add efficiency warning for single SEARCH/REPLACE blocks in apply_diff (thanks @KJ7LNW!)
-    - Fix respect maxReadFileLine setting for file mentions to prevent context exhaustion (thanks @sebinseban!)
-    - Fix Ollama API URL normalization by removing trailing slashes (thanks @Naam!)
-    - Fix restore list styles for markdown lists in chat interface (thanks @village-way!)
-    - Add support for bedrock api keys
-    - Add confirmation dialog and proper cleanup for marketplace mode removal
-    - Fix cancel auto-approve timer when editing follow-up suggestion (thanks @hassoncs!)
-    - Fix add error message when no workspace folder is open for code indexing
-
-### Patch Changes
-
-- [#1561](https://github.com/Kilo-Org/kilocode/pull/1561) [`b3b024f`](https://github.com/Kilo-Org/kilocode/commit/b3b024f670c8b98921d3fc02c626a21c18be0a52) Thanks [@RSO](https://github.com/RSO)! - Added notifications from kilocode backend
-
-- [#1574](https://github.com/Kilo-Org/kilocode/pull/1574) [`2ac061e`](https://github.com/Kilo-Org/kilocode/commit/2ac061ed83ef68f429e113f94f6d72be47fe4389) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Improve the styles for the Inline Assist suggestion previews
-
-- [#1581](https://github.com/Kilo-Org/kilocode/pull/1581) [`abf9898`](https://github.com/Kilo-Org/kilocode/commit/abf9898fa1e4e37bdb65ba3abad5c2a7ea78db45) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix 'failure to apply changes to files' when Git diff views are open
-
-- [#1575](https://github.com/Kilo-Org/kilocode/pull/1575) [`3442152`](https://github.com/Kilo-Org/kilocode/commit/34421525994cfa794744a4f969e8eded5cf14d47) Thanks [@hassoncs](https://github.com/hassoncs)! - Attempt to fix the 'kilo icon missing' bug by switching back to PNG icons
-
-## [v4.67.0]
-
-- [#1484](https://github.com/Kilo-Org/kilocode/pull/1484) [`8294250`](https://github.com/Kilo-Org/kilocode/commit/8294250662f15c819f68781b507cb0e35a29b71b) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Improve Inline Assist suggestions by adding comprehensive context awareness
-
-## [v4.66.0]
-
-- [#1539](https://github.com/Kilo-Org/kilocode/pull/1539) [`fd3679b`](https://github.com/Kilo-Org/kilocode/commit/fd3679b56b1b72ca41d70b30d805c94d377f3626) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Ollama models now use and report the correct context window size.
-
-- [#1510](https://github.com/Kilo-Org/kilocode/pull/1510) [`ee48df4`](https://github.com/Kilo-Org/kilocode/commit/ee48df43fb460a1fbaa9e4f5a11ce45172bf63e3) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Include changes from Roo Code v3.23.19
-
-    - Fix configurable delay for diagnostics to prevent premature error reporting
-    - Add command timeout allowlist
-    - Add description and whenToUse fields to custom modes in .roomodes (thanks @RandalSchwartz!)
-    - Fix Claude model detection by name for API protocol selection (thanks @daniel-lxs!)
-    - Optional setting to prevent completion with open todos
-    - Add global rate limiting for OpenAI-compatible embeddings (thanks @daniel-lxs!)
-    - Add batch limiting to code indexer (thanks @daniel-lxs!)
-    - Add: Moonshot provider (thanks @CellenLee!)
-    - Add: Qwen/Qwen3-235B-A22B-Instruct-2507 model to Chutes AI provider
-    - Fix: move context condensing prompt to Prompts section (thanks @SannidhyaSah!)
-    - Add: jump icon for newly created files
-    - Fix: add character limit to prevent terminal output context explosion
-    - Fix: resolve global mode export not including rules files
-    - Add: auto-omit MCP content when no servers are configured
-    - Fix: sort symlinked rules files by symlink names, not target names
-    - Docs: clarify when to use update_todo_list tool
-    - Add: Mistral embedding provider (thanks @SannidhyaSah!)
-    - Fix: add run parameter to vitest command in rules (thanks @KJ7LNW!)
-    - Update: the max_tokens fallback logic in the sliding window
-    - Fix: Bedrock and Vertext token counting improvements (thanks @daniel-lxs!)
-    - Add: llama-4-maverick model to Vertex AI provider (thanks @MuriloFP!)
-    - Fix: properly distinguish between user cancellations and API failures
-    - Fix: add case sensitivity mention to suggested fixes in apply_diff error message
-    - Fix: Resolve 'Bad substitution' error in command parsing (#5978 by @KJ7LNW, PR by @daniel-lxs)
-    - Fix: Add ErrorBoundary component for better error handling (#5731 by @elianiva, PR by @KJ7LNW)
-    - Improve: Use SIGKILL for command execution timeouts in the "execa" variant (thanks @cte!)
-    - Split commands on newlines when evaluating auto-approve
-    - Smarter auto-deny of commands
-
-### Patch Changes
-
-- [#1550](https://github.com/Kilo-Org/kilocode/pull/1550) [`48b0d78`](https://github.com/Kilo-Org/kilocode/commit/48b0d78ea9282f4447e5c57262d727b2bc621e50) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - A visual indication is now provided whenever the cost of an API Request could not be retrieved
-
-## [v4.65.3]
-
-- [#1544](https://github.com/Kilo-Org/kilocode/pull/1544) [`758d4ad`](https://github.com/Kilo-Org/kilocode/commit/758d4addb361ae9bc7eb3ba3a98f37a298f8d60d) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improvements to token and cost usage reporting
-
-## [v4.65.2]
-
-- [#1526](https://github.com/Kilo-Org/kilocode/pull/1526) [`fe97c95`](https://github.com/Kilo-Org/kilocode/commit/fe97c9526a13dcf6834c5695dc46b41964738464) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Specify the default model in one place in the code
-
-## [v4.65.1]
-
-- [#1518](https://github.com/Kilo-Org/kilocode/pull/1518) [`f709388`](https://github.com/Kilo-Org/kilocode/commit/f709388ae1e1b730c06796d0b9ec207532219d6e) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Claude Sonnet 4 is now the default model! Attend the Anthropic x Kilo Code workshop [The Art of Prompt Engineering for Software Developers](https://www.eventbrite.nl/e/the-art-of-prompt-engineering-for-software-developers-tickets-1474017238239) Thursday, July 31 2025!
-
-- [#1521](https://github.com/Kilo-Org/kilocode/pull/1521) [`08ccbea`](https://github.com/Kilo-Org/kilocode/commit/08ccbeaf2c4e5d9ec22c77edc7cea673f75e397c) Thanks [@hassoncs](https://github.com/hassoncs)! - The chat box is no longer cleared when clicking buttons
-
-    Previously, if either of the buttons in the agent chat was clicked, the ChatTextArea would get cleared. Now, the ChatTextArea will only get cleared if a message is sent as part of the response.
-
-## [v4.65.0]
-
-- [#1487](https://github.com/Kilo-Org/kilocode/pull/1487) [`ad91c38`](https://github.com/Kilo-Org/kilocode/commit/ad91c3824c5fcbced818c90745bed95f7a7e9dc0) Thanks [@mcowger](https://github.com/mcowger)! - Introduce a new Virtual Quota Fallback Provider - delegate to other Profiles based on cost or request count limits!
-
-    This new virtual provider lets you set cost- or request-based quotas for a list of profiles. It will automatically falls back to the next profile's provider when any limit is reached!
-
-### Patch Changes
-
-- [#1502](https://github.com/Kilo-Org/kilocode/pull/1502) [`73f414c`](https://github.com/Kilo-Org/kilocode/commit/73f414c25a59e140946c4c415a8f11817898987c) Thanks [@hellosunghyun](https://github.com/hellosunghyun)! - Update Cerebras models with latest offerings
-
-- [#1512](https://github.com/Kilo-Org/kilocode/pull/1512) [`aea28be`](https://github.com/Kilo-Org/kilocode/commit/aea28bec33d27ad3f824a8a1d44c9d36025adf26) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix a memory leak when opening many documents with different Uris
-
-- [#1515](https://github.com/Kilo-Org/kilocode/pull/1515) [`2b208b3`](https://github.com/Kilo-Org/kilocode/commit/2b208b3320834a847fb3443677d5e7dee3722c41) Thanks [@hassoncs](https://github.com/hassoncs)! - Improve the background color of the "Help Improve Kilo Code" banner
-
-## [v4.64.3]
-
-- [#1494](https://github.com/Kilo-Org/kilocode/pull/1494) [`1488591`](https://github.com/Kilo-Org/kilocode/commit/148859168d0dc1521d5ee7c5d96263ffae47a587) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improved error reporting for Checkpoint-related failures
-
-## [v4.64.2]
-
-- [#1477](https://github.com/Kilo-Org/kilocode/pull/1477) [`8edf106`](https://github.com/Kilo-Org/kilocode/commit/8edf1063d308f36074e10d68cf8418d0f20665d6) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Prevent selection of incompatible providers when you switch models
-
-## [v4.64.1]
-
-- [#1474](https://github.com/Kilo-Org/kilocode/pull/1474) [`7efe383`](https://github.com/Kilo-Org/kilocode/commit/7efe383628f91b7977c0cffcdfc0a7a226ab1f01) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Inline Assist Telemetry
-
-## [v4.64.0]
-
-- [#1447](https://github.com/Kilo-Org/kilocode/pull/1447) [`38d135e`](https://github.com/Kilo-Org/kilocode/commit/38d135eafc395fe5c9883fbe9fcd79941a21e0ce) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - (retry) The Task view now shows per-request cost when using the Kilo Code provider
-
-## [v4.63.2]
-
-- [#1462](https://github.com/Kilo-Org/kilocode/pull/1462) [`54f09c6`](https://github.com/Kilo-Org/kilocode/commit/54f09c6edbd9ea13ebbd645fad9de5a448d5a11d) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Kilo Code no longer uses Gemini 2.5 Pro after a fresh install/reset while showing Sonnet 3.7
-
-- [#1471](https://github.com/Kilo-Org/kilocode/pull/1471) [`d95b409`](https://github.com/Kilo-Org/kilocode/commit/d95b40981715fffbfe62d1fc4e54472195db1f2c) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Fix Kilo Code profile persist of Routing Provider
-
-## [v4.63.1]
-
-- [#1460](https://github.com/Kilo-Org/kilocode/pull/1460) [`415ea90`](https://github.com/Kilo-Org/kilocode/commit/415ea904e8b9ddd35ce1e4a894411f3679c94922) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improve label of todo list toggle
-
-## [v4.63.0]
-
-- [#1451](https://github.com/Kilo-Org/kilocode/pull/1451) [`66b5892`](https://github.com/Kilo-Org/kilocode/commit/66b5892fbc56d88372ba2ad87118f8696ccbd366) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Add toggles that disable Inline Assist features to the Settings panel
-
-- [#1450](https://github.com/Kilo-Org/kilocode/pull/1450) [`077dba2`](https://github.com/Kilo-Org/kilocode/commit/077dba2964ad99bea5f57d9db1718063abd08a18) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add todo list tool enable checkbox to provider advanced settings (thanks @daniel-lxs, @mrubens!)
-
-- [#1443](https://github.com/Kilo-Org/kilocode/pull/1443) [`eba422a`](https://github.com/Kilo-Org/kilocode/commit/eba422acb01017cc9c7465f414836ff9f14bc86c) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Adds support for changing the Kilo Code providers routing strategy
-
-    You can now select the OpenRouter provider to process your Kilo Code requests.
-
-### Patch Changes
-
-- [#1454](https://github.com/Kilo-Org/kilocode/pull/1454) [`b34b55a`](https://github.com/Kilo-Org/kilocode/commit/b34b55a3f074f14bdfc28bb1998cd91fdf74b0b5) Thanks [@chainedcoder](https://github.com/chainedcoder)! - Load project ID from Gemini CLI's .env file
-
-- [#1448](https://github.com/Kilo-Org/kilocode/pull/1448) [`4e9118b`](https://github.com/Kilo-Org/kilocode/commit/4e9118b7c876c2d2620f2b72503ec17b85ec0539) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Removed language support for Filipino, Greek and Swedish because usage is very low. We can re-add these languages if there is demand.
-
-## [v4.62.0]
-
-- [#1386](https://github.com/Kilo-Org/kilocode/pull/1386) [`48fb539`](https://github.com/Kilo-Org/kilocode/commit/48fb5392a962279463d8db225559db42f32d4ad8) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Include changes from Roo Code v3.23.14
-
-    - Fix Mermaid syntax warning (thanks @MuriloFP!)
-    - Expand Vertex AI region config to include all available regions in GCP Vertex AI (thanks @shubhamgupta731!)
-    - Handle Qdrant vector dimension mismatch when switching embedding models (thanks @daniel-lxs!)
-    - Fix typos in comment & document (thanks @noritaka1166!)
-    - Improve the display of codebase search results
-    - Correct translation fallback logic for embedding errors (thanks @daniel-lxs!)
-    - Clean up MCP tool disabling
-    - Link to marketplace from modes and MCP tab
-    - Fix TTS button display (thanks @sensei-woo!)
-    - Add Devstral Medium model support
-    - Add comprehensive error telemetry to code-index service (thanks @daniel-lxs!)
-    - Exclude cache tokens from context window calculation (thanks @daniel-lxs!)
-    - Enable dynamic tool selection in architect mode for context discovery
-    - Add configurable max output tokens setting for claude-code
-    - Add enable/disable toggle for code indexing (thanks @daniel-lxs!)
-    - Add a command auto-deny list to auto-approve settings
-    - Add navigation link to history tab in HistoryPreview
-    - Enable Claude Code provider to run natively on Windows (thanks @SannidhyaSah!)
-    - Add gemini-embedding-001 model to code-index service (thanks @daniel-lxs!)
-    - Resolve vector dimension mismatch error when switching embedding models
-    - Return the cwd in the exec tool's response so that the model is not lost after subsequent calls (thanks @chris-garrett!)
-    - Add configurable timeout for command execution in VS Code settings
-    - Prioritize built-in model dimensions over custom dimensions (thanks @daniel-lxs!)
-    - Add padding to the index model options
-    - Add Kimi K2 model to Groq along with fixes to context condensing math
-    - Add Cmd+Shift+. keyboard shortcut for previous mode switching
-    - Update the max-token calculation in model-params to better support Kimi K2 and others
-    - Add the ability to "undo" enhance prompt changes
-    - Fix a bug where the path component of the baseURL for the LiteLLM provider contains path in it (thanks @ChuKhaLi)
-    - Add support for Vertex AI model name formatting when using Claude Code with Vertex AI (thanks @janaki-sasidhar)
-    - The list-files tool must include at least the first-level directory contents (thanks @qdaxb)
-    - Add a configurable limit that controls both consecutive errors and tool repetitions (thanks @MuriloFP)
-    - Add `.terraform/` and `.terragrunt-cache/` directories to the checkpoint exclusion patterns (thanks @MuriloFP)
-    - Increase Ollama API timeout values (thanks @daniel-lxs)
-    - Fix an issue where you need to "discard changes" before saving even though there are no settings changes
-    - Fix `DirectoryScanner` memory leak and improve file limit handling (thanks @daniel-lxs)
-    - Fix time formatting in environment (thanks @chrarnoldus)
-    - Prevent empty mode names from being saved (thanks @daniel-lxs)
-    - Improve auto-approve checkbox UX
-    - Improve the chat message edit / delete functionality (thanks @liwilliam2021)
-    - Add `commandExecutionTimeout` to `GlobalSettings`
-    - Log api-initiated tasks to a tmp directory
-
-### Patch Changes
-
-- [#1154](https://github.com/Kilo-Org/kilocode/pull/1154) [`d871e5e`](https://github.com/Kilo-Org/kilocode/commit/d871e5efb88050d2b4795e8b463e336342dbe550) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Update the Kilo code icon to adapt to light/dark themes
-
-- [#1396](https://github.com/Kilo-Org/kilocode/pull/1396) [`2c46e91`](https://github.com/Kilo-Org/kilocode/commit/2c46e913bba7699eb3bc1425dbe898217f7ee9fe) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Adds new Settings page for Inline Assist
-
-    You can now select the provider you'd like to use for `Inline Assist` commands
-
-## [v4.61.1]
-
-- [#1435](https://github.com/Kilo-Org/kilocode/pull/1435) [`05b5bf4`](https://github.com/Kilo-Org/kilocode/commit/05b5bf400fd195109aa8b2bada01b843acc58318) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Revert "Show per-request cost for Kilo Code provider"
-
-## [v4.61.0]
-
-- [#1431](https://github.com/Kilo-Org/kilocode/pull/1431) [`97a9b97`](https://github.com/Kilo-Org/kilocode/commit/97a9b97de865e3f2d12a956ceaceda12c13505e3) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The Task view now shows per-request cost when using the Kilo Code provider
-
-### Patch Changes
-
-- [#1408](https://github.com/Kilo-Org/kilocode/pull/1408) [`cb5132f`](https://github.com/Kilo-Org/kilocode/commit/cb5132f3faa1f7670c438a201274cbc249a8f68d) Thanks [@markijbema](https://github.com/markijbema)! - Log out kilo code provider when resetting data
-
-- [#1421](https://github.com/Kilo-Org/kilocode/pull/1421) [`841bca9`](https://github.com/Kilo-Org/kilocode/commit/841bca9348434db5d3a5a7fa1c7a821816a23a3f) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed an issue where Kilo Code would inadvertently steal focus
-
-## [v4.60.0]
-
-- [#1354](https://github.com/Kilo-Org/kilocode/pull/1354) [`e6d031d`](https://github.com/Kilo-Org/kilocode/commit/e6d031d77621d38769efd612c04e03137db084de) Thanks [@hassoncs](https://github.com/hassoncs)! - Commit message generation now works with multi-root workspaces
-
-### Patch Changes
-
-- [#1377](https://github.com/Kilo-Org/kilocode/pull/1377) [`185f068`](https://github.com/Kilo-Org/kilocode/commit/185f06891fd1b62114252c10c13ca875321ebe42) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Kilo Code no longer binds to the Ctrl+Shift+K combination
-
-## [v4.59.2]
-
-- [#1364](https://github.com/Kilo-Org/kilocode/pull/1364) [`aaef06f`](https://github.com/Kilo-Org/kilocode/commit/aaef06f9923a31bf1054a06f249ea32d97459c7b) Thanks [@NyxJae](https://github.com/NyxJae)! - Improved some autocomplete-related non-English texts
-
-## [v4.59.1]
-
-- [#1362](https://github.com/Kilo-Org/kilocode/pull/1362) [`08486c4`](https://github.com/Kilo-Org/kilocode/commit/08486c4ac186da2ab7dc02cc8012e77dcae96cce) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed excessive "Kilo Code is having trouble" warnings when the browser tool is scrolling
-
-## [v4.59.0]
-
-- [#1244](https://github.com/Kilo-Org/kilocode/pull/1244) [`8b50f8e`](https://github.com/Kilo-Org/kilocode/commit/8b50f8eb558dc7c3a8667086660ff3c2f5f29788) Thanks [@hassoncs](https://github.com/hassoncs)! - New: Inline Assist Commands
-
-    We've added two new commands that allow you to get AI assistance directly in the code editor. There's no need to start a whole new Kilo task if you just need a quick result. You can even use this while a task is running, speeding up your workflow!
-
-    ⚡️ Quick Inline Tasks (Cmd/Ctl+I)
-    Only need a quick change? Select some code (or don't!) and hit Cmd+I. Describe your goal in plain English ("create a React component with these props", "add error handling to this function"), and get ready-to-use suggestions directly in your editor.
-
-    🧠 Let Kilo Decide (Cmd/Ctl+L)
-    Think the change you need is obvious? Just hit Cmd+L. Kilo will use the surrounding context to offer immediate improvements, keeping you in the flow.
-
-    ⌨️ Live in Your Keyboard
-    Use your arrow keys (↑/↓) to cycle through the options and see a live diff of the changes. Happy with a suggestion? Hit Tab to apply it. That's it. No mouse needed.
-
-### Patch Changes
-
-- [#1359](https://github.com/Kilo-Org/kilocode/pull/1359) [`fbff6cb`](https://github.com/Kilo-Org/kilocode/commit/fbff6cb78472c763b625356dc881ad66c044b0d3) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix positioning of send button in RTL languages
-
-## [v4.58.4]
-
-- [#1349](https://github.com/Kilo-Org/kilocode/pull/1349) [`9f5bb71`](https://github.com/Kilo-Org/kilocode/commit/9f5bb715a086676472f7a5674911b45d230cc970) Thanks [@hassoncs](https://github.com/hassoncs)! - Enhance Prompt feature now works with Claude Code provider
-
-## [v4.58.3]
-
-- [#1348](https://github.com/Kilo-Org/kilocode/pull/1348) [`f83d1d7`](https://github.com/Kilo-Org/kilocode/commit/f83d1d76fa5c42b11cf9821d6b577d5af3d60a79) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add enable/disable toggle for code indexing (thanks @daniel-lxs!)
-
-- [#1328](https://github.com/Kilo-Org/kilocode/pull/1328) [`584225a`](https://github.com/Kilo-Org/kilocode/commit/584225af82a42d840d7daab4a837f1c65ad675fc) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed "Kilo" being inadvertenly translated in some languages (e.g. Кіло, กิโล, キロ)
-
-## [v4.58.2]
-
-- [#1340](https://github.com/Kilo-Org/kilocode/pull/1340) [`1a367c9`](https://github.com/Kilo-Org/kilocode/commit/1a367c943cd423f86c3ab25afe7b43f9d489147b) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add gemini-embedding-001 model to code-index service (thanks @daniel-lxs!)
-
-## [v4.58.1]
-
-- [#1305](https://github.com/Kilo-Org/kilocode/pull/1305) [`34456ee`](https://github.com/Kilo-Org/kilocode/commit/34456eebad9606e5aaee6bff4991a187e8f99573) Thanks [@cobra91](https://github.com/cobra91)! - French localization has been improved
-
-- [#1332](https://github.com/Kilo-Org/kilocode/pull/1332) [`8863e50`](https://github.com/Kilo-Org/kilocode/commit/8863e505e48f80c3d244427b3249eca122791913) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix max_tokens limit for moonshotai/kimi-k2-instruct on Groq
-
-## [v4.58.0]
-
-- [#1272](https://github.com/Kilo-Org/kilocode/pull/1272) [`8026793`](https://github.com/Kilo-Org/kilocode/commit/80267936053b1fbaf4eaf00ef0cbf770cc619fcf) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.23.6
-
-    - Move codebase indexing out of experimental (thanks @daniel-lxs and @MuriloFP!)
-    - Add todo list tool (thanks @qdaxb!)
-    - Fix code index secret persistence and improve settings UX (thanks @daniel-lxs!)
-    - Add Gemini embedding provider for codebase indexing (thanks @SannidhyaSah!)
-    - Support full endpoint URLs in OpenAI Compatible provider (thanks @SannidhyaSah!)
-    - Add markdown support to codebase indexing (thanks @MuriloFP!)
-    - Add Search/Filter Functionality to API Provider Selection in Settings (thanks @GOODBOY008!)
-    - Add configurable max search results (thanks @MuriloFP!)
-    - Add copy prompt button to task actions (thanks @Juice10 and @vultrnerd!)
-    - Fix insertContentTool to create new files with content (thanks @Ruakij!)
-    - Fix typescript compiler watch path inconsistency (thanks @bbenshalom!)
-    - Use actual max_completion_tokens from OpenRouter API (thanks @shariqriazz!)
-    - Prevent completion sound from replaying when reopening completed tasks (thanks @SannidhyaSah!)
-    - Fix access_mcp_resource fails to handle images correctly (thanks @s97712!)
-    - Prevent chatbox focus loss during automated file editing (thanks @hannesrudolph!)
-    - Resolve intermittent hangs and lack of clear error feedback in apply_diff tool (thanks @lhish!)
-    - Resolve Go duplicate references in tree-sitter queries (thanks @MuriloFP!)
-    - Chat UI consistency and layout shifts (thanks @seedlord!)
-    - Chat index UI enhancements (thanks @MuriloFP!)
-    - Fix model search being prefilled on dropdown (thanks @kevinvandijk!)
-    - Improve chat UI - add camera icon margin and make placeholder non-selectable (thanks @MuriloFP!)
-    - Delete .roo/rules-{mode} folder when custom mode is deleted
-    - Enforce file restrictions for all edit tools in architect mode
-    - Add User-Agent header to API providers
-    - Fix auto question timer unmount (thanks @liwilliam2021!)
-    - Fix new_task tool streaming issue
-    - Optimize file listing when maxWorkspaceFiles is 0 (thanks @daniel-lxs!)
-    - Correct export/import of OpenAI Compatible codebase indexing settings (thanks @MuriloFP!)
-    - Resolve workspace path inconsistency in code indexing for multi-workspace scenarios
-    - Always show the code indexing dot under the chat text area
-    - Fix bug where auto-approval was intermittently failing
-    - Remove erroneous line from announcement modal
-    - Update chat area icons for better discoverability & consistency
-    - Fix a bug that allowed list_files to return directory results that should be excluded by .gitignore
-    - Add an overflow header menu to make the UI a little tidier (thanks @dlab-anton)
-    - Fix a bug the issue where null custom modes configuration files cause a 'Cannot read properties of null' error (thanks @daniel-lxs!)
-    - Replace native title attributes with StandardTooltip component for consistency (thanks @daniel-lxs!)
-    - Fix: use decodeURIComponent in openFile (thanks @vivekfyi!)
-    - Fix(embeddings): Translate error messages before sending to UI (thanks @daniel-lxs!)
-    - Make account tab visible
-    - Grok 4
-
-### Patch Changes
-
-- [#1324](https://github.com/Kilo-Org/kilocode/pull/1324) [`0ff6960`](https://github.com/Kilo-Org/kilocode/commit/0ff69600cefd24190c607ca9001de5e03d7c03a7) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add Kimi K2 model to Grok (thanks @mrubens)
-
-## [v4.57.4]
-
-- [#1293](https://github.com/Kilo-Org/kilocode/pull/1293) [`2371a08`](https://github.com/Kilo-Org/kilocode/commit/2371a086199503e68bb8b2a7a909c14da60a2532) Thanks [@Autumnlight02](https://github.com/Autumnlight02)! - A few Mistral models (including devstral) were added.
-
-## [v4.57.3]
-
-- [#1297](https://github.com/Kilo-Org/kilocode/pull/1297) [`1dd349c`](https://github.com/Kilo-Org/kilocode/commit/1dd349ca12fe0a75f7b058ae1c2bd56955350c9b) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - More details are included in the "Cannot complete request, make sure you are connected and logged in with the selected provider" error message
-
-## [v4.57.2]
-
-- [#1274](https://github.com/Kilo-Org/kilocode/pull/1274) [`e9fe0da`](https://github.com/Kilo-Org/kilocode/commit/e9fe0daa60f2afdcf4ef2ce9680ca5f47faa26b2) Thanks [@raziel5746](https://github.com/raziel5746)! - ENAMETOOLONG error in Claude Code integration on Windows is resolved
-
-## [v4.57.1]
-
-- [#1280](https://github.com/Kilo-Org/kilocode/pull/1280) [`6954e16`](https://github.com/Kilo-Org/kilocode/commit/6954e1619bfd46904c80ec65ce945c5f17aa172a) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Show idea suggestions when there is no task history
-
-## [v4.57.0]
-
-- [#1265](https://github.com/Kilo-Org/kilocode/pull/1265) [`0b89829`](https://github.com/Kilo-Org/kilocode/commit/0b89829af4067acfaf2b7a13c5ee8e061d1ea6d6) Thanks [@hassoncs](https://github.com/hassoncs)! - Add 'max requests' section to the Auto-Approve Settings page
-
-## [v4.56.4]
-
-- [#1263](https://github.com/Kilo-Org/kilocode/pull/1263) [`32685c1`](https://github.com/Kilo-Org/kilocode/commit/32685c128a35ce38e3d9c27c833c3592e61e5cc0) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The current time is now provided in ISO format, which is non-ambiguous and less likely to confuse the AI.
-
-## [v4.56.3]
-
-- [#1259](https://github.com/Kilo-Org/kilocode/pull/1259) [`4d55c91`](https://github.com/Kilo-Org/kilocode/commit/4d55c9102cb72e927609b4ce07d78d1f32fe27b0) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Fix model dropdown to show Kilo Code preferred models for the Kilo Code provider first
-
-## [v4.56.2]
-
-- [#1255](https://github.com/Kilo-Org/kilocode/pull/1255) [`acc2aaf`](https://github.com/Kilo-Org/kilocode/commit/acc2aaf4fb56290424db0d6533caee507fedbd5b) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Fix autocomplete init with custom openrouter models
-
-## [v4.56.1]
-
-- [#1242](https://github.com/Kilo-Org/kilocode/pull/1242) [`c0ec484`](https://github.com/Kilo-Org/kilocode/commit/c0ec4843a286d644580bd82d8db37d5a1e46394e) Thanks [@hassoncs](https://github.com/hassoncs)! - Continue to show commit message generation progress while waiting for LLM response
-
-## [v4.56.0]
-
-- [#785](https://github.com/Kilo-Org/kilocode/pull/785) [`24cc186`](https://github.com/Kilo-Org/kilocode/commit/24cc1860fe6f220a0df95f7d81ffbd9e21022d7a) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add idea suggestion box to get you inspired with some ideas when starting out fresh
-
-## [v4.55.3]
-
-- [#1238](https://github.com/Kilo-Org/kilocode/pull/1238) [`c0b075c`](https://github.com/Kilo-Org/kilocode/commit/c0b075cd73557f2a3af1a12fcf237f66ece97f34) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add Grok 4 support (thanks @mrubens!)
-
-## [v4.55.2]
-
-- [#1183](https://github.com/Kilo-Org/kilocode/pull/1183) [`e3ba400`](https://github.com/Kilo-Org/kilocode/commit/e3ba400e17254a53b6be2147f70c4d107bdda576) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The default mode is now automatically selected if the previous mode doesn't exist anymore (this can happen with custom modes).
-
-## [v4.55.1]
-
-- [#885](https://github.com/Kilo-Org/kilocode/pull/885) [`02288f5`](https://github.com/Kilo-Org/kilocode/commit/02288f5ca7fde811a0477ba99b6d4c33dc239afb) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Improve UI responsiveness when the user cancel the current operation
-
-- [#1203](https://github.com/Kilo-Org/kilocode/pull/1203) [`5c21b8b`](https://github.com/Kilo-Org/kilocode/commit/5c21b8bcab5d584683c5c643d4075c01cd7265fe) Thanks [@hassoncs](https://github.com/hassoncs)! - Kilocode rules will now be included in the commit message generation prompt
-
-## [v4.55.0]
-
-- [#1197](https://github.com/Kilo-Org/kilocode/pull/1197) [`2ceb643`](https://github.com/Kilo-Org/kilocode/commit/2ceb643a35f4a4c04680c119b14e0072d273ee13) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Kilo Code now optionally sends error and usage data to help us fix bugs and improve the extension. No code, prompts, or personal information is ever sent. You can always opt-out in the Settings.
-
-### Patch Changes
-
-- [#1191](https://github.com/Kilo-Org/kilocode/pull/1191) [`ce2b45a`](https://github.com/Kilo-Org/kilocode/commit/ce2b45aec7845719754f892717f2c2eee548bff2) Thanks [@NyxJae](https://github.com/NyxJae)! - Improve Chinese translations
-
-- [#1194](https://github.com/Kilo-Org/kilocode/pull/1194) [`dee59c6`](https://github.com/Kilo-Org/kilocode/commit/dee59c6f8d8438fb5c8f7bf15ca7d58ed561f3be) Thanks [@markijbema](https://github.com/markijbema)! - Minor improvement to login process for Kilocode provider
-
-- [#1186](https://github.com/Kilo-Org/kilocode/pull/1186) [`e16aded`](https://github.com/Kilo-Org/kilocode/commit/e16aded354d5180fb651767c540267f3fdec70dc) Thanks [@hassoncs](https://github.com/hassoncs)! - Improve the progress bar during commit message generation
-
-## [v4.54.0]
-
-- [#1124](https://github.com/Kilo-Org/kilocode/pull/1124) [`468019d`](https://github.com/Kilo-Org/kilocode/commit/468019dc7c07e3994a5cac1103bae658befcf948) Thanks [@alexandrevilain](https://github.com/alexandrevilain)! - Allow configuring autocomplete API provider
-
-### Patch Changes
-
-- [#1187](https://github.com/Kilo-Org/kilocode/pull/1187) [`53ed102`](https://github.com/Kilo-Org/kilocode/commit/53ed102ab42d98c43acc5a5faac773bf6e114a48) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Fix multiple broken documentation links
-
-## [v4.53.0]
-
-- [#1118](https://github.com/Kilo-Org/kilocode/pull/1118) [`a9f6464`](https://github.com/Kilo-Org/kilocode/commit/a9f6464a34398256427005354fe7cc85fe58e243) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Support MCP notifications (feature from Cline)
-
-### Patch Changes
-
-- [#1158](https://github.com/Kilo-Org/kilocode/pull/1158) [`359cf61`](https://github.com/Kilo-Org/kilocode/commit/359cf61618083546f1da7604480e4147f1e843f9) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Kilo Code provider config UI rework
-
-## [v4.52.0]
-
-- [#1084](https://github.com/Kilo-Org/kilocode/pull/1084) [`c97d2f5`](https://github.com/Kilo-Org/kilocode/commit/c97d2f59edd28a875881bf29da616361bfce6fad) Thanks [@hassoncs](https://github.com/hassoncs)! - Generate commit messages based on unstaged changes if there's nothing staged
-
-## [v4.51.2]
-
-- [#1164](https://github.com/Kilo-Org/kilocode/pull/1164) [`ceed4e3`](https://github.com/Kilo-Org/kilocode/commit/ceed4e3191557c6ad6adb91e705cc462edb08ea3) Thanks [@philipvas](https://github.com/philipvas)! - Fix browser mode JSON snippets appearing in chat
-
-## [v4.51.1]
-
-- [#1163](https://github.com/Kilo-Org/kilocode/pull/1163) [`3f0592a`](https://github.com/Kilo-Org/kilocode/commit/3f0592a95282b6f2b6486b31146f322ea3324916) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Context condensing error messages are now more detailed
-
-- [#1165](https://github.com/Kilo-Org/kilocode/pull/1165) [`fe6ed81`](https://github.com/Kilo-Org/kilocode/commit/fe6ed81e73dd666043441c339e040d17dbb12aea) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Fix double scrollbar in dropdowns
-
-- [#1155](https://github.com/Kilo-Org/kilocode/pull/1155) [`2cbd9f8`](https://github.com/Kilo-Org/kilocode/commit/2cbd9f80a3d0f535d9839fefcf4812e0c59eebab) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Customer Support email address link was replaced by a web link, which works more reliably.
-
-## [v4.51.0]
-
-- [#841](https://github.com/Kilo-Org/kilocode/pull/841) [`1615ec7`](https://github.com/Kilo-Org/kilocode/commit/1615ec74cec2198d49cf1cd6942d883c0b717f4f) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Quick model selector on the chatbox
-
-- [#1149](https://github.com/Kilo-Org/kilocode/pull/1149) [`62786a8`](https://github.com/Kilo-Org/kilocode/commit/62786a8d09e42f51ac61c15216a168c172e87785) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.22.6
-
-    - Add timer-based auto approve for follow up questions (thanks @liwilliam2021!)
-    - Add import/export modes functionality
-    - Add persistent version indicator on chat screen
-    - Add automatic configuration import on extension startup (thanks @takakoutso!)
-    - Add user-configurable search score threshold slider for semantic search (thanks @hannesrudolph!)
-    - Add default headers and testing for litellm fetcher (thanks @andrewshu2000!)
-    - Fix consistent cancellation error messages for thinking vs streaming phases
-    - Fix AWS Bedrock cross-region inference profile mapping (thanks @KevinZhao!)
-    - Fix URL loading timeout issues in @ mentions (thanks @MuriloFP!)
-    - Fix API retry exponential backoff capped at 10 minutes (thanks @MuriloFP!)
-    - Fix Qdrant URL field auto-filling with default value (thanks @SannidhyaSah!)
-    - Fix profile context condensation threshold (thanks @PaperBoardOfficial!)
-    - Fix apply_diff tool documentation for multi-file capabilities
-    - Fix cache files excluded from rules compilation (thanks @MuriloFP!)
-    - Add streamlined extension installation and documentation (thanks @devxpain!)
-    - Prevent Architect mode from providing time estimates
-    - Remove context size from environment details
-    - Change default mode to architect for new installations
-    - Suppress Mermaid error rendering
-    - Improve Mermaid buttons with light background in light mode (thanks @chrarnoldus!)
-    - Add .vscode/ to write-protected files/directories
-    - Update AWS Bedrock cross-region inference profile mapping (thanks @KevinZhao!)
-
-## [v4.50.0]
-
-- [#1111](https://github.com/Kilo-Org/kilocode/pull/1111) [`fe40949`](https://github.com/Kilo-Org/kilocode/commit/fe4094938ffc14fdbc19fde874a45d80f0431c6c) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Make MCP server toggles easier accessible with button in the top bar
-
-### Patch Changes
-
-- [#967](https://github.com/Kilo-Org/kilocode/pull/967) [`cd574a5`](https://github.com/Kilo-Org/kilocode/commit/cd574a5d1076c671a7abe2ca5f0f6c45fd524cd7) Thanks [@catrielmuller](https://github.com/catrielmuller)! - System Notification Setting
-
-## [v4.49.5]
-
-- [#1083](https://github.com/Kilo-Org/kilocode/pull/1083) [`d2f5c4f`](https://github.com/Kilo-Org/kilocode/commit/d2f5c4f3448bcf573663a8bef96a044b1f7f287e) Thanks [@IAmABear](https://github.com/IAmABear)! - Fix project mcp settings button not opening file
-
-- [#1107](https://github.com/Kilo-Org/kilocode/pull/1107) [`77cdbc9`](https://github.com/Kilo-Org/kilocode/commit/77cdbc9c3f70393ca9f1de15898a1ef74c107834) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Exclude binary and cache files from rules compilation
-
-## [v4.49.4]
-
-- [#942](https://github.com/Kilo-Org/kilocode/pull/942) [`873e6c8`](https://github.com/Kilo-Org/kilocode/commit/873e6c8f671f5505e6fca8c7ed19ac5e89c73d43) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix auto-generate commit message fails when git diff too large
-
-    Now we automatically exclude lockfiles when generating commit message diffs to avoid overflowing the context window.
-
-- [#956](https://github.com/Kilo-Org/kilocode/pull/956) [`7219c34`](https://github.com/Kilo-Org/kilocode/commit/7219c342501d36b6e85a15ae09f3eed2796d0f7a) Thanks [@markijbema](https://github.com/markijbema)! - do not autocomplete when we are indenting a line
-
-- [#1060](https://github.com/Kilo-Org/kilocode/pull/1060) [`8b149e1`](https://github.com/Kilo-Org/kilocode/commit/8b149e1e54319d2b6737ad7ed5a65ad4e921240f) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Fix model search being prefilled in dropdown to prevent confusion in available models
-
-## [v4.49.3]
-
-- [#981](https://github.com/Kilo-Org/kilocode/pull/981) [`66a4d0f`](https://github.com/Kilo-Org/kilocode/commit/66a4d0f58821e4321f6c127bbbf95d96450ba054) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - No longer steal focus from the chat text area when a file is being edited.
-
-## [v4.49.2]
-
-- [#947](https://github.com/Kilo-Org/kilocode/pull/947) [`eae4b74`](https://github.com/Kilo-Org/kilocode/commit/eae4b74a68720013c30547865ad9423e0154b89a) Thanks [@kamilchm](https://github.com/kamilchm)! - Add support for project id set in env.GOOGLE_CLOUD_PROJECT for Gemini CLI (thanks @kamilchm!)
-
-## [v4.49.1]
-
-- [#949](https://github.com/Kilo-Org/kilocode/pull/949) [`1043c8b`](https://github.com/Kilo-Org/kilocode/commit/1043c8b3484bfe18baa0a0267f3a967469a84b4c) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Mermaid diagram toolbar is now light in light mode (bugfix)
-
-- [#945](https://github.com/Kilo-Org/kilocode/pull/945) [`e3580b8`](https://github.com/Kilo-Org/kilocode/commit/e3580b83cdf59cec0e2b0ae22975d87cd0218329) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Improved Arabic translation by AL38lAlmdbeR
-
-## [v4.49.0]
-
-- [#894](https://github.com/Kilo-Org/kilocode/pull/894) [`421d57e`](https://github.com/Kilo-Org/kilocode/commit/421d57e44537b13760551e0a1484aae1e8735bc7) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Kilo Code will no longer process file reads or MCP tool outputs if the estimated size is over 80% of the context window. If this behavior breaks your workflow, it can be re-enabled by checking Settings > Context > Allow very large file reads.
-
-- [#929](https://github.com/Kilo-Org/kilocode/pull/929) [`641d264`](https://github.com/Kilo-Org/kilocode/commit/641d2647d57049b6633664d6f9b31c6986684e00) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Edit and resend user feedback messages
-
-### Patch Changes
-
-- [#938](https://github.com/Kilo-Org/kilocode/pull/938) [`a606053`](https://github.com/Kilo-Org/kilocode/commit/a606053a3b55b140bab9ebc4bf3ae53969380644) Thanks [@markijbema](https://github.com/markijbema)! - Add debugging info for when we cannot read a task file
-
-- [#943](https://github.com/Kilo-Org/kilocode/pull/943) [`8178463`](https://github.com/Kilo-Org/kilocode/commit/81784632209960e93ffedf9c9b08235a12c238d5) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Fix checkpoints do not always include a revert option
-
-## [v4.48.0]
-
-- [#926](https://github.com/Kilo-Org/kilocode/pull/926) [`75b6c80`](https://github.com/Kilo-Org/kilocode/commit/75b6c80878f61f9f5d2b0c7499bee56eb8f09d06) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Arabic translation added (support for right-to-left languages is experimental)
-
-- [#930](https://github.com/Kilo-Org/kilocode/pull/930) [`047b30e`](https://github.com/Kilo-Org/kilocode/commit/047b30ec1ca8b30c86ad7708dea16bf404ed94f8) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.22.4
-
-    - Fix: resolve E2BIG error by passing large prompts via stdin to Claude CLI (thanks @Fovty!)
-    - Add optional mode suggestions to follow-up questions
-    - Restore JSON backwards compatibility for .roomodes files (thanks @daniel-lxs!)
-    - Fix: eliminate XSS vulnerability in CodeBlock component (thanks @KJ7LNW!)
-    - Fix terminal keyboard shortcut error when adding content to context (thanks @MuriloFP!)
-    - Fix checkpoint popover not opening due to StandardTooltip wrapper conflict (thanks @daniel-lxs!)
-    - Fix(i18n): correct gemini cli error translation paths (thanks @daniel-lxs!)
-    - Code Index (Qdrant) recreate services when change configurations (thanks @catrielmuller!)
-    - Fix undefined mcp command (thanks @qdaxb!)
-    - Use upstream_inference_cost for OpenRouter BYOK cost calculation and show cached token count (thanks @chrarnoldus!)
-    - Update maxTokens value for qwen/qwen3-32b model on Groq (thanks @KanTakahiro!)
-    - Standardize tooltip delays to 300ms
-    - Add support for loading rules from a global .kilocode directory (thanks @samhvw8!)
-    - Modes selector improvements (thanks @brunobergher!)
-    - Use safeWriteJson for all JSON file writes to avoid task history corruption (thanks @KJ7LNW!)
-    - Improve YAML error handling when editing modes
-    - Add default task names for empty tasks (thanks @daniel-lxs!)
-    - Improve translation workflow to avoid unnecessary file reads (thanks @KJ7LNW!)
-    - Allow write_to_file to handle newline-only and empty content (thanks @Githubguy132010!)
-    - Address multiple memory leaks in CodeBlock component (thanks @kiwina!)
-    - Memory cleanup (thanks @xyOz-dev!)
-    - Fix port handling bug in code indexing for HTTPS URLs (thanks @benashby!)
-    - Improve Bedrock error handling for throttling and streaming contexts
-    - Handle long Claude code messages (thanks @daniel-lxs!)
-    - Fixes to Claude Code caching and image upload
-    - Disable reasoning budget UI controls for Claude Code provider
-    - Remove temperature parameter for Azure OpenAI reasoning models (thanks @ExactDoug!)
-    - Add VS Code setting to disable quick fix context actions (thanks @OlegOAndreev!)
-
-### Patch Changes
-
-- [#931](https://github.com/Kilo-Org/kilocode/pull/931) [`351ebde`](https://github.com/Kilo-Org/kilocode/commit/351ebdec10833328ec9069ddacb41ea37660eae8) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The /newtask command now starts a task more reliably.
-
-## [v4.47.0]
-
-- [#905](https://github.com/Kilo-Org/kilocode/pull/905) [`4224ba9`](https://github.com/Kilo-Org/kilocode/commit/4224ba978c4ebd5eeee7bc879bc3d860f36a64fb) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Improve MCP marketplace and installed MCP servers views (thanks Roo Code!)
-
-## [v4.46.0]
-
-- [#921](https://github.com/Kilo-Org/kilocode/pull/921) [`4d0d1ed`](https://github.com/Kilo-Org/kilocode/commit/4d0d1ed6081266a24b3b715f3450a5bd82718dbb) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Enable browser tool for Gemini, GPT and all other models that can read images
-
-### Patch Changes
-
-- [#889](https://github.com/Kilo-Org/kilocode/pull/889) [`7f72a33`](https://github.com/Kilo-Org/kilocode/commit/7f72a33278100f3a7679d7b2761f1380a54bfc90) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Refresh CodeIndex Services (Qdrant) when change the configuration
-
-- [#911](https://github.com/Kilo-Org/kilocode/pull/911) [`ef17629`](https://github.com/Kilo-Org/kilocode/commit/ef17629f278e759345ae4aa4bb3ea27006ff7918) Thanks [@NyxJae](https://github.com/NyxJae)! - Improve Chinese translation: Kilo Code should be a proper noun
-
-- [#910](https://github.com/Kilo-Org/kilocode/pull/910) [`91ce5a6`](https://github.com/Kilo-Org/kilocode/commit/91ce5a649f7b2d9cb0911b3b5c4fcf3a133b420a) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix not being able to open Mermaid diagrams in a tab or save them
-
-## [v4.45.0]
-
-- [#867](https://github.com/Kilo-Org/kilocode/pull/867) [`717823f`](https://github.com/Kilo-Org/kilocode/commit/717823f40419bda32813b3e1f9f357fdabfa89df) Thanks [@Juice10](https://github.com/Juice10)! - Add copy prompt button to task actions. Based on [@vultrnerd's feedback](https://github.com/Kilo-Org/kilocode/discussions/850).
-
-### Patch Changes
-
-- [#890](https://github.com/Kilo-Org/kilocode/pull/890) [`1a35cfe`](https://github.com/Kilo-Org/kilocode/commit/1a35cfe2c0dbfee68c09c7abeb42199e8713095f) Thanks [@hassoncs](https://github.com/hassoncs)! - Only show the colorful gutter bars when hovering over the Task Timeline
-
-## [v4.44.1]
-
-### Patch Changes
-
-- [#887](https://github.com/Kilo-Org/kilocode/pull/887) [`df10163`](https://github.com/Kilo-Org/kilocode/commit/df101636d0f9851b2f3ee4820c84cb09b3c41f33) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Update text on welcome screen
-
-- [#886](https://github.com/Kilo-Org/kilocode/pull/886) [`084cee7`](https://github.com/Kilo-Org/kilocode/commit/084cee76dc59a2f83ddf36dfdf71666f89a2898a) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed crashes with the error message "Bad substitution" and "Cannot read properties of undefined (reading 'includes')"
-
-## [v4.44.0]
-
-- [#881](https://github.com/Kilo-Org/kilocode/pull/881) [`30836f4`](https://github.com/Kilo-Org/kilocode/commit/30836f4d11a02769787af91c552789c14118ebdf) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add support for Gemini CLI provider (thanks Roo & Cline!)
-
-## [v4.43.1]
-
-- [#842](https://github.com/Kilo-Org/kilocode/pull/842) [`32e4c30`](https://github.com/Kilo-Org/kilocode/commit/32e4c304506b4042b76265446a3169206eb243a5) Thanks [@markijbema](https://github.com/markijbema)! - add a button to fix mermaid syntax errors by calling the LLM
-
-## [v4.43.0]
-
-- [#871](https://github.com/Kilo-Org/kilocode/pull/871) [`52f216d`](https://github.com/Kilo-Org/kilocode/commit/52f216de21ea5be0366976a9108e3c9edd993620) Thanks [@hassoncs](https://github.com/hassoncs)! - Add a colorful gutter to chat messages corresponding to the Task Timeline
-
-- [#861](https://github.com/Kilo-Org/kilocode/pull/861) [`8e9df82`](https://github.com/Kilo-Org/kilocode/commit/8e9df820f22b3ea833a00dc490ad05bfaa6f1645) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Add language support for Filipino, Thai, Ukrainian, Czech, Greek and Swedish
-
-- [#847](https://github.com/Kilo-Org/kilocode/pull/847) [`fbe3c75`](https://github.com/Kilo-Org/kilocode/commit/fbe3c75c1fbaf2b16cea43554cf7e9be2ef8849f) Thanks [@hassoncs](https://github.com/hassoncs)! - Highlight the context window progress bar red when near the limit
-
-### Patch Changes
-
-- [#853](https://github.com/Kilo-Org/kilocode/pull/853) [`e9452f1`](https://github.com/Kilo-Org/kilocode/commit/e9452f11035c8daa40c5afd752bad4c18f7f3f64) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix @ mentions not working after slash commands
-
-- [#854](https://github.com/Kilo-Org/kilocode/pull/854) [`81d8b06`](https://github.com/Kilo-Org/kilocode/commit/81d8b0657ec045efa67b41bb7af493ef4753a8ae) Thanks [@catrielmuller](https://github.com/catrielmuller)! - Fix allowed commands export/import
-
-- [#871](https://github.com/Kilo-Org/kilocode/pull/871) [`52f216d`](https://github.com/Kilo-Org/kilocode/commit/52f216de21ea5be0366976a9108e3c9edd993620) Thanks [@hassoncs](https://github.com/hassoncs)! - Enable the Task Timeline by default
-
-## [v4.42.0]
-
-- [#844](https://github.com/Kilo-Org/kilocode/pull/844) [`8f33721`](https://github.com/Kilo-Org/kilocode/commit/8f3372102d8a06cfbe0dd2889287befea6a347a4) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.21.5
-
-    - Fix Qdrant URL prefix handling for QdrantClient initialization (thanks @CW-B-W!)
-    - Improve LM Studio model detection to show all downloaded models (thanks @daniel-lxs!)
-    - Resolve Claude Code provider JSON parsing and reasoning block display
-    - Fix start line not working in multiple apply diff (thanks @samhvw8!)
-    - Resolve diff editor issues with markdown preview associations (thanks @daniel-lxs!)
-    - Resolve URL port handling bug for HTTPS URLs in Qdrant (thanks @benashby!)
-    - Mark unused Ollama schema properties as optional (thanks @daniel-lxs!)
-    - Close the local browser when used as fallback for remote (thanks @markijbema!)
-    - Add Claude Code provider for local CLI integration (thanks @BarreiroT!)
-    - Add profile-specific context condensing thresholds (thanks @SannidhyaSah!)
-    - Fix context length for lmstudio and ollama (thanks @thecolorblue!)
-    - Resolve MCP tool eye icon state and hide in chat context (thanks @daniel-lxs!)
-    - Add LaTeX math equation rendering in chat window
-    - Add toggle for excluding MCP server tools from the prompt (thanks @Rexarrior!)
-    - Add symlink support to list_files tool
-    - Fix marketplace blanking after populating
-    - Fix recursive directory scanning in @ mention "Add Folder" functionality (thanks @village-way!)
-    - Resolve phantom subtask display on cancel during API retry
-    - Correct Gemini 2.5 Flash pricing (thanks @daniel-lxs!)
-    - Resolve marketplace timeout issues and display installed MCPs (thanks @daniel-lxs!)
-    - Onboarding tweaks to emphasize modes (thanks @brunobergher!)
-    - Rename 'Boomerang Tasks' to 'Task Orchestration' for clarity
-    - Remove command execution from attempt_completion
-    - Fix markdown for links followed by punctuation (thanks @xyOz-dev!)
-
-### Patch Changes
-
-- [#845](https://github.com/Kilo-Org/kilocode/pull/845) [`8e53c23`](https://github.com/Kilo-Org/kilocode/commit/8e53c237151787523f7338037d5442e9e0225e94) Thanks [@hassoncs](https://github.com/hassoncs)! - Improved Task Timeline tooltips
-
-- [#825](https://github.com/Kilo-Org/kilocode/pull/825) [`b7b7f8c`](https://github.com/Kilo-Org/kilocode/commit/b7b7f8c165a0b85f504076432e2fa4ce695077b8) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Show number of cache reads for Gemini models
-
-## [v4.41.0]
-
-- [#794](https://github.com/Kilo-Org/kilocode/pull/794) [`7113260`](https://github.com/Kilo-Org/kilocode/commit/711326037cbb38db49f6a2d12671c7974a981787) Thanks [@markijbema](https://github.com/markijbema)! - Include changes from Roo Code v3.21.1
-
-    - Fix tree-sitter issues that were preventing codebase indexing from working correctly
-    - Improve error handling for codebase search embeddings
-    - Resolve MCP server execution on Windows with node version managers
-    - Default 'Enable MCP Server Creation' to false
-    - Rate limit correctly when starting a subtask (thanks @olweraltuve!)
-    - Add Gemini 2.5 models (Pro, Flash and Flash Lite) (thanks @daniel-lxs!)
-    - Add max tokens checkbox option for OpenAI compatible provider (thanks @AlexandruSmirnov!)
-    - Update provider models and prices for Groq & Mistral (thanks @KanTakahiro!)
-    - Add proper error handling for API conversation history issues (thanks @KJ7LNW!)
-    - Fix ambiguous model id error (thanks @elianiva!)
-    - Fix save/discard/revert flow for Prompt Settings (thanks @hassoncs!)
-    - Fix codebase indexing alignment with list-files hidden directory filtering (thanks @daniel-lxs!)
-    - Fix subtask completion mismatch (thanks @feifei325!)
-    - Fix Windows path normalization in MCP variable injection (thanks @daniel-lxs!)
-    - Update marketplace branding to 'Roo Marketplace' (thanks @SannidhyaSah!)
-    - Refactor to more consistent history UI (thanks @elianiva!)
-    - Adjust context menu positioning to be near Copilot
-    - Update evals Docker setup to work on Windows (thanks @StevenTCramer!)
-    - Include current working directory in terminal details
-    - Encourage use of start_line in multi-file diff to match legacy diff
-    - Always focus the panel when clicked to ensure menu buttons are visible (thanks @hassoncs!)
-
-### Patch Changes
-
-- [#829](https://github.com/Kilo-Org/kilocode/pull/829) [`8fbae6b`](https://github.com/Kilo-Org/kilocode/commit/8fbae6bf6adc6ad7f7db5a2ce5aaa8a449cc417c) Thanks [@hassoncs](https://github.com/hassoncs)! - Fixed issue causing workflows and rules not to load immediately when the extension loads
-
-## [v4.40.1]
-
-- [#801](https://github.com/Kilo-Org/kilocode/pull/801) [`e64e172`](https://github.com/Kilo-Org/kilocode/commit/e64e172b7ccc21e7d3e1e278c3ada368b19ab43f) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix minor task timeline layout shift from hidden scrollbar
-
-- [#812](https://github.com/Kilo-Org/kilocode/pull/812) [`40bb083`](https://github.com/Kilo-Org/kilocode/commit/40bb0838bdeae01a044f91579a9ce2007df390f7) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix TelemetryService not initialized error when applying diff fails
-
-## [v4.40.0]
-
-### Minor Changes
-
-- [#770](https://github.com/Kilo-Org/kilocode/pull/770) [`f2fe2f1`](https://github.com/Kilo-Org/kilocode/commit/f2fe2f1f93a97f49004072ae3feaa25edafe2b78) Thanks [@hassoncs](https://github.com/hassoncs)! - Add $WORKSPACE_ROOT environment variable to terminal sessions for easier workspace navigation
-
-    Terminal sessions now automatically include a `$WORKSPACE_ROOT` environment variable that points to your current workspace root directory. This makes it easier for the agent to run terminal commands in sub-directories, for example, running just one directory's tests: `cd $WORKSPACE_ROOT && npx jest`.
-
-    This enhancement is particularly useful when working in deeply nested directories or when you need to quickly reference files or tests at the root level. In multi-workspace setups, this points to the workspace folder containing your currently active file.
-
-## [v4.39.2]
-
-### Patch Changes
-
-- [#788](https://github.com/Kilo-Org/kilocode/pull/788) [`120f6ce`](https://github.com/Kilo-Org/kilocode/commit/120f6cee1dac1a1e05a715eee82b0bd12f127344) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix cache read stats not being shown in the Chat window
-
-## [v4.39.1]
-
-### Patch Changes
-
-- [#773](https://github.com/Kilo-Org/kilocode/pull/773) [`28b90f1`](https://github.com/Kilo-Org/kilocode/commit/28b90f14b50526c414cdc22872a9095a67d90b5c) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Rename Roo to Kilo in the diff view
-
-## [v4.39.0]
-
-- [#777](https://github.com/Kilo-Org/kilocode/pull/777) [`b04ad66`](https://github.com/Kilo-Org/kilocode/commit/b04ad661e195ca42430bd7d1c6f5a247cf3ff49b) Thanks [@markijbema](https://github.com/markijbema)! - Added Cerebras API provider (from Cline)
-
-- [#768](https://github.com/Kilo-Org/kilocode/pull/768) [`fc7a357`](https://github.com/Kilo-Org/kilocode/commit/fc7a357fa6460d54eec58800af60d335fbc71a96) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.20.3
-
-    - Resolve diff editor race condition in multi-monitor setups (thanks @daniel-lxs!)
-    - Add logic to prevent auto-approving edits of configuration files
-    - Adjust searching and listing files outside of the workspace to respect the auto-approve settings
-    - Fix multi-file diff error handling and UI feedback (thanks @daniel-lxs!)
-    - Improve prompt history navigation to not interfere with text editing (thanks @daniel-lxs!)
-    - Fix errant maxReadFileLine default
-    - Limit search_files to only look within the workspace for improved security
-    - Force tar-fs >=2.1.3 for security vulnerability fix
-    - Add cache breakpoints for custom vertex models on Unbound (thanks @pugazhendhi-m!)
-    - Reapply reasoning for bedrock with fix (thanks @daniel-lxs!)
-    - Sync BatchDiffApproval styling with BatchFilePermission for UI consistency (thanks @samhvw8!)
-    - Add max height constraint to MCP execution response for better UX (thanks @samhvw8!)
-    - Prevent MCP 'installed' label from being squeezed #4630 (thanks @daniel-lxs!)
-    - Allow a lower context condesning threshold (thanks @SECKainersdorfer!)
-    - Avoid type system duplication for cleaner codebase (thanks @EamonNerbonne!)
-    - Temporarily revert thinking support for Bedrock models
-    - Improve performance of MCP execution block
-    - Add indexing status badge to chat view
-    - Add experimental multi-file edits (thanks @samhvw8!)
-    - Move concurrent reads setting to context settings with default of 5
-    - Improve MCP execution UX (thanks @samhvw8!)
-    - Add magic variables support for MCPs with `workspaceFolder` injection (thanks @NamesMT!)
-    - Add prompt history navigation via arrow up/down in prompt field
-    - Add support for escaping context mentions (thanks @KJ7LNW!)
-    - Add DeepSeek R1 support to Chutes provider
-    - Add reasoning budget support to Bedrock models for extended thinking
-    - Add mermaid diagram support buttons (thanks @qdaxb!)
-    - Update XAI models and pricing (thanks @edwin-truthsearch-io!)
-    - Update O3 model pricing
-    - Add manual OpenAI-compatible format specification and parsing (thanks @dflatline!)
-    - Add core tools integration tests for comprehensive coverage
-    - Add JSDoc documentation for ClineAsk and ClineSay types (thanks @hannesrudolph!)
-    - Populate whenToUse descriptions for built-in modes
-    - Fix file write tool with early relPath & newContent validation checks (thanks @Ruakij!)
-    - Fix TaskItem display and copy issues with HTML tags in task messages (thanks @forestyoo!)
-    - Fix OpenRouter cost calculation with BYOK (thanks @chrarnoldus!)
-    - Fix terminal busy state reset after manual commands complete
-    - Fix undefined output on multi-file apply_diff operations (thanks @daniel-lxs!)
-
-- [#769](https://github.com/Kilo-Org/kilocode/pull/769) [`d12f4a3`](https://github.com/Kilo-Org/kilocode/commit/d12f4a358af696fa8f8877446661345125c4bb52) Thanks [@hassoncs](https://github.com/hassoncs)! - Add task timeline visualization to help you navigate chat history
-
-    We've added a new task timeline that gives you a visual overview of your conversation flow. You can click on timeline messages to quickly jump to specific points in your chat history, making it much easier to understand what happened during your session and navigate back to important moments.
-
-    This feature is available as a new setting in Display Settings. Enable it when you want that extra visibility into your task progress!
-
-## [v4.38.1]
-
-- [#747](https://github.com/Kilo-Org/kilocode/pull/747) [`943c7dd`](https://github.com/Kilo-Org/kilocode/commit/943c7ddb671ed19bb4b9a35ec32ee7898424bf31) Thanks [@markijbema](https://github.com/markijbema)! - Close the browsertool properly when a remote browser is configured but a fallback local one is used
-
-- [#746](https://github.com/Kilo-Org/kilocode/pull/746) [`701db76`](https://github.com/Kilo-Org/kilocode/commit/701db768e4bb7006cd4601983cf8ad0ab9579cda) Fix possible CSP error when loading OpenRouter endpoints from custom URL
-
-## [v4.38.0]
-
-- [#719](https://github.com/Kilo-Org/kilocode/pull/719) [`cc77370`](https://github.com/Kilo-Org/kilocode/commit/cc77370eb451348d3929ab1b94ca34af4de517f3) Thanks [@hassoncs](https://github.com/hassoncs)! - ## New Features
-
-    Add ability to customize git commit generation prompt and provider
-
-    ### Customized Commit Message Generation Prompts & Providers
-
-    - **Custom API Configuration**: Added support for selecting a specific API configuration for commit message generation in Settings > Prompts
-    - **Enhanced Commit Message Support**: Introduced a new `COMMIT_MESSAGE` support prompt type with comprehensive conventional commit format guidance
-
-    ### Bug Fixes
-
-    - The support prompts can now be saved/discarded like other settings
-
-### Patch Changes
-
-- [#706](https://github.com/Kilo-Org/kilocode/pull/706) [`48af442`](https://github.com/Kilo-Org/kilocode/commit/48af4429e0815eb6366cfa3a37015eadbd1df126) Thanks [@cobra91](https://github.com/cobra91)! - The OpenRouter provider now uses the custom base URL when fetching the model list.
-
-## [v4.37.0]
-
-### Minor Changes
-
-- [#724](https://github.com/Kilo-Org/kilocode/pull/724) [`a3d70ac`](https://github.com/Kilo-Org/kilocode/commit/a3d70ac457c41ccb01f892237c948156cea20b86) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Added support for Excel (.xlsx) files
-
-## [v4.36.0]
-
-- [#690](https://github.com/Kilo-Org/kilocode/pull/690) [`9b1451a`](https://github.com/Kilo-Org/kilocode/commit/9b1451a47bd2bc567646a4a0c2a12b42826ab9d1) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.19.7:
-
-    - Fix McpHub sidebar focus behavior to prevent unwanted focus grabbing
-    - Disable checkpoint functionality when nested git repositories are detected to prevent conflicts
-    - Remove unused Storybook components and dependencies to reduce bundle size
-    - Add data-testid ESLint rule for improved testing standards (thanks @elianiva!)
-    - Update development dependencies including eslint, knip, @types/node, i18next, fast-xml-parser, and @google/genai
-    - Improve CI infrastructure with GitHub Actions and Blacksmith runner migrations
-    - Replace explicit caching with implicit caching to reduce latency for Gemini models
-    - Clarify that the default concurrent file read limit is 15 files (thanks @olearycrew!)
-    - Fix copy button logic (thanks @samhvw8!)
-    - Fade buttons on history preview if no interaction in progress (thanks @sachasayan!)
-    - Allow MCP server refreshing, fix state changes in MCP server management UI view (thanks @taylorwilsdon!)
-    - Remove unnecessary npx usage in some npm scripts (thanks @user202729!)
-    - Bug fix for trailing slash error when using LiteLLM provider (thanks @kcwhite!)
-    - Fix Gemini 2.5 Pro Preview thinking budget bug
-    - Add Gemini Pro 06-05 model support (thanks @daniel-lxs and @shariqriazz!)
-    - Fix reading PDF, DOCX, and IPYNB files in read_file tool (thanks @samhvw8!)
-    - Fix Mermaid CSP errors with enhanced bundling strategy (thanks @KJ7LNW!)
-    - Improve model info detection for custom Bedrock ARNs (thanks @adamhill!)
-    - Add OpenAI Compatible embedder for codebase indexing (thanks @SannidhyaSah!)
-    - Fix multiple memory leaks in ChatView component (thanks @kiwina!)
-    - Fix WorkspaceTracker resource leaks by disposing FileSystemWatcher (thanks @kiwina!)
-    - Fix RooTips setTimeout cleanup to prevent state updates on unmounted components (thanks @kiwina!)
-    - Fix FileSystemWatcher leak in RooIgnoreController (thanks @kiwina!)
-    - Fix clipboard memory leak by clearing setTimeout in useCopyToClipboard (thanks @kiwina!)
-    - Fix ClineProvider instance cleanup (thanks @xyOz-dev!)
-    - Enforce codebase_search as primary tool for code understanding tasks (thanks @hannesrudolph!)
-    - Improve Docker setup for evals
-    - Move evals into pnpm workspace, switch from SQLite to Postgres
-    - Refactor MCP to use getDefaultEnvironment for stdio client transport (thanks @samhvw8!)
-    - Get rid of "partial" component in names referencing not necessarily partial messages (thanks @wkordalski!)
-    - Improve feature request template (thanks @elianiva!)
-
-- [#592](https://github.com/Kilo-Org/kilocode/pull/592) [`68c3d6e`](https://github.com/Kilo-Org/kilocode/commit/68c3d6e7a1250e08e2bd2b9cbbbd6b4312bad045) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Workflow and rules configuration screen added
-
-### Patch Changes
-
-- [#697](https://github.com/Kilo-Org/kilocode/pull/697) [`9514f22`](https://github.com/Kilo-Org/kilocode/commit/9514f22a9d77b2d838ddcb97b5f2c5909aaea68a) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add correct path to walkthrough files to show walkthrough on first load (thanks for the report @adamhill!)
-
-## [v4.35.1]
-
-- [#695](https://github.com/Kilo-Org/kilocode/pull/695) [`a7910eb`](https://github.com/Kilo-Org/kilocode/commit/a7910eba54a4ede296bfa82beddae71a1d9f77c5) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Fix: Feedback button overlaps new mode creation dialog
-
-- [#693](https://github.com/Kilo-Org/kilocode/pull/693) [`2a9edf8`](https://github.com/Kilo-Org/kilocode/commit/2a9edf85ca2062d0b296430348ebac967f28febb) Thanks [@hassoncs](https://github.com/hassoncs)! - Temporarily remove .kilocode/rule loading for commit message generation until it works better
-
-## [v4.35.0]
-
-- [#633](https://github.com/Kilo-Org/kilocode/pull/633) [`347cf9e`](https://github.com/Kilo-Org/kilocode/commit/347cf9e6dc10d5b8706af5e111ccc854f7742566) Thanks [@hassoncs](https://github.com/hassoncs)! - # AI-Powered Git Commit Message Generation
-
-    Automatically generate meaningful Git commit messages using AI
-
-    ## How It Works
-
-    1. Stage your changes in Git as usual
-    2. Click the [KILO] square icon in the Source Control panel
-    3. The AI analyzes your staged changes and generates an appropriate commit message
-    4. The generated message is automatically populated in the commit input box
-
-- [#638](https://github.com/Kilo-Org/kilocode/pull/638) [`3d2e749`](https://github.com/Kilo-Org/kilocode/commit/3d2e749d51797681c018bc390757fdabefd60620) Thanks [@tru-kilo](https://github.com/tru-kilo)! - Added ability to favorite tasks
-
-## [v4.34.1]
-
-### Patch Changes
-
-- [#612](https://github.com/Kilo-Org/kilocode/pull/612) [`793cfdd`](https://github.com/Kilo-Org/kilocode/commit/793cfdd4fc1411c63c818e14b0b6ca8c5225a859) Thanks [@HadesArchitect](https://github.com/HadesArchitect)! - - #611 Customer Support Visibility (Added links to contact customer support)
-
-- [#672](https://github.com/Kilo-Org/kilocode/pull/672) [`c3d955c`](https://github.com/Kilo-Org/kilocode/commit/c3d955c2280258601d5f4b05101710e34d540075) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fixed response times for gemini-2.5-pro-preview being very slow (minutes instead of seconds)
-
-- [#671](https://github.com/Kilo-Org/kilocode/pull/671) [`e0a3740`](https://github.com/Kilo-Org/kilocode/commit/e0a37406fe8102b1acd4f8e9005652e828a14e36) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - OpenRouter bring-your-own-key models now have much more accurate cost estimates.
-
-## [v4.34.0]
-
-### Minor Changes
-
-- [#636](https://github.com/Kilo-Org/kilocode/pull/636) [`6193029`](https://github.com/Kilo-Org/kilocode/commit/6193029fb1d5e5ec09dd57acb9547179ff01c2b1) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.19.4
-
-## [v4.33.2]
-
-### Patch Changes
-
-- [#628](https://github.com/Kilo-Org/kilocode/pull/628) [`3bfd49e`](https://github.com/Kilo-Org/kilocode/commit/3bfd49e495400d2be89f9754255a0af32db8f942) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add clarification about adding context and how to add files/images
-
-## [v4.33.1]
-
-### Patch Changes
-
-- [#614](https://github.com/Kilo-Org/kilocode/pull/614) [`1753220`](https://github.com/Kilo-Org/kilocode/commit/1753220ef0dc9e56d4017c82153c7c022609ad21) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Fix issue with attempt_completion wanting to initialize telemetry (Roo leftover), we don't want telemetry
-
-## [v4.33.0]
-
-- [#597](https://github.com/Kilo-Org/kilocode/pull/597) [`7e9789c`](https://github.com/Kilo-Org/kilocode/commit/7e9789ce160f6fa82365b8bc8b5331ea99848f73) Thanks [@hassoncs](https://github.com/hassoncs)! - Experimental Autocomplete
-
-    Introduces early support for "Kilo Complete", Kilo Code's new autocomplete engine. In this initial release, the Kilo Code provider is required and model selection isn’t yet configurable. Stay tuned for additional features, improvements to the completions, and customization options coming soon!
-
-- [#610](https://github.com/Kilo-Org/kilocode/pull/610) [`9aabc2c`](https://github.com/Kilo-Org/kilocode/commit/9aabc2cf5214408d54124c97d0309c06396ad641) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add way to go back to active agent session from profile page, resolves #556 (thanks for the issue @karrots)
-
-- [#603](https://github.com/Kilo-Org/kilocode/pull/603) [`99cb0a4`](https://github.com/Kilo-Org/kilocode/commit/99cb0a49e681b259c1089da07c9d3624a329b2a9) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.19.3
-
-### Patch Changes
-
-- [#541](https://github.com/Kilo-Org/kilocode/pull/541) [`6e14fce`](https://github.com/Kilo-Org/kilocode/commit/6e14fce02686c16482b0d5181c8fde9e4c3a7ca5) Thanks [@tru-kilo](https://github.com/tru-kilo)! - Fixed double scrollbars in profile dropdown
-
-- [#584](https://github.com/Kilo-Org/kilocode/pull/584) [`0b8b9ae`](https://github.com/Kilo-Org/kilocode/commit/0b8b9ae0cb4819d93691a6552e140197355fc980) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix being unable to select certain Kilo Code Provider Models (a similarly named but different model would be selected instead)
-
-## [v4.32.0]
-
-### Minor Changes
-
-- [#566](https://github.com/Kilo-Org/kilocode/pull/566) [`1cd5234`](https://github.com/Kilo-Org/kilocode/commit/1cd5234d01e46a53956dd22637a14a96a68b3a90) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.18.5
-
-### Patch Changes
-
-- [#568](https://github.com/Kilo-Org/kilocode/pull/568) [`d1afa39`](https://github.com/Kilo-Org/kilocode/commit/d1afa392c0285b79ce6133ed49d250baed99938a) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix Claude not supporting computer use
-
-### Minor Changes
-
-- [#561](https://github.com/Kilo-Org/kilocode/pull/561) [`4e8c7f2`](https://github.com/Kilo-Org/kilocode/commit/4e8c7f2394af0e0bef642a209acc6d6572602297) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Revert previous update, we found some issues, apologies
-
-## [v4.30.0]
-
-### Minor Changes
-
-- [#546](https://github.com/Kilo-Org/kilocode/pull/546) [`3895af3`](https://github.com/Kilo-Org/kilocode/commit/3895af359e969c60572f50d9bb89f0be1a1fa3f6) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.18.5
-
-- [#554](https://github.com/Kilo-Org/kilocode/pull/554) [`e8a6759`](https://github.com/Kilo-Org/kilocode/commit/e8a675935cb6470f5d9c0bcb84862f76c64f1e5f) Thanks [@seuros](https://github.com/seuros)! - Add fallback Support for Root-Level .mcp.json (thanks @seuros!)
-
-### Patch Changes
-
-- [#558](https://github.com/Kilo-Org/kilocode/pull/558) [`d5a0dad`](https://github.com/Kilo-Org/kilocode/commit/d5a0dad04263db3a38169b35c7bdd65600ee07e9) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Some text on the Providers Settings tab has been translated into languages other than English.
-
-- [#539](https://github.com/Kilo-Org/kilocode/pull/539) [`a5958c9`](https://github.com/Kilo-Org/kilocode/commit/a5958c9b4c361fbd84fac0e03d495f8e0c7b600e) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Include changes from Roo Code v3.18.1
-
-- [#551](https://github.com/Kilo-Org/kilocode/pull/551) [`b6bc484`](https://github.com/Kilo-Org/kilocode/commit/b6bc4845b9e545d913bc76db2dae63fb744f87d1) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Kilo Code now has a menu item label on the right side panel
-
-## [v4.29.2]
-
-- [#524](https://github.com/Kilo-Org/kilocode/pull/524) [`e1d59f1`](https://github.com/Kilo-Org/kilocode/commit/e1d59f1278916b98ac4f1fa8a02cb694633b475e) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Fix menu stops working when Kilo Code is moved between primary and secondary sidebars
-
-## [v4.29.1]
-
-- [#520](https://github.com/Kilo-Org/kilocode/pull/520) [`2e53902`](https://github.com/Kilo-Org/kilocode/commit/2e539020b1d4d19beba9c9a5929055cacd11f292) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Change recommended model to Claude 4 Sonnet
-
-## [v4.29.0]
-
-### Minor Changes
-
-- [#514](https://github.com/Kilo-Org/kilocode/pull/514) [`c3581e9`](https://github.com/Kilo-Org/kilocode/commit/c3581e9edc18b9a1d6c6a5c5465078027b5669d9) Thanks [@PeterDaveHello](https://github.com/PeterDaveHello)! - Update xAI grok-3 with non-beta versions
-
-- [#513](https://github.com/Kilo-Org/kilocode/pull/513) [`67aa950`](https://github.com/Kilo-Org/kilocode/commit/67aa950a0db745fab5490ee8245f9286fdb9dfeb) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - Include changes from Roo Code v3.18.0
-
-- [#490](https://github.com/Kilo-Org/kilocode/pull/490) [`c9693d7`](https://github.com/Kilo-Org/kilocode/commit/c9693d788b33eb7c52ffa919cc96e0f43125c971) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add Indonesian language support
-
-### Patch Changes
-
-- [#507](https://github.com/Kilo-Org/kilocode/pull/507) [`6734fd9`](https://github.com/Kilo-Org/kilocode/commit/6734fd903eaa8617369dd2a07a1a03610970017e) Thanks [@daliovic](https://github.com/daliovic)! - Also include support for claude 4 models via the Anthropic provider
-
-## [v4.28.1]
-
-- [#488](https://github.com/Kilo-Org/kilocode/pull/488) [`cd22ade`](https://github.com/Kilo-Org/kilocode/commit/cd22adee2290bb45951973584f37ed731065c63b) Thanks [@EamonNerbonne](https://github.com/EamonNerbonne)! - Enable caching for the new anthropic models
-
-## [v4.28.0]
-
-### Minor Changes
-
-- [#483](https://github.com/Kilo-Org/kilocode/pull/483) [`29cb981`](https://github.com/Kilo-Org/kilocode/commit/29cb981650b11bd9772e2b140f9739457ee6c850) Thanks [@drakonen](https://github.com/drakonen)! - Added cline's workflow tool
-
-### Patch Changes
-
-- [#484](https://github.com/Kilo-Org/kilocode/pull/484) [`dd15860`](https://github.com/Kilo-Org/kilocode/commit/dd158603d42a996094de6bce7ead5bcc5077c754) Thanks [@RSO](https://github.com/RSO)! - Fixed rendering of avatars in the Profile section
-
-## [v4.27.0]
-
-### Minor Changes
-
-- [#470](https://github.com/Kilo-Org/kilocode/pull/470) [`1715429`](https://github.com/Kilo-Org/kilocode/commit/17154292feeaa3cb364258a09e1a44916292ec3a) Thanks [@RSO](https://github.com/RSO)! - Added a profile view that shows your current Kilo Code balance
-
-- [#476](https://github.com/Kilo-Org/kilocode/pull/476) [`262e7a2`](https://github.com/Kilo-Org/kilocode/commit/262e7a23c6c8f28742d11160982454762240940e) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add /smol command (thanks Cline and @0xToshii)
-
-## [v4.26.0]
-
-### Minor Changes
-
-- [#473](https://github.com/Kilo-Org/kilocode/pull/473) [`9be2dc0`](https://github.com/Kilo-Org/kilocode/commit/9be2dc0773a00ca254d3e2f7dc92e5e06621e4d1) Thanks [@tru-kilo](https://github.com/tru-kilo)! - Added a slash reportbug command to report bugs directly from the extension to the kilocode repo
-
-- [#437](https://github.com/Kilo-Org/kilocode/pull/437) [`84a7f07`](https://github.com/Kilo-Org/kilocode/commit/84a7f07ef529c4c5a70926ae90fae5023b637fc9) Thanks [@tru-kilo](https://github.com/tru-kilo)! - Added a slash newrule command
-
-- [#442](https://github.com/Kilo-Org/kilocode/pull/442) [`b1b0f58`](https://github.com/Kilo-Org/kilocode/commit/b1b0f5857a5d86ac6b8fd455171c6fcdaef31722) Thanks [@chrarnoldus](https://github.com/chrarnoldus)! - The Kilo Code Provider now supports web-based IDEs, such as FireBase Studio, through an alternative authentication flow. The user should copy and paste the API Key manually in this case.
-
-## [v4.25.0]
-
-### Minor Changes
-
-- [#432](https://github.com/Kilo-Org/kilocode/pull/432) [`adfed7c`](https://github.com/Kilo-Org/kilocode/commit/adfed7c6df8cd9979df4ed152df8bda4017dc997) Thanks [@seuros](https://github.com/seuros)! - Support Streamable HTTP for MCP according to the [2025-03-26](https://modelcontextprotocol.io/specification/2025-03-26) spec
-
-- [#440](https://github.com/Kilo-Org/kilocode/pull/440) [`64adc9c`](https://github.com/Kilo-Org/kilocode/commit/64adc9cc5ac5ea8cbe03305d586de24dc7a989cc) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.17.2
-
-### Patch Changes
-
-- [#430](https://github.com/Kilo-Org/kilocode/pull/430) [`44ed7ad`](https://github.com/Kilo-Org/kilocode/commit/44ed7adf365d1103bed76e94458f6a661b4e382e) Thanks [@drakonen](https://github.com/drakonen)! - Added a notification when using non-kilocode-rules files
-
-- [#436](https://github.com/Kilo-Org/kilocode/pull/436) [`c6f54b7`](https://github.com/Kilo-Org/kilocode/commit/c6f54b76be170b841bfce9c36f4565f40d868979) Thanks [@RSO](https://github.com/RSO)! - Make the prompts view accessible through the topbar
-
-- [#434](https://github.com/Kilo-Org/kilocode/pull/434) [`f38e83c`](https://github.com/Kilo-Org/kilocode/commit/f38e83c3b640772bb376504ed65804e2da921fa0) Thanks [@RSO](https://github.com/RSO)! - Fixed bug in SettingsView that caused issues with detecting/saving changes
-
-## [v4.24.0]
-
-### Minor Changes
-
-- [#401](https://github.com/Kilo-Org/kilocode/pull/401) [`d077452`](https://github.com/Kilo-Org/kilocode/commit/d0774527bbedad4478ce3767fae6cff7de864e50) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Add ability to attach an image from within the context menu
-
-- Include changes from Roo Code v3.16.6
-
-### Patch Changes
-
-- [#386](https://github.com/Kilo-Org/kilocode/pull/386) [`5caba61`](https://github.com/Kilo-Org/kilocode/commit/5caba61f49a0f87dabf1e50fcf2b6111452a45e0) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Clearly display Kilo Code recommended models
-
-- [#354](https://github.com/Kilo-Org/kilocode/pull/354) [`106b722`](https://github.com/Kilo-Org/kilocode/commit/106b722e747f98edb15b5a8e7a65e19db31028db) Thanks [@hassoncs](https://github.com/hassoncs)! - Fix wrong model after login (#213)
-
-## [v4.23.0]
-
-### Minor Changes
-
-- [#381](https://github.com/Kilo-Org/kilocode/pull/381) [`60892c8`](https://github.com/Kilo-Org/kilocode/commit/60892c86cb88ff509e5fb38a80fdfd6b85b793b7) Thanks [@kevinvandijk](https://github.com/kevinvandijk)! - Include changes from Roo Code v3.16.3
-
-- [#303](https://github.com/Kilo-Org/kilocode/pull/303) [`b69a57e`](https://github.com/Kilo-Org/kilocode/commit/b69a57e316a740470a8be40d77dad50efde5c35c) Thanks [@drakonen](https://github.com/drakonen)! - Kilo Code Provider can now do all the OpenRouter models
-
-## [v4.22.0]
-
-### Minor Changes
-
-- Switch mode icons from unicode emojis to codicons
-
-### Patch Changes
-
-- Fixed UI Issue - Unreadable transparent section at bottom of chat textArea. Thanks to @agape-apps for reporting this issue! See [Kilo-Org/kilocode#306](https://github.com/Kilo-Org/kilocode/issues/306)
-- Fix feedback button overlapping selection action button in history view
-
-## [v4.21.0]
-
-### Minor Changes
-
-- Include changes from Roo Code v3.15.5
-
-### Patch Changes
-
-- Fix issue with removed slash commands for changing modes
-
-## [v4.20.1]
-
-### Patch Changes
-
-- Use the phrase feature-merge instead of superset in displayName and README
-- Fix "Some text unreadable in Light high contrast theme" issue
-
-## [v4.20.0]
-
-- Include slash commands from Cline, include /newtask command
-
-## [v4.19.1]
-
-### Patch Changes
-
-- Fix translations for system notifications
-- Include changes from Roo Code v3.14.3
-
-## [v4.19.0]
-
-### Minor Changes
-
-- Add easier way to add Kilo Code credit when balance is low
-
-### Patch Changes
-
-- Small UI improvements for dark themes
-
-## [v4.18.0]
-
-### Minor Changes
-
-- Include changes from Roo Code v3.14.2
-
-### Patch Changes
-
-- Fix settingview appearing not to save when hitting save button
-- Fix dark buttons on light vscode themes (thanks @Aikiboy123)
-
-## [v4.17.0]
-
-### Minor Changes
-
-- Improve UI for new tasks, history and MCP servers
-- Add commands for importing and exporting settings
-- Include changes from Roo Code v3.13.2
-
-### Patch Changes
-
-- Fix chat window buttons overlapping on small sizes (thanks @Aikiboy123)
-- Fix feedback button overlapping create mode button in prompts view
-- Fix image thumbnails after pasting image (thanks @Aikiboy123)
-
-## [v4.16.2]
-
-- Include Roo Code v3.12.3 changes
-
-## [v4.16.1]
-
-- Fix http referer header
-
-## [v4.16.0]
-
-### Minor Changes
-
-- Add better first time experience flow
-
-### Patch Changes
-
-- Fix confirmation dialog not closing in settings view
-- Add support for Gemini 2.5 Flash Preview for Kilo Code provider
-
-## [v4.15.0]
-
-- Pull in updates from Roo Code v3.11.7
+- Support for auto-approval of write operations and command execution
+- Support for .clinerules custom instructions

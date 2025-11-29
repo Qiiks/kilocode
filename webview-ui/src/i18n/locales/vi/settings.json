@@ -25,7 +25,6 @@
 		"autoApprove": "Phê duyệt",
 		"browser": "Trình duyệt",
 		"checkpoints": "Điểm kiểm tra",
-		"display": "Hiển thị",
 		"notifications": "Thông báo",
 		"contextManagement": "Ngữ cảnh",
 		"terminal": "Terminal",
@@ -34,21 +33,40 @@
 		"ui": "UI",
 		"experimental": "Thử nghiệm",
 		"language": "Ngôn ngữ",
-		"about": "Giới thiệu",
-		"autoPurge": "Tự động dọn dẹp"
+		"about": "Giới thiệu"
+	},
+	"about": {
+		"bugReport": {
+			"label": "Tìm thấy lỗi?",
+			"link": "Báo cáo trên GitHub"
+		},
+		"featureRequest": {
+			"label": "Có ý tưởng?",
+			"link": "Chia sẻ với chúng tôi"
+		},
+		"securityIssue": {
+			"label": "Phát hiện lỗ hổng bảo mật?",
+			"link": "Làm theo quy trình công bố của chúng tôi"
+		},
+		"contact": {
+			"label": "Cần nói chuyện với chúng tôi? Viết"
+		},
+		"community": "Muốn nhận mẹo hoặc chỉ muốn giao lưu với những người dùng Roo Code khác? Tham gia <redditLink>reddit.com/r/RooCode</redditLink> hoặc <discordLink>discord.gg/roocode</discordLink>",
+		"contactAndCommunity": "Liên Hệ & Cộng Đồng",
+		"manageSettings": "Quản Lý Cài Đặt"
 	},
 	"slashCommands": {
 		"description": "Quản lý các lệnh slash của bạn để thực thi nhanh các quy trình công việc và hành động tùy chỉnh. <DocsLink>Tìm hiểu thêm</DocsLink>"
 	},
 	"prompts": {
-		"description": "Cấu hình các lời nhắc hỗ trợ được sử dụng cho các hành động nhanh như cải thiện lời nhắc, giải thích mã và khắc phục sự cố. Những lời nhắc này giúp Kilo Code cung cấp hỗ trợ tốt hơn cho các tác vụ phát triển phổ biến."
+		"description": "Cấu hình các lời nhắc hỗ trợ được sử dụng cho các hành động nhanh như cải thiện lời nhắc, giải thích mã và khắc phục sự cố. Những lời nhắc này giúp Roo cung cấp hỗ trợ tốt hơn cho các tác vụ phát triển phổ biến."
 	},
 	"codeIndex": {
 		"title": "Lập chỉ mục mã nguồn",
 		"enableLabel": "Bật lập chỉ mục mã nguồn",
 		"enableDescription": "Bật lập chỉ mục mã để cải thiện tìm kiếm và sự hiểu biết về ngữ cảnh",
-		"profileLabel": "Nhà cung cấp nhúng",
-		"selectProfilePlaceholder": "Chọn nhà cung cấp",
+		"providerLabel": "Nhà cung cấp nhúng",
+		"selectProviderPlaceholder": "Chọn nhà cung cấp",
 		"openaiProvider": "OpenAI",
 		"ollamaProvider": "Ollama",
 		"geminiProvider": "Gemini",
@@ -60,6 +78,12 @@
 		"vercelAiGatewayProvider": "Vercel AI Gateway",
 		"vercelAiGatewayApiKeyLabel": "Khóa API",
 		"vercelAiGatewayApiKeyPlaceholder": "Nhập khóa API Vercel AI Gateway của bạn",
+		"bedrockProvider": "Amazon Bedrock",
+		"bedrockRegionLabel": "Vùng AWS",
+		"bedrockRegionPlaceholder": "us-east-1",
+		"bedrockProfileLabel": "Hồ sơ AWS",
+		"bedrockProfilePlaceholder": "default",
+		"bedrockProfileDescription": "Tên hồ sơ AWS từ ~/.aws/credentials (bắt buộc).",
 		"openRouterProvider": "OpenRouter",
 		"openRouterApiKeyLabel": "Khóa API OpenRouter",
 		"openRouterApiKeyPlaceholder": "Nhập khóa API OpenRouter của bạn",
@@ -95,12 +119,8 @@
 		"modelPlaceholder": "Nhập tên mô hình",
 		"selectModel": "Chọn một mô hình",
 		"ollamaBaseUrlLabel": "URL cơ sở Ollama",
-		"vectorStoreProviderLabel": "Nhà cung cấp kho lưu trữ vector",
 		"qdrantApiKeyLabel": "Khóa API Qdrant",
 		"qdrantApiKeyPlaceholder": "Nhập khóa API Qdrant của bạn (tùy chọn)",
-		"lancedbVectorStoreDirectoryLabel": "Đường dẫn LanceDB Vector Store",
-		"lancedbVectorStoreDirectoryPlaceholder": "Nhập đường dẫn kho lưu trữ vector tùy chỉnh (tùy chọn)",
-		"lancedbVectorStoreDirectoryDescription": "Đường dẫn để lưu trữ cơ sở dữ liệu vector LanceDB. Nếu trống, sử dụng vị trí mặc định trong globalStorageUri/vector.",
 		"setupConfigLabel": "Cài đặt",
 		"ollamaUrlPlaceholder": "http://localhost:11434",
 		"openAiCompatibleBaseUrlPlaceholder": "https://api.example.com",
@@ -131,33 +151,34 @@
 			"geminiApiKeyRequired": "Yêu cầu khóa API Gemini",
 			"mistralApiKeyRequired": "Cần có khóa API của Mistral",
 			"vercelAiGatewayApiKeyRequired": "Cần có khóa API Vercel AI Gateway",
+			"bedrockRegionRequired": "Vùng AWS là bắt buộc",
+			"bedrockProfileRequired": "Hồ sơ AWS là bắt buộc",
 			"ollamaBaseUrlRequired": "Yêu cầu URL cơ sở Ollama",
 			"baseUrlRequired": "Yêu cầu URL cơ sở",
 			"modelDimensionMinValue": "Kích thước mô hình phải lớn hơn 0",
 			"openRouterApiKeyRequired": "Yêu cầu khóa API OpenRouter"
 		},
+		"optional": "tùy chọn",
 		"advancedConfigLabel": "Cấu hình nâng cao",
 		"searchMinScoreLabel": "Ngưỡng điểm tìm kiếm",
 		"searchMinScoreDescription": "Điểm tương đồng tối thiểu (0.0-1.0) cần thiết cho kết quả tìm kiếm. Giá trị thấp hơn trả về nhiều kết quả hơn nhưng có thể kém liên quan hơn. Giá trị cao hơn trả về ít kết quả hơn nhưng có liên quan hơn.",
 		"searchMinScoreResetTooltip": "Đặt lại về giá trị mặc định (0.4)",
 		"searchMaxResultsLabel": "Số Kết Quả Tìm Kiếm Tối Đa",
 		"searchMaxResultsDescription": "Số lượng kết quả tìm kiếm tối đa được trả về khi truy vấn chỉ mục cơ sở mã. Giá trị cao hơn cung cấp nhiều ngữ cảnh hơn nhưng có thể bao gồm các kết quả ít liên quan hơn.",
-		"resetToDefault": "Đặt lại về mặc định",
-		"cancelling": "Đang hủy...",
-		"cancelIndexingButton": "Hủy lập chỉ mục"
+		"resetToDefault": "Đặt lại về mặc định"
 	},
 	"autoApprove": {
 		"toggleShortcut": "Bạn có thể định cấu hình một phím tắt chung cho cài đặt này <SettingsLink>trong tùy chọn IDE của bạn</SettingsLink>.",
-		"description": "Cho phép Kilo Code tự động thực hiện các hoạt động mà không cần phê duyệt. Chỉ bật những cài đặt này nếu bạn hoàn toàn tin tưởng AI và hiểu rõ các rủi ro bảo mật liên quan.",
+		"description": "Cho phép Roo tự động thực hiện các hoạt động mà không cần phê duyệt. Chỉ bật những cài đặt này nếu bạn hoàn toàn tin tưởng AI và hiểu rõ các rủi ro bảo mật liên quan.",
 		"enabled": "Phê duyệt tự động đã bật",
 		"toggleAriaLabel": "Chuyển đổi tự động phê duyệt",
 		"disabledAriaLabel": "Tự động phê duyệt bị vô hiệu hóa - hãy chọn các tùy chọn trước",
 		"readOnly": {
 			"label": "Đọc",
-			"description": "Khi được bật, Kilo Code sẽ tự động xem nội dung thư mục và đọc tệp mà không yêu cầu bạn nhấp vào nút Phê duyệt.",
+			"description": "Khi được bật, Roo sẽ tự động xem nội dung thư mục và đọc tệp mà không yêu cầu bạn nhấp vào nút Phê duyệt.",
 			"outsideWorkspace": {
 				"label": "Bao gồm các tệp ngoài không gian làm việc",
-				"description": "Cho phép Kilo Code đọc các tệp bên ngoài không gian làm việc hiện tại mà không yêu cầu phê duyệt."
+				"description": "Cho phép Roo đọc các tệp bên ngoài không gian làm việc hiện tại mà không yêu cầu phê duyệt."
 			}
 		},
 		"write": {
@@ -166,11 +187,11 @@
 			"delayLabel": "Trì hoãn sau khi ghi để cho phép chẩn đoán phát hiện các vấn đề tiềm ẩn",
 			"outsideWorkspace": {
 				"label": "Bao gồm các tệp ngoài không gian làm việc",
-				"description": "Cho phép Kilo Code tạo và chỉnh sửa các tệp bên ngoài không gian làm việc hiện tại mà không yêu cầu phê duyệt."
+				"description": "Cho phép Roo tạo và chỉnh sửa các tệp bên ngoài không gian làm việc hiện tại mà không yêu cầu phê duyệt."
 			},
 			"protected": {
 				"label": "Bao gồm các tệp được bảo vệ",
-				"description": "Cho phép Kilo Code tạo và chỉnh sửa các tệp được bảo vệ (như .kilocodeignore và các tệp cấu hình .kilocode/) mà không yêu cầu phê duyệt."
+				"description": "Cho phép Roo tạo và chỉnh sửa các tệp được bảo vệ (như .rooignore và các tệp cấu hình .roo/) mà không yêu cầu phê duyệt."
 			}
 		},
 		"browser": {
@@ -211,10 +232,6 @@
 			"addButton": "Thêm",
 			"autoDenied": "Các lệnh có tiền tố `{{prefix}}` đã bị người dùng cấm. Đừng vượt qua hạn chế này bằng cách chạy lệnh khác."
 		},
-		"showMenu": {
-			"label": "Hiển thị menu tự động phê duyệt trong giao diện trò chuyện",
-			"description": "Khi được bật, menu tự động phê duyệt sẽ hiển thị ở phần dưới của giao diện trò chuyện, cho phép truy cập nhanh vào cài đặt tự động phê duyệt"
-		},
 		"updateTodoList": {
 			"label": "Todo",
 			"description": "Danh sách việc cần làm được cập nhật tự động mà không cần phê duyệt"
@@ -237,8 +254,6 @@
 		"providerDocumentation": "Tài liệu {{provider}}",
 		"configProfile": "Hồ sơ cấu hình",
 		"description": "Lưu các cấu hình API khác nhau để nhanh chóng chuyển đổi giữa các nhà cung cấp và cài đặt.",
-		"makeActiveProfile": "Đặt làm hồ sơ hoạt động",
-		"makeActiveTooltip": "Kích hoạt hồ sơ này để sử dụng cho các yêu cầu API",
 		"apiProvider": "Nhà cung cấp API",
 		"model": "Mẫu",
 		"nameEmpty": "Tên không được để trống",
@@ -257,20 +272,10 @@
 		"noProviderMatchFound": "Không tìm thấy nhà cung cấp",
 		"noMatchFound": "Không tìm thấy hồ sơ phù hợp",
 		"vscodeLmDescription": "API Mô hình Ngôn ngữ VS Code cho phép bạn chạy các mô hình được cung cấp bởi các tiện ích mở rộng khác của VS Code (bao gồm nhưng không giới hạn ở GitHub Copilot). Cách dễ nhất để bắt đầu là cài đặt các tiện ích mở rộng Copilot và Copilot Chat từ VS Code Marketplace.",
-		"vscodeLmUnavailable": "Hỗ trợ Mô hình Ngôn ngữ VS Code chỉ có trên Visual Studio Code. Các bản fork như VSCodium và các công cụ khác có thể không hoạt động. Ngoài ra, tính năng này không có trong các công cụ JetBrains.",
-		"vscodeLmUnavailableInstructions": "Hãy đảm bảo bạn đang sử dụng công cụ được hỗ trợ và VS Code Chat đã được cài đặt và kích hoạt",
 		"awsCustomArnUse": "Nhập một ARN Amazon Bedrock hợp lệ cho mô hình bạn muốn sử dụng. Ví dụ về định dạng:",
 		"awsCustomArnDesc": "Đảm bảo rằng vùng trong ARN khớp với vùng AWS đã chọn ở trên.",
 		"openRouterApiKey": "Khóa API OpenRouter",
 		"getOpenRouterApiKey": "Lấy khóa API OpenRouter",
-		"nanoGptApiKey": "Khóa API Nano-GPT",
-		"getNanoGptApiKey": "Lấy khóa API Nano-GPT",
-		"nanoGptModelList": "Danh sách Mô hình",
-		"nanoGptModelListOptions": {
-			"all": "Tất cả Mô hình",
-			"personalized": "Mô hình Cá nhân hóa",
-			"subscription": "Mô hình Đăng ký"
-		},
 		"vercelAiGatewayApiKey": "Khóa API Vercel AI Gateway",
 		"getVercelAiGatewayApiKey": "Lấy khóa API Vercel AI Gateway",
 		"apiKeyStorageNotice": "Khóa API được lưu trữ an toàn trong Bộ lưu trữ bí mật của VSCode",
@@ -303,14 +308,14 @@
 		"anthropic1MContextBetaDescription": "Mở rộng cửa sổ ngữ cảnh lên 1 triệu token cho Claude Sonnet 4",
 		"awsBedrock1MContextBetaLabel": "Bật cửa sổ ngữ cảnh 1M (Beta)",
 		"awsBedrock1MContextBetaDescription": "Mở rộng cửa sổ ngữ cảnh lên 1 triệu token cho Claude Sonnet 4",
+		"basetenApiKey": "Khóa API Baseten",
+		"getBasetenApiKey": "Lấy khóa API Baseten",
 		"cerebrasApiKey": "Khóa API Cerebras",
 		"getCerebrasApiKey": "Lấy khóa API Cerebras",
 		"chutesApiKey": "Khóa API Chutes",
 		"getChutesApiKey": "Lấy khóa API Chutes",
 		"fireworksApiKey": "Khóa API Fireworks",
 		"getFireworksApiKey": "Lấy khóa API Fireworks",
-		"syntheticApiKey": "Khóa API Synthetic",
-		"getSyntheticApiKey": "Lấy khóa API Synthetic",
 		"featherlessApiKey": "Khóa API Featherless",
 		"getFeatherlessApiKey": "Lấy khóa API Featherless",
 		"ioIntelligenceApiKey": "Khóa API IO Intelligence",
@@ -337,10 +342,6 @@
 		"sambaNovaApiKey": "Khóa API SambaNova",
 		"getHuggingFaceApiKey": "Lấy Khóa API Hugging Face",
 		"huggingFaceApiKey": "Khóa API Hugging Face",
-		"getOvhCloudAiEndpointsApiKey": "Lấy Khóa API OVHcloud AI Endpoints",
-		"ovhCloudAiEndpointsApiKey": "Khóa API OVHcloud AI Endpoints",
-		"ovhCloudAiEndpointsBaseUrl": "URL Cơ sở",
-		"getOvhCloudAiEndpointsBaseUrl": "Sử dụng URL cơ sở tùy chỉnh",
 		"huggingFaceModelId": "ID Mô hình",
 		"huggingFaceLoading": "Đang tải...",
 		"huggingFaceModelsCount": "({{count}} mô hình)",
@@ -352,45 +353,11 @@
 		"huggingFaceSelectProvider": "Chọn một nhà cung cấp...",
 		"huggingFaceSearchProviders": "Tìm kiếm nhà cung cấp...",
 		"huggingFaceNoProvidersFound": "Không tìm thấy nhà cung cấp",
-		"sapAiCore": {
-			"serviceKey": "Khóa Dịch vụ AI Core",
-			"serviceKeyJson": "Nhập JSON Khóa Dịch vụ...",
-			"resourceGroup": "Nhóm Tài nguyên AI Core",
-			"credentialsNote": "Những thông tin xác thực này được lưu trữ cục bộ và chỉ được sử dụng để thực hiện các yêu cầu API từ tiện ích mở rộng này.",
-			"learnMore": "Bạn có thể tìm thêm thông tin về quyền truy cập API SAP AI Core tại đây.",
-			"orchestrationMode": "Chế độ Điều phối",
-			"orchestrationEnabledDesc": "Khi được bật, cung cấp quyền truy cập vào tất cả các mô hình khả dụng mà không cần triển khai riêng lẻ.",
-			"orchestrationDisabledDesc": "Khi bị tắt, chỉ cung cấp quyền truy cập vào các mô hình nền tảng đã triển khai trong phiên bản dịch vụ AI Core của bạn.",
-			"modelDeploymentDesc": "Bạn chỉ có thể chọn các mô hình có triển khai khả dụng.",
-			"deployment": "Triển khai",
-			"loading": "Đang tải...",
-			"modelsCount": "({{count}} mô hình)",
-			"deploymentsCount": "({{count}} triển khai)",
-			"selectModel": "Chọn một mô hình...",
-			"selectDeployment": "Chọn một triển khai...",
-			"searchModels": "Tìm kiếm mô hình...",
-			"searchDeployments": "Tìm kiếm triển khai...",
-			"noModelsFound": "Không tìm thấy mô hình",
-			"noDeploymentFound": "Không tìm thấy triển khai",
-			"getStarted": "Bắt đầu với SAP AI Core",
-			"supportedProviders": "Nhà cung cấp được hỗ trợ",
-			"supportedProvidersDesc1": "Nhà cung cấp SAP AI Core hiện chỉ hỗ trợ các mô hình nền tảng cho các nhà cung cấp LLM sau:",
-			"supportedProvidersDesc2": "Hãy cân nhắc chuyển sang Chế độ Điều phối để truy cập nhiều mô hình hơn.",
-			"supportedProvidersDesc3": "Tìm hiểu thêm về Chế độ Điều phối"
-		},
 		"getGeminiApiKey": "Lấy khóa API Gemini",
 		"openAiApiKey": "Khóa API OpenAI",
 		"apiKey": "Khóa API",
 		"openAiBaseUrl": "URL cơ sở",
 		"getOpenAiApiKey": "Lấy khóa API OpenAI",
-		"copilotAuthentication": "Xác thực GitHub Copilot",
-		"copilotDeviceCodeNotice": "GitHub Copilot sử dụng luồng mã thiết bị OAuth để xác thực an toàn. Bạn sẽ được chuyển hướng đến GitHub để ủy quyền truy cập.",
-		"copilotModelDescription": "Cho phép bạn sử dụng các mô hình trên Copilot",
-		"authenticating": "Đang xác thực...",
-		"waitingForAuth": "Đang chờ xác thực...",
-		"authenticateWithGitHub": "Xác thực với GitHub",
-		"authenticated": "Đã xác thực",
-		"clearAuthentication": "Xóa xác thực",
 		"mistralApiKey": "Khóa API Mistral",
 		"getMistralApiKey": "Lấy khóa API Mistral / Codestral",
 		"codestralBaseUrl": "URL cơ sở Codestral (Tùy chọn)",
@@ -447,18 +414,17 @@
 			"draftModelDesc": "Mô hình nháp phải từ cùng một họ mô hình để giải mã suy đoán hoạt động chính xác.",
 			"selectDraftModel": "Chọn mô hình nháp",
 			"noModelsFound": "Không tìm thấy mô hình nháp nào. Vui lòng đảm bảo LM Studio đang chạy với chế độ máy chủ được bật.",
-			"description": "LM Studio cho phép bạn chạy các mô hình cục bộ trên máy tính của bạn. Để biết hướng dẫn về cách bắt đầu, xem <a>hướng dẫn nhanh</a> của họ. Bạn cũng sẽ cần khởi động tính năng <b>máy chủ cục bộ</b> của LM Studio để sử dụng nó với tiện ích mở rộng này. <span>Lưu ý:</span> Kilo Code sử dụng các lời nhắc phức tạp và hoạt động tốt nhất với các mô hình Claude. Các mô hình kém mạnh hơn có thể không hoạt động như mong đợi."
+			"description": "LM Studio cho phép bạn chạy các mô hình cục bộ trên máy tính của bạn. Để biết hướng dẫn về cách bắt đầu, xem <a>hướng dẫn nhanh</a> của họ. Bạn cũng sẽ cần khởi động tính năng <b>máy chủ cục bộ</b> của LM Studio để sử dụng nó với tiện ích mở rộng này. <span>Lưu ý:</span> Roo Code sử dụng các lời nhắc phức tạp và hoạt động tốt nhất với các mô hình Claude. Các mô hình kém mạnh hơn có thể không hoạt động như mong đợi."
 		},
 		"ollama": {
 			"baseUrl": "URL cơ sở (tùy chọn)",
 			"modelId": "ID mô hình",
 			"apiKey": "Khóa API Ollama",
-			"apiKeyPlaceholder": "Nhập khóa API của bạn",
 			"apiKeyHelp": "Khóa API tùy chọn cho các phiên bản Ollama đã xác thực hoặc dịch vụ đám mây. Để trống cho cài đặt cục bộ.",
 			"numCtx": "Kích thước cửa sổ ngữ cảnh (num_ctx)",
 			"numCtxHelp": "Ghi đè kích thước cửa sổ ngữ cảnh mặc định của mô hình. Để trống để sử dụng cấu hình Modelfile của mô hình. Giá trị tối thiểu là 128.",
 			"description": "Ollama cho phép bạn chạy các mô hình cục bộ trên máy tính của bạn. Để biết hướng dẫn về cách bắt đầu, xem hướng dẫn nhanh của họ.",
-			"warning": "Lưu ý: Kilo Code sử dụng các lời nhắc phức tạp và hoạt động tốt nhất với các mô hình Claude. Các mô hình kém mạnh hơn có thể không hoạt động như mong đợi."
+			"warning": "Lưu ý: Roo Code sử dụng các lời nhắc phức tạp và hoạt động tốt nhất với các mô hình Claude. Các mô hình kém mạnh hơn có thể không hoạt động như mong đợi."
 		},
 		"unboundApiKey": "Khóa API Unbound",
 		"getUnboundApiKey": "Lấy khóa API Unbound",
@@ -480,7 +446,7 @@
 			}
 		},
 		"customModel": {
-			"capabilities": "Cấu hình các khả năng và giá cả cho mô hình tương thích OpenAI tùy chỉnh của bạn. Hãy cẩn thận khi chỉ định khả năng của mô hình, vì chúng có thể ảnh hưởng đến cách Kilo Code hoạt động.",
+			"capabilities": "Cấu hình các khả năng và giá cả cho mô hình tương thích OpenAI tùy chỉnh của bạn. Hãy cẩn thận khi chỉ định khả năng của mô hình, vì chúng có thể ảnh hưởng đến cách Roo Code hoạt động.",
 			"maxTokens": {
 				"label": "Số token đầu ra tối đa",
 				"description": "Số lượng token tối đa mà mô hình có thể tạo ra trong một phản hồi. (Chỉ định -1 để cho phép máy chủ đặt số token tối đa.)"
@@ -521,17 +487,13 @@
 			},
 			"resetDefaults": "Đặt lại về mặc định"
 		},
-		"rateLimitAfter": {
-			"label": "Giới hạn tỷ lệ ở cuối",
-			"description": "Bắt đầu hạn chế tỷ lệ sau khi luồng API kết thúc."
-		},
 		"rateLimitSeconds": {
 			"label": "Giới hạn tốc độ",
 			"description": "Thời gian tối thiểu giữa các yêu cầu API."
 		},
 		"consecutiveMistakeLimit": {
 			"label": "Giới hạn lỗi và lặp lại",
-			"description": "Số lỗi liên tiếp hoặc hành động lặp lại trước khi hiển thị hộp thoại 'Kilo đang gặp sự cố'. Đặt thành 0 để tắt cơ chế an toàn này (nó sẽ không bao giờ kích hoạt).",
+			"description": "Số lỗi liên tiếp hoặc hành động lặp lại trước khi hiển thị hộp thoại 'Roo đang gặp sự cố'. Đặt thành 0 để tắt cơ chế an toàn này (nó sẽ không bao giờ kích hoạt).",
 			"unlimitedDescription": "Đã bật thử lại không giới hạn (tự động tiếp tục). Hộp thoại sẽ không bao giờ xuất hiện.",
 			"warning": "⚠️ Đặt thành 0 cho phép thử lại không giới hạn, điều này có thể tiêu tốn mức sử dụng API đáng kể"
 		},
@@ -557,43 +519,12 @@
 			"placeholder": "Mặc định: claude",
 			"maxTokensLabel": "Số token đầu ra tối đa",
 			"maxTokensDescription": "Số lượng token đầu ra tối đa cho các phản hồi của Claude Code. Mặc định là 8000."
-		},
-		"geminiCli": {
-			"description": "Nhà cung cấp này sử dụng xác thực OAuth từ công cụ Gemini CLI và không yêu cầu khóa API.",
-			"oauthPath": "Đường dẫn Thông tin xác thực OAuth (tùy chọn)",
-			"oauthPathDescription": "Đường dẫn đến tệp thông tin xác thực OAuth. Để trống để sử dụng vị trí mặc định (~/.gemini/oauth_creds.json).",
-			"instructions": "Nếu bạn chưa xác thực, vui lòng chạy",
-			"instructionsContinued": "trong terminal của bạn trước.",
-			"setupLink": "Hướng dẫn Thiết lập Gemini CLI",
-			"requirementsTitle": "Yêu cầu Quan trọng",
-			"requirement1": "Trước tiên, bạn cần cài đặt công cụ Gemini CLI",
-			"requirement2": "Sau đó, chạy gemini trong terminal của bạn và đảm bảo bạn đăng nhập bằng Google",
-			"requirement3": "Chỉ hoạt động với tài khoản Google cá nhân (không phải tài khoản Google Workspace)",
-			"requirement4": "Không sử dụng khóa API - xác thực được xử lý qua OAuth",
-			"requirement5": "Yêu cầu công cụ Gemini CLI được cài đặt và xác thực trước",
-			"freeAccess": "Truy cập miễn phí qua xác thực OAuth"
-		},
-		"qwenCode": {
-			"oauthPath": "Đường dẫn Thông tin xác thực OAuth (tùy chọn)",
-			"oauthPathDescription": "Đường dẫn đến tệp thông tin xác thực OAuth. Để trống để sử dụng vị trí mặc định (~/.qwen/oauth_creds.json).",
-			"description": "Nhà cung cấp này sử dụng xác thực OAuth từ dịch vụ Qwen và không yêu cầu khóa API.",
-			"instructions": "Vui lòng làm theo tài liệu chính thức để lấy tệp ủy quyền và đặt nó trong đường dẫn được chỉ định.",
-			"setupLink": "Tài liệu chính thức Qwen"
-		},
-		"profileName": "Tên hồ sơ",
-		"profileType": "Loại hồ sơ",
-		"profileTypeChat": "Trò chuyện",
-		"profileTypeAutocomplete": "Tự động hoàn thành",
-		"profileTypeDescription": "Hồ sơ trò chuyện được sử dụng cho các cuộc hội thoại. Chỉ cho phép một hồ sơ tự động hoàn thành.",
-		"autocompleteLabel": "(Tự động hoàn thành)",
-		"autocomplete": {
-			"onlyOneAllowed": "Chỉ cho phép một hồ sơ tự động hoàn thành. Hồ sơ \"{{existingName}}\" đã được cấu hình cho tự động hoàn thành. Vui lòng thay đổi loại của nó trước hoặc xóa nó."
 		}
 	},
 	"browser": {
 		"enable": {
 			"label": "Bật công cụ trình duyệt",
-			"description": "Khi được bật, Kilo Code có thể sử dụng trình duyệt để tương tác với các trang web khi sử dụng các mô hình hỗ trợ sử dụng máy tính. <0>Tìm hiểu thêm</0>"
+			"description": "Khi được bật, Roo có thể sử dụng trình duyệt để tương tác với các trang web khi sử dụng các mô hình hỗ trợ sử dụng máy tính. <0>Tìm hiểu thêm</0>"
 		},
 		"viewport": {
 			"label": "Kích thước khung nhìn",
@@ -625,50 +556,18 @@
 		},
 		"enable": {
 			"label": "Bật điểm kiểm tra tự động",
-			"description": "Khi được bật, Kilo Code sẽ tự động tạo các điểm kiểm tra trong quá trình thực hiện nhiệm vụ, giúp dễ dàng xem lại các thay đổi hoặc quay lại trạng thái trước đó. <0>Tìm hiểu thêm</0>"
-		}
-	},
-	"autoPurge": {
-		"enable": {
-			"label": "Bật tự động dọn dẹp nhiệm vụ",
-			"description": "Tự động xóa các nhiệm vụ cũ để giải phóng dung lượng đĩa và cải thiện hiệu suất. Các nhiệm vụ được phân loại theo loại và tuổi để xác định thời điểm nên xóa."
-		},
-		"defaultRetention": {
-			"label": "Thời gian lưu giữ mặc định (ngày)",
-			"description": "Số ngày lưu giữ nhiệm vụ trước khi chúng đủ điều kiện để dọn dẹp"
-		},
-		"neverPurgeFavorited": {
-			"label": "Không bao giờ xóa nhiệm vụ yêu thích",
-			"description": "Khi được bật, các nhiệm vụ yêu thích sẽ không bao giờ bị xóa tự động bất kể tuổi"
-		},
-		"favoritedRetention": {
-			"label": "Lưu giữ nhiệm vụ yêu thích (ngày)",
-			"description": "Số ngày lưu giữ nhiệm vụ yêu thích (chỉ áp dụng khi 'Không bao giờ xóa nhiệm vụ yêu thích' bị tắt)"
-		},
-		"completedRetention": {
-			"label": "Lưu giữ nhiệm vụ đã hoàn thành (ngày)",
-			"description": "Số ngày lưu giữ các nhiệm vụ đã được hoàn thành thành công"
-		},
-		"incompleteRetention": {
-			"label": "Lưu giữ nhiệm vụ chưa hoàn thành (ngày)",
-			"description": "Số ngày lưu giữ các nhiệm vụ chưa được hoàn thành (thường ngắn hơn các nhiệm vụ đã hoàn thành)"
-		},
-		"lastRun": {
-			"label": "Lần dọn dẹp cuối"
-		},
-		"manualPurge": {
-			"button": "Chạy dọn dẹp ngay"
+			"description": "Khi được bật, Roo sẽ tự động tạo các điểm kiểm tra trong quá trình thực hiện nhiệm vụ, giúp dễ dàng xem lại các thay đổi hoặc quay lại trạng thái trước đó. <0>Tìm hiểu thêm</0>"
 		}
 	},
 	"notifications": {
 		"sound": {
 			"label": "Bật hiệu ứng âm thanh",
-			"description": "Khi được bật, Kilo Code sẽ phát hiệu ứng âm thanh cho thông báo và sự kiện.",
+			"description": "Khi được bật, Roo sẽ phát hiệu ứng âm thanh cho thông báo và sự kiện.",
 			"volumeLabel": "Âm lượng"
 		},
 		"tts": {
 			"label": "Bật chuyển văn bản thành giọng nói",
-			"description": "Khi được bật, Kilo Code sẽ đọc to các phản hồi của nó bằng chức năng chuyển văn bản thành giọng nói.",
+			"description": "Khi được bật, Roo sẽ đọc to các phản hồi của nó bằng chức năng chuyển văn bản thành giọng nói.",
 			"speedLabel": "Tốc độ"
 		}
 	},
@@ -676,7 +575,7 @@
 		"description": "Kiểm soát thông tin nào được đưa vào cửa sổ ngữ cảnh của AI, ảnh hưởng đến việc sử dụng token và chất lượng phản hồi",
 		"autoCondenseContextPercent": {
 			"label": "Ngưỡng kích hoạt nén ngữ cảnh thông minh",
-			"description": "Khi cửa sổ ngữ cảnh đạt đến ngưỡng này, Kilo Code sẽ tự động nén nó."
+			"description": "Khi cửa sổ ngữ cảnh đạt đến ngưỡng này, Roo sẽ tự động nén nó."
 		},
 		"condensingApiConfiguration": {
 			"label": "Cấu hình API cho Tóm tắt Ngữ cảnh",
@@ -692,7 +591,7 @@
 		},
 		"autoCondenseContext": {
 			"name": "Tự động kích hoạt nén ngữ cảnh thông minh",
-			"description": "Khi được bật, Kilo Code sẽ tự động nén ngữ cảnh khi đạt đến ngưỡng. Khi bị tắt, bạn vẫn có thể kích hoạt nén ngữ cảnh thủ công."
+			"description": "Khi được bật, Roo sẽ tự động nén ngữ cảnh khi đạt đến ngưỡng. Khi bị tắt, bạn vẫn có thể kích hoạt nén ngữ cảnh thủ công."
 		},
 		"openTabs": {
 			"label": "Giới hạn ngữ cảnh tab đang mở",
@@ -703,12 +602,12 @@
 			"description": "Số lượng tệp tối đa để đưa vào chi tiết thư mục làm việc hiện tại. Giá trị cao hơn cung cấp nhiều ngữ cảnh hơn nhưng tăng sử dụng token."
 		},
 		"rooignore": {
-			"label": "Hiển thị tệp .kilocodeignore trong danh sách và tìm kiếm",
-			"description": "Khi được bật, các tệp khớp với mẫu trong .kilocodeignore sẽ được hiển thị trong danh sách với biểu tượng khóa. Khi bị tắt, các tệp này sẽ hoàn toàn bị ẩn khỏi danh sách tệp và tìm kiếm."
+			"label": "Hiển thị tệp .rooignore trong danh sách và tìm kiếm",
+			"description": "Khi được bật, các tệp khớp với mẫu trong .rooignore sẽ được hiển thị trong danh sách với biểu tượng khóa. Khi bị tắt, các tệp này sẽ hoàn toàn bị ẩn khỏi danh sách tệp và tìm kiếm."
 		},
 		"maxReadFile": {
 			"label": "Ngưỡng tự động cắt ngắn khi đọc tệp",
-			"description": "Kilo Code đọc số dòng này khi mô hình không chỉ định giá trị bắt đầu/kết thúc. Nếu số này nhỏ hơn tổng số dòng của tệp, Kilo Code sẽ tạo một chỉ mục số dòng của các định nghĩa mã. Trường hợp đặc biệt: -1 chỉ thị Kilo Code đọc toàn bộ tệp (không tạo chỉ mục), và 0 chỉ thị không đọc dòng nào và chỉ cung cấp chỉ mục dòng cho ngữ cảnh tối thiểu. Giá trị thấp hơn giảm thiểu việc sử dụng ngữ cảnh ban đầu, cho phép đọc chính xác các phạm vi dòng sau này. Các yêu cầu có chỉ định bắt đầu/kết thúc rõ ràng không bị giới hạn bởi cài đặt này.",
+			"description": "Roo đọc số dòng này khi mô hình không chỉ định giá trị bắt đầu/kết thúc. Nếu số này nhỏ hơn tổng số dòng của tệp, Roo sẽ tạo một chỉ mục số dòng của các định nghĩa mã. Trường hợp đặc biệt: -1 chỉ thị Roo đọc toàn bộ tệp (không tạo chỉ mục), và 0 chỉ thị không đọc dòng nào và chỉ cung cấp chỉ mục dòng cho ngữ cảnh tối thiểu. Giá trị thấp hơn giảm thiểu việc sử dụng ngữ cảnh ban đầu, cho phép đọc chính xác các phạm vi dòng sau này. Các yêu cầu có chỉ định bắt đầu/kết thúc rõ ràng không bị giới hạn bởi cài đặt này.",
 			"lines": "dòng",
 			"always_full_read": "Luôn đọc toàn bộ tệp"
 		},
@@ -759,6 +658,10 @@
 		"includeCurrentCost": {
 			"label": "Bao gồm chi phí hiện tại trong ngữ cảnh",
 			"description": "Khi được bật, chi phí sử dụng API hiện tại sẽ được bao gồm trong lời nhắc hệ thống. Tắt nếu các mô hình ngừng hoạt động do lo ngại về chi phí."
+		},
+		"maxGitStatusFiles": {
+			"label": "Git status tệp tối đa",
+			"description": "Số lượng mục tệp tối đa để bao gồm trong ngữ cảnh trạng thái git. Đặt thành 0 để tắt. Thông tin nhánh và các commit luôn được hiển thị khi > 0."
 		}
 	},
 	"terminal": {
@@ -772,11 +675,11 @@
 		},
 		"outputLineLimit": {
 			"label": "Giới hạn đầu ra của terminal",
-			"description": "Giữ lại các dòng đầu tiên và cuối cùng và loại bỏ các dòng ở giữa để ở dưới giới hạn. Giảm xuống để tiết kiệm token; tăng lên để cung cấp cho Kilo thêm chi tiết ở giữa. Kilo thấy một trình giữ chỗ nơi nội dung bị bỏ qua.<0>Tìm hiểu thêm</0>"
+			"description": "Giữ lại các dòng đầu tiên và cuối cùng và loại bỏ các dòng ở giữa để ở dưới giới hạn. Giảm xuống để tiết kiệm token; tăng lên để cung cấp cho Roo thêm chi tiết ở giữa. Roo thấy một trình giữ chỗ nơi nội dung bị bỏ qua.<0>Tìm hiểu thêm</0>"
 		},
 		"outputCharacterLimit": {
 			"label": "Giới hạn ký tự terminal",
-			"description": "Ghi đè giới hạn dòng để tránh vấn đề bộ nhớ bằng cách áp đặt giới hạn cứng cho kích thước đầu ra. Nếu vượt quá, giữ đầu và cuối, hiển thị placeholder cho Kilo nơi nội dung bị bỏ qua. <0>Tìm hiểu thêm</0>"
+			"description": "Ghi đè giới hạn dòng để tránh vấn đề bộ nhớ bằng cách áp đặt giới hạn cứng cho kích thước đầu ra. Nếu vượt quá, giữ đầu và cuối, hiển thị placeholder cho Roo nơi nội dung bị bỏ qua. <0>Tìm hiểu thêm</0>"
 		},
 		"shellIntegrationTimeout": {
 			"label": "Timeout tích hợp shell terminal",
@@ -784,7 +687,7 @@
 		},
 		"shellIntegrationDisabled": {
 			"label": "Sử dụng Terminal nội tuyến (được khuyến nghị)",
-			"description": "Chạy lệnh trong Terminal nội tuyến (trò chuyện) để bỏ qua hồ sơ/tích hợp shell để chạy nhanh hơn, đáng tin cậy hơn. Khi bị tắt, Kilo sử dụng terminal VS Code với hồ sơ shell, lời nhắc và plugin của bạn. <0>Tìm hiểu thêm</0>"
+			"description": "Chạy lệnh trong Terminal nội tuyến (trò chuyện) để bỏ qua hồ sơ/tích hợp shell để chạy nhanh hơn, đáng tin cậy hơn. Khi bị tắt, Roo sử dụng terminal VS Code với hồ sơ shell, lời nhắc và plugin của bạn. <0>Tìm hiểu thêm</0>"
 		},
 		"commandDelay": {
 			"label": "Delay lệnh terminal",
@@ -822,10 +725,18 @@
 	"advancedSettings": {
 		"title": "Cài đặt nâng cao"
 	},
+	"toolProtocol": {
+		"label": "Giao thức gọi công cụ",
+		"description": "Chọn cách Roo giao tiếp với API. Native sử dụng API gọi hàm của nhà cung cấp, trong khi XML sử dụng định nghĩa công cụ định dạng XML.",
+		"default": "Mặc định",
+		"xml": "XML",
+		"native": "Native",
+		"currentDefault": "Mặc định: {{protocol}}"
+	},
 	"advanced": {
 		"diff": {
 			"label": "Bật chỉnh sửa qua diff",
-			"description": "Khi được bật, Kilo sẽ có thể chỉnh sửa tệp nhanh hơn và sẽ tự động từ chối ghi toàn bộ tệp bị cắt ngắn",
+			"description": "Khi được bật, Roo sẽ có thể chỉnh sửa tệp nhanh hơn và sẽ tự động từ chối ghi toàn bộ tệp bị cắt ngắn",
 			"strategy": {
 				"label": "Chiến lược diff",
 				"options": {
@@ -846,7 +757,7 @@
 		},
 		"todoList": {
 			"label": "Bật công cụ danh sách việc cần làm",
-			"description": "Khi được bật, Kilo Code có thể tạo và quản lý danh sách việc cần làm để theo dõi tiến độ công việc. Điều này giúp tổ chức các tác vụ phức tạp thành các bước có thể quản lý được."
+			"description": "Khi được bật, Roo có thể tạo và quản lý danh sách việc cần làm để theo dõi tiến độ công việc. Điều này giúp tổ chức các tác vụ phức tạp thành các bước có thể quản lý được."
 		}
 	},
 	"experimental": {
@@ -856,19 +767,19 @@
 		},
 		"INSERT_BLOCK": {
 			"name": "Sử dụng công cụ chèn nội dung thử nghiệm",
-			"description": "Bật công cụ chèn nội dung thử nghiệm, cho phép Kilo Code chèn nội dung tại số dòng cụ thể mà không cần tạo diff."
+			"description": "Bật công cụ chèn nội dung thử nghiệm, cho phép Roo chèn nội dung tại số dòng cụ thể mà không cần tạo diff."
 		},
 		"POWER_STEERING": {
 			"name": "Sử dụng chế độ \"power steering\" thử nghiệm",
-			"description": "Khi được bật, Kilo Code sẽ nhắc nhở mô hình về chi tiết định nghĩa chế độ hiện tại thường xuyên hơn. Điều này sẽ dẫn đến việc tuân thủ chặt chẽ hơn các định nghĩa vai trò và hướng dẫn tùy chỉnh, nhưng sẽ sử dụng nhiều token hơn cho mỗi tin nhắn."
+			"description": "Khi được bật, Roo sẽ nhắc nhở mô hình về chi tiết định nghĩa chế độ hiện tại thường xuyên hơn. Điều này sẽ dẫn đến việc tuân thủ chặt chẽ hơn các định nghĩa vai trò và hướng dẫn tùy chỉnh, nhưng sẽ sử dụng nhiều token hơn cho mỗi tin nhắn."
 		},
 		"MULTI_SEARCH_AND_REPLACE": {
 			"name": "Sử dụng công cụ diff đa khối thử nghiệm",
-			"description": "Khi được bật, Kilo Code sẽ sử dụng công cụ diff đa khối. Điều này sẽ cố gắng cập nhật nhiều khối mã trong tệp trong một yêu cầu."
+			"description": "Khi được bật, Roo sẽ sử dụng công cụ diff đa khối. Điều này sẽ cố gắng cập nhật nhiều khối mã trong tệp trong một yêu cầu."
 		},
 		"CONCURRENT_FILE_READS": {
 			"name": "Bật đọc tệp đồng thời",
-			"description": "Khi bật, Kilo Code có thể đọc nhiều tệp trong một yêu cầu duy nhất. Khi tắt, Kilo Code phải đọc từng tệp một. Việc tắt có thể hữu ích khi làm việc với các mô hình ít khả năng hơn hoặc khi bạn muốn kiểm soát nhiều hơn quyền truy cập tệp."
+			"description": "Khi bật, Roo có thể đọc nhiều tệp trong một yêu cầu duy nhất. Khi tắt, Roo phải đọc từng tệp một. Việc tắt có thể hữu ích khi làm việc với các mô hình ít khả năng hơn hoặc khi bạn muốn kiểm soát nhiều hơn quyền truy cập tệp."
 		},
 		"MARKETPLACE": {
 			"name": "Bật Marketplace",
@@ -876,11 +787,11 @@
 		},
 		"MULTI_FILE_APPLY_DIFF": {
 			"name": "Bật chỉnh sửa tệp đồng thời",
-			"description": "Khi được bật, Kilo Code có thể chỉnh sửa nhiều tệp trong một yêu cầu duy nhất. Khi bị tắt, Kilo Code phải chỉnh sửa từng tệp một. Tắt tính năng này có thể hữu ích khi làm việc với các mô hình kém khả năng hơn hoặc khi bạn muốn kiểm soát nhiều hơn đối với các thay đổi tệp."
+			"description": "Khi được bật, Roo có thể chỉnh sửa nhiều tệp trong một yêu cầu duy nhất. Khi bị tắt, Roo phải chỉnh sửa từng tệp một. Tắt tính năng này có thể hữu ích khi làm việc với các mô hình kém khả năng hơn hoặc khi bạn muốn kiểm soát nhiều hơn đối với các thay đổi tệp."
 		},
 		"PREVENT_FOCUS_DISRUPTION": {
 			"name": "Chỉnh sửa nền",
-			"description": "Khi được bật, ngăn chặn gián đoạn tiêu điểm trình soạn thảo. Việc chỉnh sửa tệp diễn ra ở nền mà không mở chế độ xem diff hoặc chiếm tiêu điểm. Bạn có thể tiếp tục làm việc không bị gián đoạn trong khi Kilo Code thực hiện thay đổi. Các tệp có thể được mở mà không có tiêu điểm để thu thập chẩn đoán hoặc giữ hoàn toàn đóng."
+			"description": "Khi được bật, ngăn chặn gián đoạn tiêu điểm trình soạn thảo. Việc chỉnh sửa tệp diễn ra ở nền mà không mở chế độ xem diff hoặc chiếm tiêu điểm. Bạn có thể tiếp tục làm việc không bị gián đoạn trong khi Roo thực hiện thay đổi. Các tệp có thể được mở mà không có tiêu điểm để thu thập chẩn đoán hoặc giữ hoàn toàn đóng."
 		},
 		"ASSISTANT_MESSAGE_PARSER": {
 			"name": "Dùng bộ phân tích tin nhắn mới",
@@ -891,50 +802,30 @@
 			"description": "Khi được bật, công cụ new_task sẽ yêu cầu cung cấp tham số todos. Điều này đảm bảo tất cả các nhiệm vụ mới bắt đầu với một danh sách mục tiêu rõ ràng. Khi bị tắt (mặc định), tham số todos vẫn là tùy chọn để tương thích ngược."
 		},
 		"IMAGE_GENERATION": {
+			"providerLabel": "Nhà cung cấp",
+			"providerDescription": "Chọn nhà cung cấp để tạo hình ảnh.",
 			"name": "Bật tạo hình ảnh AI",
-			"description": "Khi được bật, Kilo Code có thể tạo hình ảnh từ lời nhắc văn bản. Yêu cầu khóa API Kilo Code hoặc OpenRouter được cấu hình.",
-			"apiProvider": "Nhà cung cấp API",
+			"description": "Khi được bật, Roo có thể tạo hình ảnh từ lời nhắc văn bản bằng các mô hình tạo hình ảnh của OpenRouter. Yêu cầu khóa API OpenRouter được cấu hình.",
 			"openRouterApiKeyLabel": "Khóa API OpenRouter",
 			"openRouterApiKeyPlaceholder": "Nhập khóa API OpenRouter của bạn",
-			"kiloCodeApiKeyLabel": "Khóa API Kilo Code",
-			"kiloCodeApiKeyPlaceholder": "Nhập khóa API Kilo Code của bạn",
-			"kiloCodeApiKeyPaste": "Dán khóa API Kilo Code hiện tại",
 			"getApiKeyText": "Lấy khóa API của bạn từ",
 			"modelSelectionLabel": "Mô hình tạo hình ảnh",
 			"modelSelectionDescription": "Chọn mô hình để sử dụng cho việc tạo hình ảnh",
-			"warningMissingKey": "⚠️ Khóa API là bắt buộc để tạo hình ảnh, vui lòng cấu hình ở trên.",
+			"warningMissingKey": "⚠️ Khóa API OpenRouter là bắt buộc để tạo hình ảnh. Vui lòng cấu hình ở trên.",
 			"successConfigured": "✓ Tạo hình ảnh đã được cấu hình và sẵn sàng sử dụng"
-		},
-		"INLINE_ASSIST": {
-			"name": "Autocomplete",
-			"description": "Bật các tính năng Autocomplete cho gợi ý mã nhanh và cải tiến trực tiếp trong editor của bạn. Bao gồm Tác Vụ Nhanh (Cmd+I) cho các thay đổi có mục tiêu và Autocomplete cho các cải tiến theo ngữ cảnh."
-		},
-		"MORPH_FAST_APPLY": {
-			"name": "Bật Fast Apply",
-			"description": "Khi được bật, Kilo Code có thể chỉnh sửa tệp bằng Fast Apply với các mô hình chuyên biệt được tối ưu hóa cho việc sửa đổi mã. Yêu cầu Kilo Gateway Provider, OpenRouter hoặc khóa API Morph.",
-			"apiProvider": "Nhà cung cấp API",
-			"apiProviderList": {
-				"current": "Hiện tại"
-			},
-			"apiKey": "Khóa API (tùy chọn)",
-			"placeholder": "Nhập khóa API của bạn (tùy chọn)",
-			"modelLabel": "Lựa chọn mô hình",
-			"modelDescription": "Chọn mô hình Fast Apply nào để sử dụng cho việc chỉnh sửa tệp",
-			"models": {
-				"auto": "Tự động (Mặc định - chọn tốt nhất có sẵn)",
-				"morphFast": "Morph v3 Fast (Nhanh hơn, chi phí thấp hơn)",
-				"morphLarge": "Morph v3 Large (Khả năng cao hơn)",
-				"relace": "Relace Apply v3"
-			}
 		},
 		"RUN_SLASH_COMMAND": {
 			"name": "Bật lệnh slash do mô hình khởi tạo",
-			"description": "Khi được bật, Kilo Code có thể chạy các lệnh slash của bạn để thực hiện các quy trình làm việc."
+			"description": "Khi được bật, Roo có thể chạy các lệnh slash của bạn để thực hiện các quy trình làm việc."
+		},
+		"MULTIPLE_NATIVE_TOOL_CALLS": {
+			"name": "Lệnh gọi công cụ song song",
+			"description": "Khi được bật, giao thức native có thể thực thi nhiều công cụ trong một lượt tin nhắn của trợ lý."
 		}
 	},
 	"promptCaching": {
 		"label": "Tắt bộ nhớ đệm prompt",
-		"description": "Khi được chọn, Kilo Code sẽ không sử dụng bộ nhớ đệm prompt cho mô hình này."
+		"description": "Khi được chọn, Roo sẽ không sử dụng bộ nhớ đệm prompt cho mô hình này."
 	},
 	"temperature": {
 		"useCustom": "Sử dụng nhiệt độ tùy chỉnh",
@@ -964,18 +855,17 @@
 		}
 	},
 	"modelPicker": {
-		"automaticFetch": "Tiện ích mở rộng tự động lấy danh sách mới nhất các mô hình có sẵn trên <serviceLink>{{serviceName}}</serviceLink>. Nếu bạn không chắc chắn nên chọn mô hình nào, Kilo Code hoạt động tốt nhất với <defaultModelLink>{{defaultModelId}}</defaultModelLink>.",
+		"automaticFetch": "Tiện ích mở rộng tự động lấy danh sách mới nhất các mô hình có sẵn trên <serviceLink>{{serviceName}}</serviceLink>. Nếu bạn không chắc chắn nên chọn mô hình nào, Roo Code hoạt động tốt nhất với <defaultModelLink>{{defaultModelId}}</defaultModelLink>. Bạn cũng có thể thử tìm kiếm \"free\" cho các tùy chọn miễn phí hiện có.",
 		"label": "Mô hình",
 		"searchPlaceholder": "Tìm kiếm",
 		"noMatchFound": "Không tìm thấy kết quả",
 		"useCustomModel": "Sử dụng tùy chỉnh: {{modelId}}"
 	},
 	"footer": {
-		"feedback": "Nếu bạn có bất kỳ câu hỏi hoặc phản hồi nào, vui lòng mở một vấn đề tại <githubLink>github.com/Kilo-Org/kilocode</githubLink> hoặc tham gia <redditLink>reddit.com/r/kilocode</redditLink> hoặc <discordLink>kilocode.ai/discord</discordLink>",
-		"support": "Đối với các câu hỏi về tài chính, vui lòng liên hệ Hỗ trợ khách hàng tại <supportLink>https://kilocode.ai/support</supportLink>",
+		"feedback": "Nếu bạn có bất kỳ câu hỏi hoặc phản hồi nào, vui lòng mở một vấn đề tại <githubLink>github.com/RooCodeInc/Roo-Code</githubLink> hoặc tham gia <redditLink>reddit.com/r/RooCode</redditLink> hoặc <discordLink>discord.gg/roocode</discordLink>",
 		"telemetry": {
 			"label": "Cho phép báo cáo lỗi và sử dụng ẩn danh",
-			"description": "Giúp cải thiện Kilo Code bằng cách gửi dữ liệu sử dụng ẩn danh và báo cáo lỗi. Không bao giờ gửi mã, lời nhắc hoặc thông tin cá nhân. Xem chính sách bảo mật của chúng tôi để biết thêm chi tiết."
+			"description": "Giúp cải thiện Roo Code bằng cách gửi dữ liệu sử dụng ẩn danh và báo cáo lỗi. Telemetry này không thu thập mã, prompt hoặc thông tin cá nhân. Xem <privacyLink>chính sách bảo mật</privacyLink> của chúng tôi để biết thêm chi tiết. Bạn có thể tắt tính năng này bất cứ lúc nào."
 		},
 		"settings": {
 			"import": "Nhập",
@@ -1003,9 +893,7 @@
 		"providerNotAllowed": "Nhà cung cấp '{{provider}}' không được phép bởi tổ chức của bạn",
 		"modelNotAllowed": "Mô hình '{{model}}' không được phép cho nhà cung cấp '{{provider}}' bởi tổ chức của bạn",
 		"profileInvalid": "Hồ sơ này chứa một nhà cung cấp hoặc mô hình không được phép bởi tổ chức của bạn",
-		"qwenCodeOauthPath": "Bạn phải cung cấp đường dẫn thông tin xác thực OAuth hợp lệ",
-		"sapAiCore": "Bạn phải cung cấp Khóa Dịch vụ SAP AI Core hợp lệ.",
-		"sapAiCoreDeploymentId": "Bạn phải chọn một triển khai đang chạy cho mô hình '{{model}}'."
+		"qwenCodeOauthPath": "Bạn phải cung cấp đường dẫn thông tin xác thực OAuth hợp lệ"
 	},
 	"placeholders": {
 		"apiKey": "Nhập khóa API...",
@@ -1039,32 +927,6 @@
 	"labels": {
 		"customArn": "ARN tùy chỉnh",
 		"useCustomArn": "Sử dụng ARN tùy chỉnh..."
-	},
-	"display": {
-		"taskTimeline": {
-			"label": "Hiển thị dòng thời gian công việc",
-			"description": "Hiển thị dòng thời gian trực quan của các tin nhắn công việc, được phân loại theo màu sắc theo từng loại, cho phép bạn nhanh chóng xem tiến độ công việc và cuộn lại các điểm cụ thể trong lịch sử của công việc."
-		},
-		"sendMessageOnEnter": {
-			"label": "Gửi tin nhắn bằng Enter",
-			"description": "Khi được bật, nhấn Enter để gửi và Shift+Enter cho dòng mới. Tắt để sử dụng Shift+Enter để gửi."
-		},
-		"costThreshold": {
-			"label": "Ẩn chi phí dưới ngưỡng",
-			"description": "Chỉ hiển thị chi phí yêu cầu trên mức này. Chi phí luôn được hiển thị khi khung thông tin chi tiết được mở.",
-			"currentValue": "Ngưỡng hiện tại: ${{value}}"
-		},
-		"showTimestamps": {
-			"label": "Hiển thị dấu thời gian",
-			"description": "Hiển thị dấu thời gian cho mỗi tin nhắn trong giao diện chat"
-		}
-	},
-	"ghost": {
-		"showGutterAnimation": {
-			"label": "Hiển thị hoạt ảnh lề khi tự động hoàn thành",
-			"description": "Hiển thị chỉ báo hoạt ảnh trong lề trình soạn thảo khi tự động hoàn thành đang chạy",
-			"preview": "Xem trước hoạt ảnh"
-		}
 	},
 	"includeMaxOutputTokens": "Bao gồm token đầu ra tối đa",
 	"includeMaxOutputTokensDescription": "Gửi tham số token đầu ra tối đa trong các yêu cầu API. Một số nhà cung cấp có thể không hỗ trợ điều này.",

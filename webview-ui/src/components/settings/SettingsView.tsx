@@ -21,20 +21,19 @@ import {
 	AlertTriangle,
 	Globe,
 	Info,
-	Server, // kilocode_change
-	Bot, // kilocode_change
 	MessageSquare,
-	Monitor,
 	LucideIcon,
-	// SquareSlash, // kilocode_change
-	// Glasses, // kilocode_change
+	SquareSlash,
+	Glasses,
 } from "lucide-react"
 
-// kilocode_change
-import { ensureBodyPointerEventsRestored } from "@/utils/fixPointerEvents"
-
-import type { ProviderSettings, ExperimentId, TelemetrySetting, ProfileType } from "@roo-code/types" // kilocode_change - autocomplete profile type system
-import { DEFAULT_CHECKPOINT_TIMEOUT_SECONDS } from "@roo-code/types"
+import {
+	type ProviderSettings,
+	type ExperimentId,
+	type TelemetrySetting,
+	DEFAULT_CHECKPOINT_TIMEOUT_SECONDS,
+	ImageGenerationProvider,
+} from "@roo-code/types"
 
 import { vscode } from "@src/utils/vscode"
 import { cn } from "@src/lib/utils"
@@ -65,7 +64,6 @@ import ApiOptions from "./ApiOptions"
 import { AutoApproveSettings } from "./AutoApproveSettings"
 import { BrowserSettings } from "./BrowserSettings"
 import { CheckpointSettings } from "./CheckpointSettings"
-import { DisplaySettings } from "./DisplaySettings" // kilocode_change
 import { NotificationSettings } from "./NotificationSettings"
 import { ContextManagementSettings } from "./ContextManagementSettings"
 import { TerminalSettings } from "./TerminalSettings"
@@ -74,9 +72,6 @@ import { LanguageSettings } from "./LanguageSettings"
 import { About } from "./About"
 import { Section } from "./Section"
 import PromptsSettings from "./PromptsSettings"
-import McpView from "../kilocodeMcp/McpView" // kilocode_change
-import deepEqual from "fast-deep-equal" // kilocode_change
-import { GhostServiceSettingsView } from "../kilocode/settings/GhostServiceSettings" // kilocode_change
 import { SlashCommandsSettings } from "./SlashCommandsSettings"
 import { UISettings } from "./UISettings"
 
@@ -84,21 +79,19 @@ export const settingsTabsContainer = "flex flex-1 overflow-hidden [&.narrow_.tab
 export const settingsTabList =
 	"w-48 data-[compact=true]:w-12 flex-shrink-0 flex flex-col overflow-y-auto overflow-x-hidden border-r border-vscode-sideBar-background"
 export const settingsTabTrigger =
-	"whitespace-nowrap overflow-hidden min-w-0 h-12 px-4 py-3 box-border flex items-center border-l-2 border-transparent text-vscode-foreground opacity-70 hover:bg-vscode-list-hoverBackground data-[compact=true]:w-12 data-[compact=true]:p-4 cursor-pointer" // kilocode_change add cursor-pointer
-export const settingsTabTriggerActive =
-	"opacity-100 border-vscode-focusBorder bg-vscode-list-activeSelectionBackground hover:bg-vscode-list-activeSelectionBackground cursor-default" // kilocode_change add hover:bg-* and cursor-default
+	"whitespace-nowrap overflow-hidden min-w-0 h-12 px-4 py-3 box-border flex items-center border-l-2 border-transparent text-vscode-foreground opacity-70 hover:bg-vscode-list-hoverBackground data-[compact=true]:w-12 data-[compact=true]:p-4"
+export const settingsTabTriggerActive = "opacity-100 border-vscode-focusBorder bg-vscode-list-activeSelectionBackground"
 
 export interface SettingsViewRef {
 	checkUnsaveChanges: (then: () => void) => void
 }
+
 const sectionNames = [
 	"providers",
 	"autoApprove",
 	"slashCommands",
 	"browser",
 	"checkpoints",
-	"ghost", // kilocode_change
-	"display", // kilocode_change
 	"notifications",
 	"contextManagement",
 	"terminal",
@@ -106,11 +99,10 @@ const sectionNames = [
 	"ui",
 	"experimental",
 	"language",
-	"mcp",
 	"about",
 ] as const
 
-type SectionName = (typeof sectionNames)[number] // kilocode_change
+type SectionName = (typeof sectionNames)[number]
 
 type SettingsViewProps = {
 	onDone: () => void
@@ -121,13 +113,7 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 	const { t } = useAppTranslation()
 
 	const extensionState = useExtensionState()
-	const {
-		currentApiConfigName,
-		listApiConfigMeta,
-		uriScheme,
-		kiloCodeWrapperProperties, // kilocode_change
-		settingsImportedAt,
-	} = extensionState
+	const { currentApiConfigName, listApiConfigMeta, uriScheme, settingsImportedAt } = extensionState
 
 	const [isDiscardDialogShow, setDiscardDialogShow] = useState(false)
 	const [isChangeDetected, setChangeDetected] = useState(false)
@@ -138,8 +124,6 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 			: "providers",
 	)
 
-	const [editingApiConfigName, setEditingApiConfigName] = useState<string>(currentApiConfigName || "default") // kilocode_change: Track which profile is being edited separately from the active profile
-
 	const scrollPositions = useRef<Record<SectionName, number>>(
 		Object.fromEntries(sectionNames.map((s) => [s, 0])) as Record<SectionName, number>,
 	)
@@ -149,12 +133,6 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 	const confirmDialogHandler = useRef<() => void>()
 
 	const [cachedState, setCachedState] = useState(() => extensionState)
-
-	// kilocode_change begin
-	useEffect(() => {
-		ensureBodyPointerEventsRestored()
-	}, [isDiscardDialogShow])
-	// kilocode_change end
 
 	const {
 		alwaysAllowReadOnly,
@@ -181,9 +159,6 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 		checkpointTimeout,
 		diffEnabled,
 		experiments,
-		morphApiKey, // kilocode_change
-		fastApplyModel, // kilocode_change: Fast Apply model selection
-		fastApplyApiProvider, // kilocode_change: Fast Apply model api base url
 		fuzzyMatchThreshold,
 		maxOpenTabsContext,
 		maxWorkspaceFiles,
@@ -210,45 +185,27 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 		showRooIgnoredFiles,
 		remoteBrowserEnabled,
 		maxReadFileLine,
-		showAutoApproveMenu, // kilocode_change
-		yoloMode, // kilocode_change
-		showTaskTimeline, // kilocode_change
-		sendMessageOnEnter, // kilocode_change
-		showTimestamps, // kilocode_change
-		hideCostBelowThreshold, // kilocode_change
 		maxImageFileSize,
 		maxTotalImageSize,
 		terminalCompressProgressBar,
 		maxConcurrentFileReads,
-		allowVeryLargeReads, // kilocode_change
-		terminalCommandApiConfigId, // kilocode_change
 		condensingApiConfigId,
 		customCondensingPrompt,
-		yoloGatekeeperApiConfigId, // kilocode_change: AI gatekeeper for YOLO mode
 		customSupportPrompts,
 		profileThresholds,
-		systemNotificationsEnabled, // kilocode_change
 		alwaysAllowFollowupQuestions,
 		alwaysAllowUpdateTodoList,
 		followupAutoApproveTimeoutMs,
-		ghostServiceSettings, // kilocode_change
-		// kilocode_change start - Auto-purge settings
-		autoPurgeEnabled,
-		autoPurgeDefaultRetentionDays,
-		autoPurgeFavoritedTaskRetentionDays,
-		autoPurgeCompletedTaskRetentionDays,
-		autoPurgeIncompleteTaskRetentionDays,
-		autoPurgeLastRunTimestamp,
-		// kilocode_change end - Auto-purge settings
 		includeDiagnosticMessages,
 		maxDiagnosticMessages,
 		includeTaskHistoryInEnhance,
+		imageGenerationProvider,
 		openRouterImageApiKey,
-		kiloCodeImageApiKey,
 		openRouterImageGenerationSelectedModel,
 		reasoningBlockCollapsed,
 		includeCurrentTime,
 		includeCurrentCost,
+		maxGitStatusFiles,
 	} = cachedState
 
 	const apiConfiguration = useMemo(() => cachedState.apiConfiguration ?? {}, [cachedState.apiConfiguration])
@@ -263,70 +220,7 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 		setCachedState((prevCachedState) => ({ ...prevCachedState, ...extensionState }))
 		prevApiConfigName.current = currentApiConfigName
 		setChangeDetected(false)
-		setEditingApiConfigName(currentApiConfigName || "default") // kilocode_change: Sync editing profile when active profile changes
 	}, [currentApiConfigName, extensionState])
-
-	// kilocode_change start
-	const isLoadingProfileForEditing = useRef(false)
-
-	useEffect(() => {
-		const handleMessage = (event: MessageEvent) => {
-			const message = event.data
-			if (message.type === "profileConfigurationForEditing" && message.text === editingApiConfigName) {
-				// Update cached state with the editing profile's configuration
-				setCachedState((prevState) => ({
-					...prevState,
-					apiConfiguration: message.apiConfiguration,
-				}))
-				setChangeDetected(false)
-				isLoadingProfileForEditing.current = false
-			}
-		}
-
-		window.addEventListener("message", handleMessage)
-		return () => window.removeEventListener("message", handleMessage)
-	}, [editingApiConfigName])
-
-	// Temporary way of making sure that the Settings view updates its local state properly when receiving
-	// api keys from providers that support url callbacks. This whole Settings View needs proper with this local state thing later
-	const { kilocodeToken, openRouterApiKey, glamaApiKey, requestyApiKey } = extensionState.apiConfiguration ?? {}
-	useEffect(() => {
-		setCachedState((prevCachedState) => ({
-			...prevCachedState,
-			apiConfiguration: {
-				...prevCachedState.apiConfiguration,
-				// Only set specific tokens/keys instead of spreading the entire
-				// `prevCachedState.apiConfiguration` since it may contain unsaved changes
-				kilocodeToken,
-				openRouterApiKey,
-				glamaApiKey,
-				requestyApiKey,
-			},
-		}))
-	}, [kilocodeToken, openRouterApiKey, glamaApiKey, requestyApiKey])
-
-	useEffect(() => {
-		// Only update if we're not already detecting changes
-		// This prevents overwriting user changes that haven't been saved yet
-		// Also skip if we're loading a profile for editing
-		if (!isChangeDetected && !isLoadingProfileForEditing.current) {
-			// When editing a different profile than the active one,
-			// don't overwrite apiConfiguration from extensionState since it contains
-			// the active profile's config, not the editing profile's config
-			if (editingApiConfigName !== currentApiConfigName) {
-				// Sync everything except apiConfiguration
-				const { apiConfiguration: _, ...restOfExtensionState } = extensionState
-				setCachedState((prevState) => ({
-					...prevState,
-					...restOfExtensionState,
-				}))
-			} else {
-				// When editing the active profile, sync everything including apiConfiguration
-				setCachedState(extensionState)
-			}
-		}
-	}, [extensionState, isChangeDetected, editingApiConfigName, currentApiConfigName])
-	// kilocode_change end
 
 	// Bust the cache when settings are imported.
 	useEffect(() => {
@@ -338,42 +232,14 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 
 	const setCachedStateField: SetCachedStateField<keyof ExtensionStateContextType> = useCallback((field, value) => {
 		setCachedState((prevState) => {
-			// kilocode_change start
-			if (deepEqual(prevState[field], value)) {
+			if (prevState[field] === value) {
 				return prevState
 			}
-			// kilocode_change end
 
 			setChangeDetected(true)
 			return { ...prevState, [field]: value }
 		})
 	}, [])
-
-	// kilocode_change start
-	const setGhostServiceSettingsField = useCallback(
-		<K extends keyof NonNullable<ExtensionStateContextType["ghostServiceSettings"]>>(
-			field: K,
-			value: NonNullable<ExtensionStateContextType["ghostServiceSettings"]>[K],
-		) => {
-			setCachedState((prevState) => {
-				const currentSettings = prevState.ghostServiceSettings || {}
-				if (currentSettings[field] === value) {
-					return prevState
-				}
-
-				setChangeDetected(true)
-				return {
-					...prevState,
-					ghostServiceSettings: {
-						...currentSettings,
-						[field]: value,
-					},
-				}
-			})
-		},
-		[],
-	)
-	// kilocode_change end
 
 	const setApiConfigurationField = useCallback(
 		<K extends keyof ProviderSettings>(field: K, value: ProviderSettings[K], isUserAction: boolean = true) => {
@@ -425,6 +291,16 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 		})
 	}, [])
 
+	const setImageGenerationProvider = useCallback((provider: ImageGenerationProvider) => {
+		setCachedState((prevState) => {
+			if (prevState.imageGenerationProvider !== provider) {
+				setChangeDetected(true)
+			}
+
+			return { ...prevState, imageGenerationProvider: provider }
+		})
+	}, [])
+
 	const setOpenRouterImageApiKey = useCallback((apiKey: string) => {
 		setCachedState((prevState) => {
 			if (prevState.openRouterImageApiKey !== apiKey) {
@@ -432,13 +308,6 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 			}
 
 			return { ...prevState, openRouterImageApiKey: apiKey }
-		})
-	}, [])
-
-	const setKiloCodeImageApiKey = useCallback((apiKey: string) => {
-		setCachedState((prevState) => {
-			setChangeDetected(true)
-			return { ...prevState, kiloCodeImageApiKey: apiKey }
 		})
 	}, [])
 
@@ -539,52 +408,15 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 					reasoningBlockCollapsed: reasoningBlockCollapsed ?? true,
 					includeCurrentTime: includeCurrentTime ?? true,
 					includeCurrentCost: includeCurrentCost ?? true,
+					maxGitStatusFiles: maxGitStatusFiles ?? 0,
 					profileThresholds,
+					imageGenerationProvider,
 					openRouterImageApiKey,
 					openRouterImageGenerationSelectedModel,
 					experiments,
 					customSupportPrompts,
 				},
 			})
-			vscode.postMessage({ type: "ttsEnabled", bool: ttsEnabled })
-			vscode.postMessage({ type: "ttsSpeed", value: ttsSpeed })
-			vscode.postMessage({ type: "terminalCommandApiConfigId", text: terminalCommandApiConfigId || "" }) // kilocode_change
-			vscode.postMessage({ type: "showAutoApproveMenu", bool: showAutoApproveMenu }) // kilocode_change
-			vscode.postMessage({ type: "yoloMode", bool: yoloMode }) // kilocode_change
-			vscode.postMessage({ type: "allowVeryLargeReads", bool: allowVeryLargeReads }) // kilocode_change
-			vscode.postMessage({ type: "currentApiConfigName", text: currentApiConfigName })
-			vscode.postMessage({ type: "showTaskTimeline", bool: showTaskTimeline }) // kilocode_change
-			vscode.postMessage({ type: "sendMessageOnEnter", bool: sendMessageOnEnter }) // kilocode_change
-			vscode.postMessage({ type: "showTimestamps", bool: showTimestamps }) // kilocode_change
-			vscode.postMessage({ type: "hideCostBelowThreshold", value: hideCostBelowThreshold }) // kilocode_change
-			vscode.postMessage({ type: "updateCondensingPrompt", text: customCondensingPrompt || "" })
-			vscode.postMessage({ type: "yoloGatekeeperApiConfigId", text: yoloGatekeeperApiConfigId || "" }) // kilocode_change: AI gatekeeper for YOLO mode
-			vscode.postMessage({ type: "setReasoningBlockCollapsed", bool: reasoningBlockCollapsed ?? true })
-			vscode.postMessage({ type: "upsertApiConfiguration", text: editingApiConfigName, apiConfiguration }) // kilocode_change: Save to editing profile instead of current active profile
-			vscode.postMessage({ type: "telemetrySetting", text: telemetrySetting })
-			vscode.postMessage({ type: "systemNotificationsEnabled", bool: systemNotificationsEnabled }) // kilocode_change
-			vscode.postMessage({ type: "ghostServiceSettings", values: ghostServiceSettings }) // kilocode_change
-			vscode.postMessage({ type: "morphApiKey", text: morphApiKey }) // kilocode_change
-			vscode.postMessage({ type: "fastApplyModel", text: fastApplyModel }) // kilocode_change: Fast Apply model selection
-			vscode.postMessage({ type: "fastApplyApiProvider", text: fastApplyApiProvider }) // kilocode_change: Fast Apply model api base url
-			vscode.postMessage({ type: "kiloCodeImageApiKey", text: kiloCodeImageApiKey })
-			// kilocode_change start - Auto-purge settings
-			vscode.postMessage({ type: "autoPurgeEnabled", bool: autoPurgeEnabled })
-			vscode.postMessage({ type: "autoPurgeDefaultRetentionDays", value: autoPurgeDefaultRetentionDays })
-			vscode.postMessage({
-				type: "autoPurgeFavoritedTaskRetentionDays",
-				value: autoPurgeFavoritedTaskRetentionDays ?? undefined,
-			})
-			vscode.postMessage({
-				type: "autoPurgeCompletedTaskRetentionDays",
-				value: autoPurgeCompletedTaskRetentionDays,
-			})
-			vscode.postMessage({
-				type: "autoPurgeIncompleteTaskRetentionDays",
-				value: autoPurgeIncompleteTaskRetentionDays,
-			})
-			// Update cachedState to match the current state to prevent isChangeDetected from being set back to true
-			setCachedState((prevState) => ({ ...prevState, ...extensionState }))
 
 			// These have more complex logic so they aren't (yet) handled
 			// by the `updateSettings` message.
@@ -592,19 +424,6 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 			vscode.postMessage({ type: "upsertApiConfiguration", text: currentApiConfigName, apiConfiguration })
 			vscode.postMessage({ type: "telemetrySetting", text: telemetrySetting })
 
-			// kilocode_change: When editing a different profile, don't overwrite apiConfiguration
-			if (editingApiConfigName !== currentApiConfigName) {
-				// Only sync non-apiConfiguration fields from extensionState
-				const { apiConfiguration: _, ...restOfExtensionState } = extensionState
-				setCachedState((prevState) => ({
-					...prevState,
-					...restOfExtensionState,
-				}))
-			} else {
-				// When editing the active profile, sync everything
-				setCachedState((prevState) => ({ ...prevState, ...extensionState }))
-			}
-			// kilocode_change end
 			setChangeDetected(false)
 		}
 	}
@@ -623,7 +442,6 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 
 	useImperativeHandle(ref, () => ({ checkUnsaveChanges }), [checkUnsaveChanges])
 
-	// kilocode_change start
 	const onConfirmDialogResult = useCallback(
 		(confirm: boolean) => {
 			if (confirm) {
@@ -634,27 +452,8 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 			}
 			// If confirm is false (Cancel), do nothing, dialog closes automatically
 		},
-		[setCachedState, setChangeDetected, extensionState], // Depend on extensionState to get the latest original state
+		[extensionState], // Depend on extensionState to get the latest original state
 	)
-
-	// From time to time there's a bug that triggers unsaved changes upon rendering the SettingsView
-	// This is a (nasty) workaround to detect when this happens, and to force overwrite the unsaved changes
-	const renderStart = useRef<null | number>()
-	useEffect(() => {
-		renderStart.current = performance.now()
-	}, [])
-	useEffect(() => {
-		if (renderStart.current && process.env.NODE_ENV !== "test") {
-			const renderEnd = performance.now()
-			const renderTime = renderEnd - renderStart.current
-
-			if (renderTime < 100 && isChangeDetected) {
-				console.info("Overwriting unsaved changes in less than 100ms")
-				onConfirmDialogResult(true)
-			}
-		}
-	}, [isChangeDetected, onConfirmDialogResult])
-	// kilocode_change end
 
 	// Handle tab changes with unsaved changes check
 	const handleTabChange = useCallback(
@@ -704,29 +503,27 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 		() => [
 			{ id: "providers", icon: Webhook },
 			{ id: "autoApprove", icon: CheckCheck },
-			// { id: "slashCommands", icon: SquareSlash }, // kilocode_change: needs work to be re-introduced
+			{ id: "slashCommands", icon: SquareSlash },
 			{ id: "browser", icon: SquareMousePointer },
 			{ id: "checkpoints", icon: GitBranch },
-			{ id: "display", icon: Monitor }, // kilocode_change
-			...(kiloCodeWrapperProperties?.kiloCodeWrapped ? [] : [{ id: "ghost" as const, icon: Bot }]), // kilocode_change
 			{ id: "notifications", icon: Bell },
 			{ id: "contextManagement", icon: Database },
 			{ id: "terminal", icon: SquareTerminal },
 			{ id: "prompts", icon: MessageSquare },
-			// { id: "ui", icon: Glasses }, // kilocode_change: we have our own display section
+			{ id: "ui", icon: Glasses },
 			{ id: "experimental", icon: FlaskConical },
 			{ id: "language", icon: Globe },
-			{ id: "mcp", icon: Server },
 			{ id: "about", icon: Info },
 		],
-		[kiloCodeWrapperProperties?.kiloCodeWrapped], // kilocode_change
+		[], // No dependencies needed now
 	)
+
 	// Update target section logic to set active tab
 	useEffect(() => {
 		if (targetSection && sectionNames.includes(targetSection as SectionName)) {
 			setActiveTab(targetSection as SectionName)
 		}
-	}, [targetSection]) // kilocode_change
+	}, [targetSection])
 
 	// Function to scroll the active tab into view for vertical layout
 	const scrollToActiveTab = useCallback(() => {
@@ -823,13 +620,7 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 								data-compact={isCompactMode}>
 								<div className={cn("flex items-center gap-2", isCompactMode && "justify-center")}>
 									<Icon className="w-4 h-4" />
-									<span className="tab-label">
-										{id === "mcp"
-											? t(`kilocode:settings.sections.mcp`)
-											: id === "ghost"
-												? t(`kilocode:ghost.title`)
-												: t(`settings:sections.${id}`)}
-									</span>
+									<span className="tab-label">{t(`settings:sections.${id}`)}</span>
 								</div>
 							</TabTrigger>
 						)
@@ -844,13 +635,7 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 											{React.cloneElement(triggerComponent)}
 										</TooltipTrigger>
 										<TooltipContent side="right" className="text-base">
-											<p className="m-0">
-												{id === "mcp"
-													? t(`kilocode:settings.sections.mcp`)
-													: id === "ghost"
-														? t(`kilocode:ghost.title`)
-														: t(`settings:sections.${id}`)}
-											</p>
+											<p className="m-0">{t(`settings:sections.${id}`)}</p>
 										</TooltipContent>
 									</Tooltip>
 								</TooltipProvider>
@@ -876,75 +661,39 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 							</SectionHeader>
 
 							<Section>
-								{/* kilocode_change start changes to allow for editting a non-active profile */}
 								<ApiConfigManager
-									currentApiConfigName={editingApiConfigName}
-									activeApiConfigName={currentApiConfigName}
+									currentApiConfigName={currentApiConfigName}
 									listApiConfigMeta={listApiConfigMeta}
-									onSelectConfig={(configName: string) => {
-										checkUnsaveChanges(() => {
-											setEditingApiConfigName(configName)
-											// Set flag to prevent extensionState sync while loading
-											isLoadingProfileForEditing.current = true
-											// Request the profile's configuration for editing
-											vscode.postMessage({
-												type: "getProfileConfigurationForEditing",
-												text: configName,
-											})
-										})
-									}}
-									onActivateConfig={(configName: string) => {
-										vscode.postMessage({ type: "loadApiConfiguration", text: configName })
-									}}
-									onDeleteConfig={(configName: string) => {
-										const isEditingProfile = configName === editingApiConfigName
-
+									onSelectConfig={(configName: string) =>
+										checkUnsaveChanges(() =>
+											vscode.postMessage({ type: "loadApiConfiguration", text: configName }),
+										)
+									}
+									onDeleteConfig={(configName: string) =>
 										vscode.postMessage({ type: "deleteApiConfiguration", text: configName })
-
-										// If deleting the editing profile, switch to another for editing
-										if (isEditingProfile && listApiConfigMeta && listApiConfigMeta.length > 1) {
-											const nextProfile = listApiConfigMeta.find((p) => p.name !== configName)
-											if (nextProfile) {
-												setEditingApiConfigName(nextProfile.name)
-											}
-										}
-									}}
+									}
 									onRenameConfig={(oldName: string, newName: string) => {
 										vscode.postMessage({
 											type: "renameApiConfiguration",
 											values: { oldName, newName },
 											apiConfiguration,
 										})
-										if (oldName === editingApiConfigName) {
-											setEditingApiConfigName(newName)
-										}
-										// Update prevApiConfigName if renaming the active profile
-										if (oldName === currentApiConfigName) {
-											prevApiConfigName.current = newName
-										}
+										prevApiConfigName.current = newName
 									}}
-									// kilocode_change start - autocomplete profile type system
-									onUpsertConfig={(configName: string, profileType?: ProfileType) => {
+									onUpsertConfig={(configName: string) =>
 										vscode.postMessage({
 											type: "upsertApiConfiguration",
 											text: configName,
-											apiConfiguration: {
-												...apiConfiguration,
-												profileType: profileType || "chat",
-											},
+											apiConfiguration,
 										})
-										setEditingApiConfigName(configName)
-									}}
+									}
 								/>
-								{/* kilocode_change end changes to allow for editting a non-active profile */}
-
 								<ApiOptions
 									uriScheme={uriScheme}
 									apiConfiguration={apiConfiguration}
 									setApiConfigurationField={setApiConfigurationField}
 									errorMessage={errorMessage}
 									setErrorMessage={setErrorMessage}
-									currentApiConfigName={currentApiConfigName}
 								/>
 							</Section>
 						</div>
@@ -953,9 +702,6 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 					{/* Auto-Approve Section */}
 					{activeTab === "autoApprove" && (
 						<AutoApproveSettings
-							showAutoApproveMenu={showAutoApproveMenu} // kilocode_change
-							yoloMode={yoloMode} // kilocode_change
-							yoloGatekeeperApiConfigId={yoloGatekeeperApiConfigId} // kilocode_change: AI gatekeeper for YOLO mode
 							alwaysAllowReadOnly={alwaysAllowReadOnly}
 							alwaysAllowReadOnlyOutsideWorkspace={alwaysAllowReadOnlyOutsideWorkspace}
 							alwaysAllowWrite={alwaysAllowWrite}
@@ -1000,38 +746,8 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 							enableCheckpoints={enableCheckpoints}
 							checkpointTimeout={checkpointTimeout}
 							setCachedStateField={setCachedStateField}
-							// kilocode_change start
-							autoPurgeEnabled={autoPurgeEnabled}
-							autoPurgeDefaultRetentionDays={autoPurgeDefaultRetentionDays}
-							autoPurgeFavoritedTaskRetentionDays={autoPurgeFavoritedTaskRetentionDays}
-							autoPurgeCompletedTaskRetentionDays={autoPurgeCompletedTaskRetentionDays}
-							autoPurgeIncompleteTaskRetentionDays={autoPurgeIncompleteTaskRetentionDays}
-							autoPurgeLastRunTimestamp={autoPurgeLastRunTimestamp}
-							onManualPurge={() => {
-								vscode.postMessage({ type: "manualPurge" })
-							}}
-							// kilocode_change end
 						/>
 					)}
-
-					{/* kilocode_change start display section */}
-					{activeTab === "display" && (
-						<DisplaySettings
-							reasoningBlockCollapsed={reasoningBlockCollapsed ?? true}
-							showTaskTimeline={showTaskTimeline}
-							sendMessageOnEnter={sendMessageOnEnter}
-							showTimestamps={cachedState.showTimestamps} // kilocode_change
-							hideCostBelowThreshold={hideCostBelowThreshold}
-							setCachedStateField={setCachedStateField}
-						/>
-					)}
-					{activeTab === "ghost" && (
-						<GhostServiceSettingsView
-							ghostServiceSettings={ghostServiceSettings}
-							onGhostServiceSettingsChange={setGhostServiceSettingsField}
-						/>
-					)}
-					{/* kilocode_change end display section */}
 
 					{/* Notifications Section */}
 					{activeTab === "notifications" && (
@@ -1040,8 +756,6 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 							ttsSpeed={ttsSpeed}
 							soundEnabled={soundEnabled}
 							soundVolume={soundVolume}
-							systemNotificationsEnabled={systemNotificationsEnabled}
-							areSettingsCommitted={!isChangeDetected}
 							setCachedStateField={setCachedStateField}
 						/>
 					)}
@@ -1059,13 +773,13 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 							maxImageFileSize={maxImageFileSize}
 							maxTotalImageSize={maxTotalImageSize}
 							maxConcurrentFileReads={maxConcurrentFileReads}
-							allowVeryLargeReads={allowVeryLargeReads /* kilocode_change */}
 							profileThresholds={profileThresholds}
 							includeDiagnosticMessages={includeDiagnosticMessages}
 							maxDiagnosticMessages={maxDiagnosticMessages}
 							writeDelayMs={writeDelayMs}
 							includeCurrentTime={includeCurrentTime}
 							includeCurrentCost={includeCurrentCost}
+							maxGitStatusFiles={maxGitStatusFiles}
 							setCachedStateField={setCachedStateField}
 						/>
 					)}
@@ -1084,7 +798,6 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 							terminalZshP10k={terminalZshP10k}
 							terminalZdotdir={terminalZdotdir}
 							terminalCompressProgressBar={terminalCompressProgressBar}
-							terminalCommandApiConfigId={terminalCommandApiConfigId} // kilocode_change
 							setCachedStateField={setCachedStateField}
 						/>
 					)}
@@ -1114,23 +827,16 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 						<ExperimentalSettings
 							setExperimentEnabled={setExperimentEnabled}
 							experiments={experiments}
-							// kilocode_change start
-							setCachedStateField={setCachedStateField}
-							morphApiKey={morphApiKey}
-							fastApplyModel={fastApplyModel}
-							fastApplyApiProvider={fastApplyApiProvider}
-							// kilocode_change end
 							apiConfiguration={apiConfiguration}
 							setApiConfigurationField={setApiConfigurationField}
+							imageGenerationProvider={imageGenerationProvider}
 							openRouterImageApiKey={openRouterImageApiKey as string | undefined}
-							kiloCodeImageApiKey={kiloCodeImageApiKey}
 							openRouterImageGenerationSelectedModel={
 								openRouterImageGenerationSelectedModel as string | undefined
 							}
+							setImageGenerationProvider={setImageGenerationProvider}
 							setOpenRouterImageApiKey={setOpenRouterImageApiKey}
-							setKiloCodeImageApiKey={setKiloCodeImageApiKey}
 							setImageGenerationSelectedModel={setImageGenerationSelectedModel}
-							currentProfileKilocodeToken={apiConfiguration.kilocodeToken}
 						/>
 					)}
 
@@ -1138,10 +844,6 @@ const SettingsView = forwardRef<SettingsViewRef, SettingsViewProps>(({ onDone, t
 					{activeTab === "language" && (
 						<LanguageSettings language={language || "en"} setCachedStateField={setCachedStateField} />
 					)}
-
-					{/* kilocode_change */}
-					{/* MCP Section */}
-					{activeTab === "mcp" && <McpView />}
 
 					{/* About Section */}
 					{activeTab === "about" && (

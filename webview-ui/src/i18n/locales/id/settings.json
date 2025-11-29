@@ -25,7 +25,6 @@
 		"autoApprove": "Auto-Approve",
 		"browser": "Browser",
 		"checkpoints": "Checkpoint",
-		"display": "Tampilkan",
 		"notifications": "Notifikasi",
 		"contextManagement": "Konteks",
 		"terminal": "Terminal",
@@ -34,21 +33,40 @@
 		"ui": "UI",
 		"experimental": "Eksperimental",
 		"language": "Bahasa",
-		"about": "Tentang Kilo Code",
-		"autoPurge": "Pembersihan Otomatis"
+		"about": "Tentang Roo Code"
+	},
+	"about": {
+		"bugReport": {
+			"label": "Menemukan bug?",
+			"link": "Laporkan di GitHub"
+		},
+		"featureRequest": {
+			"label": "Punya ide?",
+			"link": "Bagikan dengan kami"
+		},
+		"securityIssue": {
+			"label": "Menemukan kerentanan?",
+			"link": "Ikuti proses pengungkapan kami"
+		},
+		"contact": {
+			"label": "Perlu bicara dengan kami? Tulis"
+		},
+		"community": "Ingin tips atau hanya nongkrong dengan pengguna Roo Code lainnya? Bergabunglah dengan <redditLink>reddit.com/r/RooCode</redditLink> atau <discordLink>discord.gg/roocode</discordLink>",
+		"contactAndCommunity": "Kontak & Komunitas",
+		"manageSettings": "Kelola Pengaturan"
 	},
 	"slashCommands": {
 		"description": "Kelola perintah slash kamu untuk mengeksekusi alur kerja dan tindakan kustom dengan cepat. <DocsLink>Pelajari lebih lanjut</DocsLink>"
 	},
 	"prompts": {
-		"description": "Konfigurasi support prompt yang digunakan untuk aksi cepat seperti meningkatkan prompt, menjelaskan kode, dan memperbaiki masalah. Prompt ini membantu Kilo Code memberikan bantuan yang lebih baik untuk tugas pengembangan umum."
+		"description": "Konfigurasi support prompt yang digunakan untuk aksi cepat seperti meningkatkan prompt, menjelaskan kode, dan memperbaiki masalah. Prompt ini membantu Roo memberikan bantuan yang lebih baik untuk tugas pengembangan umum."
 	},
 	"codeIndex": {
 		"title": "Pengindeksan Codebase",
 		"enableLabel": "Aktifkan Pengindeksan Codebase",
 		"enableDescription": "Aktifkan pengindeksan kode untuk pencarian dan pemahaman konteks yang lebih baik",
-		"profileLabel": "Provider Embeddings",
-		"selectProfilePlaceholder": "Pilih provider",
+		"providerLabel": "Provider Embeddings",
+		"selectProviderPlaceholder": "Pilih provider",
 		"openaiProvider": "OpenAI",
 		"ollamaProvider": "Ollama",
 		"geminiProvider": "Gemini",
@@ -57,6 +75,12 @@
 		"vercelAiGatewayProvider": "Vercel AI Gateway",
 		"vercelAiGatewayApiKeyLabel": "API Key",
 		"vercelAiGatewayApiKeyPlaceholder": "Masukkan kunci API Vercel AI Gateway Anda",
+		"bedrockProvider": "Amazon Bedrock",
+		"bedrockRegionLabel": "Wilayah AWS",
+		"bedrockRegionPlaceholder": "us-east-1",
+		"bedrockProfileLabel": "Profil AWS",
+		"bedrockProfilePlaceholder": "default",
+		"bedrockProfileDescription": "Nama profil AWS dari ~/.aws/credentials (wajib).",
 		"openRouterProvider": "OpenRouter",
 		"openRouterApiKeyLabel": "Kunci API OpenRouter",
 		"openRouterApiKeyPlaceholder": "Masukkan kunci API OpenRouter Anda",
@@ -95,12 +119,8 @@
 		"modelPlaceholder": "Masukkan nama model",
 		"selectModel": "Pilih model",
 		"ollamaBaseUrlLabel": "URL Dasar Ollama",
-		"vectorStoreProviderLabel": "Penyedia Penyimpanan Vektor",
 		"qdrantApiKeyLabel": "Kunci API Qdrant",
 		"qdrantApiKeyPlaceholder": "Masukkan kunci API Qdrant kamu (opsional)",
-		"lancedbVectorStoreDirectoryLabel": "Jalur LanceDB Vector Store",
-		"lancedbVectorStoreDirectoryPlaceholder": "Masukkan jalur penyimpanan vektor kustom (opsional)",
-		"lancedbVectorStoreDirectoryDescription": "Jalur untuk menyimpan database vektor LanceDB. Jika kosong, menggunakan lokasi default di globalStorageUri/vector.",
 		"setupConfigLabel": "Pengaturan",
 		"ollamaUrlPlaceholder": "http://localhost:11434",
 		"openAiCompatibleBaseUrlPlaceholder": "https://api.example.com",
@@ -131,33 +151,34 @@
 			"geminiApiKeyRequired": "Kunci API Gemini diperlukan",
 			"mistralApiKeyRequired": "Kunci API Mistral diperlukan",
 			"vercelAiGatewayApiKeyRequired": "Kunci API Vercel AI Gateway diperlukan",
+			"bedrockRegionRequired": "Wilayah AWS diperlukan",
+			"bedrockProfileRequired": "Profil AWS diperlukan",
 			"ollamaBaseUrlRequired": "URL dasar Ollama diperlukan",
 			"baseUrlRequired": "URL dasar diperlukan",
 			"modelDimensionMinValue": "Dimensi model harus lebih besar dari 0",
 			"openRouterApiKeyRequired": "Kunci API OpenRouter diperlukan"
 		},
+		"optional": "opsional",
 		"advancedConfigLabel": "Konfigurasi Lanjutan",
 		"searchMinScoreLabel": "Ambang Batas Skor Pencarian",
 		"searchMinScoreDescription": "Skor kesamaan minimum (0.0-1.0) yang diperlukan untuk hasil pencarian. Nilai yang lebih rendah mengembalikan lebih banyak hasil tetapi mungkin kurang relevan. Nilai yang lebih tinggi mengembalikan lebih sedikit hasil tetapi lebih relevan.",
 		"searchMinScoreResetTooltip": "Reset ke nilai default (0.4)",
 		"searchMaxResultsLabel": "Hasil Pencarian Maksimum",
 		"searchMaxResultsDescription": "Jumlah maksimum hasil pencarian yang dikembalikan saat melakukan query indeks basis kode. Nilai yang lebih tinggi memberikan lebih banyak konteks tetapi mungkin menyertakan hasil yang kurang relevan.",
-		"resetToDefault": "Reset ke default",
-		"cancelling": "Membatalkan...",
-		"cancelIndexingButton": "Batalkan pengindeksan"
+		"resetToDefault": "Reset ke default"
 	},
 	"autoApprove": {
 		"toggleShortcut": "Anda dapat mengonfigurasi pintasan global untuk pengaturan ini <SettingsLink>di preferensi IDE Anda</SettingsLink>.",
-		"description": "Izinkan Kilo Code untuk secara otomatis melakukan operasi tanpa memerlukan persetujuan. Aktifkan pengaturan ini hanya jika kamu sepenuhnya mempercayai AI dan memahami risiko keamanan yang terkait.",
+		"description": "Izinkan Roo untuk secara otomatis melakukan operasi tanpa memerlukan persetujuan. Aktifkan pengaturan ini hanya jika kamu sepenuhnya mempercayai AI dan memahami risiko keamanan yang terkait.",
 		"enabled": "Auto-Approve Diaktifkan",
 		"toggleAriaLabel": "Beralih persetujuan otomatis",
 		"disabledAriaLabel": "Persetujuan otomatis dinonaktifkan - pilih opsi terlebih dahulu",
 		"readOnly": {
 			"label": "Baca",
-			"description": "Ketika diaktifkan, Kilo Code akan secara otomatis melihat konten direktori dan membaca file tanpa memerlukan kamu mengklik tombol Setujui.",
+			"description": "Ketika diaktifkan, Roo akan secara otomatis melihat konten direktori dan membaca file tanpa memerlukan kamu mengklik tombol Setujui.",
 			"outsideWorkspace": {
 				"label": "Sertakan file di luar workspace",
-				"description": "Izinkan Kilo Code membaca file di luar workspace saat ini tanpa memerlukan persetujuan."
+				"description": "Izinkan Roo membaca file di luar workspace saat ini tanpa memerlukan persetujuan."
 			}
 		},
 		"write": {
@@ -166,11 +187,11 @@
 			"delayLabel": "Delay setelah menulis untuk memungkinkan diagnostik mendeteksi masalah potensial",
 			"outsideWorkspace": {
 				"label": "Sertakan file di luar workspace",
-				"description": "Izinkan Kilo Code membuat dan mengedit file di luar workspace saat ini tanpa memerlukan persetujuan."
+				"description": "Izinkan Roo membuat dan mengedit file di luar workspace saat ini tanpa memerlukan persetujuan."
 			},
 			"protected": {
 				"label": "Sertakan file yang dilindungi",
-				"description": "Izinkan Kilo Code membuat dan mengedit file yang dilindungi (seperti .kilocodeignore dan file konfigurasi .kilocode/) tanpa memerlukan persetujuan."
+				"description": "Izinkan Roo membuat dan mengedit file yang dilindungi (seperti .rooignore dan file konfigurasi .roo/) tanpa memerlukan persetujuan."
 			}
 		},
 		"browser": {
@@ -237,8 +258,6 @@
 		"providerDocumentation": "Dokumentasi {{provider}}",
 		"configProfile": "Profil Konfigurasi",
 		"description": "Simpan konfigurasi API yang berbeda untuk beralih dengan cepat antara provider dan pengaturan.",
-		"makeActiveProfile": "Jadikan Profil Aktif",
-		"makeActiveTooltip": "Aktifkan profil ini untuk digunakan dalam permintaan API",
 		"apiProvider": "Provider API",
 		"model": "Model",
 		"nameEmpty": "Nama tidak boleh kosong",
@@ -257,8 +276,6 @@
 		"noProviderMatchFound": "Tidak ada penyedia ditemukan",
 		"noMatchFound": "Tidak ada profil yang cocok ditemukan",
 		"vscodeLmDescription": " API Model Bahasa VS Code memungkinkan kamu menjalankan model yang disediakan oleh ekstensi VS Code lainnya (termasuk namun tidak terbatas pada GitHub Copilot). Cara termudah untuk memulai adalah menginstal ekstensi Copilot dan Copilot Chat dari VS Code Marketplace.",
-		"vscodeLmUnavailable": "Dukungan Model Bahasa VS Code hanya tersedia di Visual Studio Code. Fork seperti VSCodium dan lainnya mungkin tidak berfungsi. Selain itu, kemampuan ini tidak tersedia di alat JetBrains.",
-		"vscodeLmUnavailableInstructions": "Pastikan Anda menggunakan alat yang didukung dan bahwa VS Code Chat telah diinstal dan diaktifkan",
 		"awsCustomArnUse": "Masukkan ARN Amazon Bedrock yang valid untuk model yang ingin kamu gunakan. Contoh format:",
 		"awsCustomArnDesc": "Pastikan region di ARN cocok dengan AWS Region yang kamu pilih di atas.",
 		"openRouterApiKey": "OpenRouter API Key",
@@ -295,14 +312,14 @@
 		"anthropic1MContextBetaDescription": "Memperluas jendela konteks menjadi 1 juta token untuk Claude Sonnet 4",
 		"awsBedrock1MContextBetaLabel": "Aktifkan jendela konteks 1M (Beta)",
 		"awsBedrock1MContextBetaDescription": "Memperluas jendela konteks menjadi 1 juta token untuk Claude Sonnet 4",
+		"basetenApiKey": "Baseten API Key",
+		"getBasetenApiKey": "Dapatkan Baseten API Key",
 		"cerebrasApiKey": "Cerebras API Key",
 		"getCerebrasApiKey": "Dapatkan Cerebras API Key",
 		"chutesApiKey": "Chutes API Key",
 		"getChutesApiKey": "Dapatkan Chutes API Key",
 		"fireworksApiKey": "Fireworks API Key",
 		"getFireworksApiKey": "Dapatkan Fireworks API Key",
-		"syntheticApiKey": "Synthetic API Key",
-		"getSyntheticApiKey": "Dapatkan Synthetic API Key",
 		"featherlessApiKey": "Featherless API Key",
 		"getFeatherlessApiKey": "Dapatkan Featherless API Key",
 		"ioIntelligenceApiKey": "IO Intelligence API Key",
@@ -322,14 +339,6 @@
 		"minimaxApiKey": "Kunci API MiniMax",
 		"getMiniMaxApiKey": "Dapatkan Kunci API MiniMax",
 		"minimaxBaseUrl": "Titik Masuk MiniMax",
-		"nanoGptApiKey": "Kunci API Nano-GPT",
-		"getNanoGptApiKey": "Dapatkan Kunci API Nano-GPT",
-		"nanoGptModelList": "Daftar Model",
-		"nanoGptModelListOptions": {
-			"all": "Semua Model",
-			"personalized": "Model Personal",
-			"subscription": "Model Langganan"
-		},
 		"geminiApiKey": "Gemini API Key",
 		"getGroqApiKey": "Dapatkan Groq API Key",
 		"groqApiKey": "Groq API Key",
@@ -337,10 +346,6 @@
 		"sambaNovaApiKey": "SambaNova API Key",
 		"getHuggingFaceApiKey": "Dapatkan Kunci API Hugging Face",
 		"huggingFaceApiKey": "Kunci API Hugging Face",
-		"getOvhCloudAiEndpointsApiKey": "Dapatkan Kunci API OVHcloud AI Endpoints",
-		"ovhCloudAiEndpointsApiKey": "Kunci API OVHcloud AI Endpoints",
-		"ovhCloudAiEndpointsBaseUrl": "URL Dasar",
-		"getOvhCloudAiEndpointsBaseUrl": "Gunakan URL dasar kustom",
 		"huggingFaceModelId": "ID Model",
 		"getGeminiApiKey": "Dapatkan Gemini API Key",
 		"huggingFaceLoading": "Memuat...",
@@ -357,14 +362,6 @@
 		"apiKey": "API Key",
 		"openAiBaseUrl": "Base URL",
 		"getOpenAiApiKey": "Dapatkan OpenAI API Key",
-		"copilotAuthentication": "Autentikasi GitHub Copilot",
-		"copilotDeviceCodeNotice": "GitHub Copilot menggunakan alur kode perangkat OAuth untuk autentikasi yang aman. Kamu akan diarahkan ke GitHub untuk mengotorisasi akses.",
-		"copilotModelDescription": "Memungkinkan kamu menggunakan model di Copilot",
-		"authenticating": "Mengautentikasi...",
-		"waitingForAuth": "Menunggu autentikasi...",
-		"authenticateWithGitHub": "Autentikasi dengan GitHub",
-		"authenticated": "Terautentikasi",
-		"clearAuthentication": "Hapus Autentikasi",
 		"mistralApiKey": "Mistral API Key",
 		"getMistralApiKey": "Dapatkan Mistral / Codestral API Key",
 		"codestralBaseUrl": "Codestral Base URL (Opsional)",
@@ -421,44 +418,17 @@
 			"draftModelDesc": "Draft model harus dari keluarga model yang sama agar speculative decoding bekerja dengan benar.",
 			"selectDraftModel": "Pilih Draft Model",
 			"noModelsFound": "Tidak ada draft model ditemukan. Pastikan LM Studio berjalan dengan Server Mode diaktifkan.",
-			"description": "LM Studio memungkinkan kamu menjalankan model secara lokal di komputer. Untuk instruksi cara memulai, lihat <a>panduan quickstart</a> mereka. Kamu juga perlu memulai fitur <b>local server</b> LM Studio untuk menggunakannya dengan ekstensi ini. <span>Catatan:</span> Kilo Code menggunakan prompt kompleks dan bekerja terbaik dengan model Claude. Model yang kurang mampu mungkin tidak bekerja seperti yang diharapkan."
+			"description": "LM Studio memungkinkan kamu menjalankan model secara lokal di komputer. Untuk instruksi cara memulai, lihat <a>panduan quickstart</a> mereka. Kamu juga perlu memulai fitur <b>local server</b> LM Studio untuk menggunakannya dengan ekstensi ini. <span>Catatan:</span> Roo Code menggunakan prompt kompleks dan bekerja terbaik dengan model Claude. Model yang kurang mampu mungkin tidak bekerja seperti yang diharapkan."
 		},
 		"ollama": {
 			"baseUrl": "Base URL (opsional)",
 			"modelId": "Model ID",
 			"apiKey": "Ollama API Key",
-			"apiKeyPlaceholder": "Masukkan API key Anda",
 			"apiKeyHelp": "API key opsional untuk instance Ollama yang terautentikasi atau layanan cloud. Biarkan kosong untuk instalasi lokal.",
 			"numCtx": "Ukuran Jendela Konteks (num_ctx)",
 			"numCtxHelp": "Ganti ukuran jendela konteks default model. Biarkan kosong untuk menggunakan konfigurasi Modelfile model. Nilai minimum adalah 128.",
 			"description": "Ollama memungkinkan kamu menjalankan model secara lokal di komputer. Untuk instruksi cara memulai, lihat panduan quickstart mereka.",
-			"warning": "Catatan: Kilo Code menggunakan prompt kompleks dan bekerja terbaik dengan model Claude. Model yang kurang mampu mungkin tidak bekerja seperti yang diharapkan."
-		},
-		"sapAiCore": {
-			"serviceKey": "AI Core Service Key",
-			"serviceKeyJson": "Masukkan Service Key JSON...",
-			"resourceGroup": "AI Core Resource Group",
-			"credentialsNote": "Kredensial ini disimpan secara lokal dan hanya digunakan untuk membuat permintaan API dari ekstensi ini.",
-			"learnMore": "Kamu dapat menemukan informasi lebih lanjut tentang akses API SAP AI Core di sini.",
-			"orchestrationMode": "Mode Orkestrasi",
-			"orchestrationEnabledDesc": "Ketika diaktifkan, menyediakan akses ke semua model yang tersedia tanpa memerlukan deployment individual.",
-			"orchestrationDisabledDesc": "Ketika dinonaktifkan, hanya menyediakan akses ke model foundation yang di-deploy di instance AI Core kamu.",
-			"modelDeploymentDesc": "Kamu hanya dapat memilih model dengan deployment yang tersedia.",
-			"deployment": "Deployment",
-			"loading": "Memuat...",
-			"modelsCount": "({{count}} model)",
-			"deploymentsCount": "({{count}} deployment)",
-			"selectModel": "Pilih model...",
-			"selectDeployment": "Pilih deployment...",
-			"searchModels": "Cari model...",
-			"searchDeployments": "Cari deployment...",
-			"noModelsFound": "Tidak ada model ditemukan",
-			"noDeploymentFound": "Tidak ada deployment ditemukan",
-			"getStarted": "Mulai dengan SAP AI Core",
-			"supportedProviders": "Provider yang Didukung",
-			"supportedProvidersDesc1": "Provider SAP AI Core saat ini hanya mendukung model foundation untuk provider LLM berikut:",
-			"supportedProvidersDesc2": "Pertimbangkan untuk beralih ke Mode Orkestrasi untuk akses ke lebih banyak model.",
-			"supportedProvidersDesc3": "Pelajari lebih lanjut tentang Mode Orkestrasi"
+			"warning": "Catatan: Roo Code menggunakan prompt kompleks dan bekerja terbaik dengan model Claude. Model yang kurang mampu mungkin tidak bekerja seperti yang diharapkan."
 		},
 		"unboundApiKey": "Unbound API Key",
 		"getUnboundApiKey": "Dapatkan Unbound API Key",
@@ -480,7 +450,7 @@
 			}
 		},
 		"customModel": {
-			"capabilities": "Konfigurasi kemampuan dan harga untuk model kustom yang kompatibel dengan OpenAI. Hati-hati saat menentukan kemampuan model, karena dapat mempengaruhi performa Kilo Code.",
+			"capabilities": "Konfigurasi kemampuan dan harga untuk model kustom yang kompatibel dengan OpenAI. Hati-hati saat menentukan kemampuan model, karena dapat mempengaruhi performa Roo Code.",
 			"maxTokens": {
 				"label": "Token Output Maksimum",
 				"description": "Jumlah maksimum token yang dapat dihasilkan model dalam respons. (Tentukan -1 untuk membiarkan server mengatur token maksimum.)"
@@ -521,17 +491,13 @@
 			},
 			"resetDefaults": "Reset ke Default"
 		},
-		"rateLimitAfter": {
-			"label": "Batas laju di akhir",
-			"description": "Mulai membatasi laju setelah aliran API berakhir."
-		},
 		"rateLimitSeconds": {
 			"label": "Rate limit",
 			"description": "Waktu minimum antara permintaan API."
 		},
 		"consecutiveMistakeLimit": {
 			"label": "Batas Kesalahan & Pengulangan",
-			"description": "Jumlah kesalahan berturut-turut atau tindakan berulang sebelum menampilkan dialog 'Kilo mengalami masalah'. Atur ke 0 untuk menonaktifkan mekanisme keamanan ini (tidak akan pernah terpicu).",
+			"description": "Jumlah kesalahan berturut-turut atau tindakan berulang sebelum menampilkan dialog 'Roo mengalami masalah'. Atur ke 0 untuk menonaktifkan mekanisme keamanan ini (tidak akan pernah terpicu).",
 			"unlimitedDescription": "Percobaan ulang tak terbatas diaktifkan (lanjut otomatis). Dialog tidak akan pernah muncul.",
 			"warning": "⚠️ Mengatur ke 0 memungkinkan percobaan ulang tak terbatas yang dapat menghabiskan penggunaan API yang signifikan"
 		},
@@ -557,43 +523,12 @@
 			"placeholder": "Default: claude",
 			"maxTokensLabel": "Token Output Maks",
 			"maxTokensDescription": "Jumlah maksimum token output untuk respons Claude Code. Default adalah 8000."
-		},
-		"geminiCli": {
-			"description": "Penyedia ini menggunakan autentikasi OAuth dari alat Gemini CLI dan tidak memerlukan kunci API.",
-			"oauthPath": "Jalur Kredensial OAuth (opsional)",
-			"oauthPathDescription": "Jalur ke file kredensial OAuth. Biarkan kosong untuk menggunakan lokasi default (~/.gemini/oauth_creds.json).",
-			"instructions": "Jika Anda belum melakukan autentikasi, jalankan",
-			"instructionsContinued": "di terminal Anda terlebih dahulu.",
-			"setupLink": "Petunjuk Pengaturan Gemini CLI",
-			"requirementsTitle": "Persyaratan Penting",
-			"requirement1": "Pertama, Anda perlu menginstal alat Gemini CLI",
-			"requirement2": "Kemudian, jalankan gemini di terminal Anda dan pastikan Anda masuk dengan Google",
-			"requirement3": "Hanya berfungsi dengan akun Google pribadi (bukan akun Google Workspace)",
-			"requirement4": "Tidak menggunakan kunci API - autentikasi ditangani melalui OAuth",
-			"requirement5": "Memerlukan alat Gemini CLI diinstal dan diautentikasi terlebih dahulu",
-			"freeAccess": "Akses gratis melalui autentikasi OAuth"
-		},
-		"qwenCode": {
-			"oauthPath": "Jalur Kredensial OAuth (opsional)",
-			"oauthPathDescription": "Jalur ke file kredensial OAuth. Biarkan kosong untuk menggunakan lokasi default (~/.qwen/oauth_creds.json).",
-			"description": "Provider ini menggunakan autentikasi OAuth dari layanan Qwen dan tidak memerlukan kunci API.",
-			"instructions": "Silakan ikuti dokumentasi resmi untuk mendapatkan file otorisasi dan tempatkan di jalur yang ditentukan.",
-			"setupLink": "Dokumentasi Resmi Qwen"
-		},
-		"profileName": "Nama Profil",
-		"profileType": "Jenis Profil",
-		"profileTypeChat": "Chat",
-		"profileTypeAutocomplete": "Pelengkapan Otomatis",
-		"profileTypeDescription": "Profil chat digunakan untuk percakapan. Hanya satu profil pelengkapan otomatis yang diizinkan.",
-		"autocompleteLabel": "(Pelengkapan Otomatis)",
-		"autocomplete": {
-			"onlyOneAllowed": "Hanya satu profil pelengkapan otomatis yang diizinkan. Profil \"{{existingName}}\" sudah dikonfigurasi untuk pelengkapan otomatis. Silakan ubah jenisnya terlebih dahulu atau hapus."
 		}
 	},
 	"browser": {
 		"enable": {
 			"label": "Aktifkan tool browser",
-			"description": "Ketika diaktifkan, Kilo Code dapat menggunakan browser untuk berinteraksi dengan website ketika menggunakan model yang mendukung computer use. <0>Pelajari lebih lanjut</0>"
+			"description": "Ketika diaktifkan, Roo dapat menggunakan browser untuk berinteraksi dengan website ketika menggunakan model yang mendukung computer use. <0>Pelajari lebih lanjut</0>"
 		},
 		"viewport": {
 			"label": "Ukuran viewport",
@@ -625,50 +560,18 @@
 		},
 		"enable": {
 			"label": "Aktifkan checkpoint otomatis",
-			"description": "Ketika diaktifkan, Kilo Code akan secara otomatis membuat checkpoint selama eksekusi tugas, memudahkan untuk meninjau perubahan atau kembali ke state sebelumnya. <0>Pelajari lebih lanjut</0>"
-		}
-	},
-	"autoPurge": {
-		"enable": {
-			"label": "Aktifkan pembersihan tugas otomatis",
-			"description": "Secara otomatis menghapus tugas lama untuk membebaskan ruang disk dan meningkatkan kinerja. Tugas diklasifikasikan berdasarkan jenis dan usia untuk menentukan kapan harus dihapus."
-		},
-		"defaultRetention": {
-			"label": "Periode retensi default (hari)",
-			"description": "Jumlah hari untuk menyimpan tugas sebelum memenuhi syarat untuk dibersihkan"
-		},
-		"neverPurgeFavorited": {
-			"label": "Jangan pernah hapus tugas favorit",
-			"description": "Ketika diaktifkan, tugas favorit tidak akan pernah dihapus secara otomatis terlepas dari usia"
-		},
-		"favoritedRetention": {
-			"label": "Retensi tugas favorit (hari)",
-			"description": "Jumlah hari untuk menyimpan tugas favorit (hanya berlaku ketika 'Jangan pernah hapus tugas favorit' dinonaktifkan)"
-		},
-		"completedRetention": {
-			"label": "Retensi tugas selesai (hari)",
-			"description": "Jumlah hari untuk menyimpan tugas yang telah berhasil diselesaikan"
-		},
-		"incompleteRetention": {
-			"label": "Retensi tugas tidak lengkap (hari)",
-			"description": "Jumlah hari untuk menyimpan tugas yang tidak diselesaikan (biasanya lebih pendek dari tugas yang selesai)"
-		},
-		"lastRun": {
-			"label": "Pembersihan terakhir"
-		},
-		"manualPurge": {
-			"button": "Jalankan Pembersihan Sekarang"
+			"description": "Ketika diaktifkan, Roo akan secara otomatis membuat checkpoint selama eksekusi tugas, memudahkan untuk meninjau perubahan atau kembali ke state sebelumnya. <0>Pelajari lebih lanjut</0>"
 		}
 	},
 	"notifications": {
 		"sound": {
 			"label": "Aktifkan efek suara",
-			"description": "Ketika diaktifkan, Kilo Code akan memutar efek suara untuk notifikasi dan event.",
+			"description": "Ketika diaktifkan, Roo akan memutar efek suara untuk notifikasi dan event.",
 			"volumeLabel": "Volume"
 		},
 		"tts": {
 			"label": "Aktifkan text-to-speech",
-			"description": "Ketika diaktifkan, Kilo Code akan membacakan responnya menggunakan text-to-speech.",
+			"description": "Ketika diaktifkan, Roo akan membacakan responnya menggunakan text-to-speech.",
 			"speedLabel": "Kecepatan"
 		}
 	},
@@ -676,7 +579,7 @@
 		"description": "Kontrol informasi apa yang disertakan dalam context window AI, mempengaruhi penggunaan token dan kualitas respons",
 		"autoCondenseContextPercent": {
 			"label": "Ambang batas untuk memicu kondensasi konteks cerdas",
-			"description": "Ketika context window mencapai ambang batas ini, Kilo Code akan secara otomatis mengondensasikannya."
+			"description": "Ketika context window mencapai ambang batas ini, Roo akan secara otomatis mengondensasikannya."
 		},
 		"condensingApiConfiguration": {
 			"label": "Konfigurasi API untuk Kondensasi Konteks",
@@ -692,7 +595,7 @@
 		},
 		"autoCondenseContext": {
 			"name": "Secara otomatis memicu kondensasi konteks cerdas",
-			"description": "Ketika diaktifkan, Kilo Code akan secara otomatis mengondensasi konteks ketika ambang batas tercapai. Ketika dinonaktifkan, kamu masih dapat memicu kondensasi konteks secara manual."
+			"description": "Ketika diaktifkan, Roo akan secara otomatis mengondensasi konteks ketika ambang batas tercapai. Ketika dinonaktifkan, kamu masih dapat memicu kondensasi konteks secara manual."
 		},
 		"diagnostics": {
 			"includeMessages": {
@@ -729,8 +632,8 @@
 			"description": "Jumlah maksimum file yang disertakan dalam detail direktori kerja saat ini. Nilai yang lebih tinggi memberikan lebih banyak konteks tetapi meningkatkan penggunaan token."
 		},
 		"rooignore": {
-			"label": "Tampilkan file .kilocodeignore'd dalam daftar dan pencarian",
-			"description": "Ketika diaktifkan, file yang cocok dengan pola di .kilocodeignore akan ditampilkan dalam daftar dengan simbol kunci. Ketika dinonaktifkan, file ini akan sepenuhnya disembunyikan dari daftar file dan pencarian."
+			"label": "Tampilkan file .rooignore'd dalam daftar dan pencarian",
+			"description": "Ketika diaktifkan, file yang cocok dengan pola di .rooignore akan ditampilkan dalam daftar dengan simbol kunci. Ketika dinonaktifkan, file ini akan sepenuhnya disembunyikan dari daftar file dan pencarian."
 		},
 		"maxConcurrentFileReads": {
 			"label": "Batas pembacaan file bersamaan",
@@ -738,7 +641,7 @@
 		},
 		"maxReadFile": {
 			"label": "Ambang batas auto-truncate pembacaan file",
-			"description": "Kilo Code membaca sejumlah baris ini ketika model menghilangkan nilai start/end. Jika angka ini kurang dari total file, Kilo Code menghasilkan indeks nomor baris dari definisi kode. Kasus khusus: -1 menginstruksikan Kilo Code untuk membaca seluruh file (tanpa indexing), dan 0 menginstruksikannya untuk tidak membaca baris dan hanya menyediakan indeks baris untuk konteks minimal. Nilai yang lebih rendah meminimalkan penggunaan konteks awal, memungkinkan pembacaan rentang baris yang tepat selanjutnya. Permintaan start/end eksplisit tidak dibatasi oleh pengaturan ini.",
+			"description": "Roo membaca sejumlah baris ini ketika model menghilangkan nilai start/end. Jika angka ini kurang dari total file, Roo menghasilkan indeks nomor baris dari definisi kode. Kasus khusus: -1 menginstruksikan Roo untuk membaca seluruh file (tanpa indexing), dan 0 menginstruksikannya untuk tidak membaca baris dan hanya menyediakan indeks baris untuk konteks minimal. Nilai yang lebih rendah meminimalkan penggunaan konteks awal, memungkinkan pembacaan rentang baris yang tepat selanjutnya. Permintaan start/end eksplisit tidak dibatasi oleh pengaturan ini.",
 			"lines": "baris",
 			"always_full_read": "Selalu baca seluruh file"
 		},
@@ -759,6 +662,10 @@
 		"includeCurrentCost": {
 			"label": "Sertakan biaya saat ini dalam konteks",
 			"description": "Ketika diaktifkan, biaya penggunaan API saat ini akan disertakan dalam prompt sistem. Nonaktifkan ini jika model berhenti bekerja karena masalah biaya."
+		},
+		"maxGitStatusFiles": {
+			"label": "Git status maks file",
+			"description": "Jumlah maksimum entri file untuk disertakan dalam konteks status git. Atur ke 0 untuk menonaktifkan. Info cabang dan commit selalu ditampilkan saat > 0."
 		}
 	},
 	"terminal": {
@@ -772,11 +679,11 @@
 		},
 		"outputLineLimit": {
 			"label": "Batas keluaran terminal",
-			"description": "Menyimpan baris pertama dan terakhir dan membuang yang tengah agar tetap di bawah batas. Turunkan untuk menghemat token; naikkan untuk memberi Kilo lebih banyak detail tengah. Kilo melihat placeholder di mana konten dilewati.<0>Pelajari lebih lanjut</0>"
+			"description": "Menyimpan baris pertama dan terakhir dan membuang yang tengah agar tetap di bawah batas. Turunkan untuk menghemat token; naikkan untuk memberi Roo lebih banyak detail tengah. Roo melihat placeholder di mana konten dilewati.<0>Pelajari lebih lanjut</0>"
 		},
 		"outputCharacterLimit": {
 			"label": "Batas karakter terminal",
-			"description": "Override batas baris untuk mencegah masalah memori dengan memberlakukan cap keras pada ukuran output. Jika terlampaui, simpan awal dan akhir lalu tampilkan placeholder ke Kilo di mana konten dilewati. <0>Pelajari lebih lanjut</0>"
+			"description": "Override batas baris untuk mencegah masalah memori dengan memberlakukan cap keras pada ukuran output. Jika terlampaui, simpan awal dan akhir lalu tampilkan placeholder ke Roo di mana konten dilewati. <0>Pelajari lebih lanjut</0>"
 		},
 		"shellIntegrationTimeout": {
 			"label": "Timeout integrasi shell terminal",
@@ -784,7 +691,7 @@
 		},
 		"shellIntegrationDisabled": {
 			"label": "Gunakan Terminal Inline (disarankan)",
-			"description": "Jalankan perintah di Terminal Inline (obrolan) untuk melewati profil/integrasi shell untuk proses lebih cepat dan andal. Saat dinonaktifkan, Kilo menggunakan terminal VS Code dengan profil shell, prompt, dan plugin Anda. <0>Pelajari lebih lanjut</0>"
+			"description": "Jalankan perintah di Terminal Inline (obrolan) untuk melewati profil/integrasi shell untuk proses lebih cepat dan andal. Saat dinonaktifkan, Roo menggunakan terminal VS Code dengan profil shell, prompt, dan plugin Anda. <0>Pelajari lebih lanjut</0>"
 		},
 		"commandDelay": {
 			"label": "Delay perintah terminal",
@@ -822,10 +729,18 @@
 	"advancedSettings": {
 		"title": "Pengaturan lanjutan"
 	},
+	"toolProtocol": {
+		"label": "Protokol Panggilan Alat",
+		"description": "Pilih bagaimana Roo berkomunikasi dengan API. Asli menggunakan API panggilan fungsi penyedia, sedangkan XML menggunakan definisi alat berformat XML.",
+		"default": "Default",
+		"xml": "XML",
+		"native": "Asli",
+		"currentDefault": "Default: {{protocol}}"
+	},
 	"advanced": {
 		"diff": {
 			"label": "Aktifkan editing melalui diff",
-			"description": "Ketika diaktifkan, Kilo Code akan dapat mengedit file lebih cepat dan akan secara otomatis menolak penulisan file penuh yang terpotong",
+			"description": "Ketika diaktifkan, Roo akan dapat mengedit file lebih cepat dan akan secara otomatis menolak penulisan file penuh yang terpotong",
 			"strategy": {
 				"label": "Strategi diff",
 				"options": {
@@ -846,14 +761,14 @@
 		},
 		"todoList": {
 			"label": "Aktifkan alat daftar tugas",
-			"description": "Saat diaktifkan, Kilo Code dapat membuat dan mengelola daftar tugas untuk melacak kemajuan tugas. Ini membantu mengatur tugas kompleks menjadi langkah-langkah yang dapat dikelola."
+			"description": "Saat diaktifkan, Roo dapat membuat dan mengelola daftar tugas untuk melacak kemajuan tugas. Ini membantu mengatur tugas kompleks menjadi langkah-langkah yang dapat dikelola."
 		}
 	},
 	"experimental": {
 		"warning": "⚠️",
 		"autoCondenseContextPercent": {
 			"label": "Ambang batas untuk memicu kondensasi konteks cerdas",
-			"description": "Ketika context window mencapai ambang batas ini, Kilo Code akan secara otomatis mengondensasikannya."
+			"description": "Ketika context window mencapai ambang batas ini, Roo akan secara otomatis mengondensasikannya."
 		},
 		"condensingApiConfiguration": {
 			"label": "Konfigurasi API untuk Kondensasi Konteks",
@@ -877,19 +792,23 @@
 		},
 		"INSERT_BLOCK": {
 			"name": "Gunakan tool insert content eksperimental",
-			"description": "Aktifkan tool insert content eksperimental, memungkinkan Kilo Code menyisipkan konten pada nomor baris spesifik tanpa perlu membuat diff."
+			"description": "Aktifkan tool insert content eksperimental, memungkinkan Roo menyisipkan konten pada nomor baris spesifik tanpa perlu membuat diff."
 		},
 		"POWER_STEERING": {
 			"name": "Gunakan mode \"power steering\" eksperimental",
-			"description": "Ketika diaktifkan, Kilo Code akan mengingatkan model tentang detail definisi mode saat ini lebih sering. Ini akan menghasilkan kepatuhan yang lebih kuat terhadap definisi peran dan instruksi kustom, tetapi akan menggunakan lebih banyak token per pesan."
+			"description": "Ketika diaktifkan, Roo akan mengingatkan model tentang detail definisi mode saat ini lebih sering. Ini akan menghasilkan kepatuhan yang lebih kuat terhadap definisi peran dan instruksi kustom, tetapi akan menggunakan lebih banyak token per pesan."
+		},
+		"AUTOCOMPLETE": {
+			"name": "Gunakan fitur \"autocomplete\" eksperimental",
+			"description": "Ketika diaktifkan, Roo akan memberikan saran kode inline saat kamu mengetik. Memerlukan Roo Code API Provider."
 		},
 		"CONCURRENT_FILE_READS": {
 			"name": "Aktifkan pembacaan file bersamaan",
-			"description": "Ketika diaktifkan, Kilo Code dapat membaca beberapa file dalam satu permintaan. Ketika dinonaktifkan, Kilo Code harus membaca file satu per satu. Menonaktifkan ini dapat membantu saat bekerja dengan model yang kurang mampu atau ketika kamu ingin kontrol lebih terhadap akses file."
+			"description": "Ketika diaktifkan, Roo dapat membaca beberapa file dalam satu permintaan. Ketika dinonaktifkan, Roo harus membaca file satu per satu. Menonaktifkan ini dapat membantu saat bekerja dengan model yang kurang mampu atau ketika kamu ingin kontrol lebih terhadap akses file."
 		},
 		"MULTI_SEARCH_AND_REPLACE": {
 			"name": "Gunakan tool multi block diff eksperimental",
-			"description": "Ketika diaktifkan, Kilo Code akan menggunakan tool multi block diff. Ini akan mencoba memperbarui beberapa blok kode dalam file dalam satu permintaan."
+			"description": "Ketika diaktifkan, Roo akan menggunakan tool multi block diff. Ini akan mencoba memperbarui beberapa blok kode dalam file dalam satu permintaan."
 		},
 		"MARKETPLACE": {
 			"name": "Aktifkan Marketplace",
@@ -897,29 +816,11 @@
 		},
 		"MULTI_FILE_APPLY_DIFF": {
 			"name": "Aktifkan edit file bersamaan",
-			"description": "Ketika diaktifkan, Kilo Code dapat mengedit beberapa file dalam satu permintaan. Ketika dinonaktifkan, Kilo Code harus mengedit file satu per satu. Menonaktifkan ini dapat membantu saat bekerja dengan model yang kurang mampu atau ketika kamu ingin kontrol lebih terhadap modifikasi file."
-		},
-		"MORPH_FAST_APPLY": {
-			"name": "Aktifkan Fast Apply",
-			"description": "Ketika diaktifkan, Kilo Code dapat mengedit file menggunakan Fast Apply dengan model khusus yang dioptimalkan untuk modifikasi kode. Memerlukan Kilo Gateway Provider, OpenRouter, atau kunci API Morph.",
-			"apiProvider": "Penyedia API",
-			"apiProviderList": {
-				"current": "Saat ini"
-			},
-			"apiKey": "Kunci API (opsional)",
-			"placeholder": "Masukkan kunci API Anda (opsional)",
-			"modelLabel": "Pemilihan Model",
-			"modelDescription": "Pilih model Fast Apply mana yang akan digunakan untuk edit file",
-			"models": {
-				"auto": "Otomatis (Default - memilih yang terbaik yang tersedia)",
-				"morphFast": "Morph v3 Fast (Lebih cepat, biaya lebih rendah)",
-				"morphLarge": "Morph v3 Large (Lebih mampu)",
-				"relace": "Relace Apply v3"
-			}
+			"description": "Ketika diaktifkan, Roo dapat mengedit beberapa file dalam satu permintaan. Ketika dinonaktifkan, Roo harus mengedit file satu per satu. Menonaktifkan ini dapat membantu saat bekerja dengan model yang kurang mampu atau ketika kamu ingin kontrol lebih terhadap modifikasi file."
 		},
 		"PREVENT_FOCUS_DISRUPTION": {
 			"name": "Pengeditan Latar Belakang",
-			"description": "Ketika diaktifkan, mencegah gangguan fokus editor. Pengeditan file terjadi di latar belakang tanpa membuka tampilan diff atau mencuri fokus. Anda dapat terus bekerja tanpa gangguan saat Kilo Code melakukan perubahan. File mungkin dibuka tanpa fokus untuk menangkap diagnostik atau tetap tertutup sepenuhnya."
+			"description": "Ketika diaktifkan, mencegah gangguan fokus editor. Pengeditan file terjadi di latar belakang tanpa membuka tampilan diff atau mencuri fokus. Anda dapat terus bekerja tanpa gangguan saat Roo melakukan perubahan. File mungkin dibuka tanpa fokus untuk menangkap diagnostik atau tetap tertutup sepenuhnya."
 		},
 		"ASSISTANT_MESSAGE_PARSER": {
 			"name": "Gunakan parser pesan baru",
@@ -931,31 +832,29 @@
 		},
 		"IMAGE_GENERATION": {
 			"name": "Aktifkan pembuatan gambar AI",
-			"description": "Ketika diaktifkan, Kilo Code dapat menghasilkan gambar dari prompt teks. Memerlukan kunci API Kilo Code atau OpenRouter yang dikonfigurasi.",
-			"apiProvider": "Penyedia API",
+			"description": "Ketika diaktifkan, Roo dapat menghasilkan gambar dari prompt teks menggunakan model pembuatan gambar.",
+			"providerLabel": "Penyedia",
+			"providerDescription": "Pilih penyedia untuk menghasilkan gambar.",
 			"openRouterApiKeyLabel": "Kunci API OpenRouter",
 			"openRouterApiKeyPlaceholder": "Masukkan kunci API OpenRouter Anda",
-			"kiloCodeApiKeyLabel": "Kunci API Kilo Code",
-			"kiloCodeApiKeyPlaceholder": "Masukkan kunci API Kilo Code Anda",
-			"kiloCodeApiKeyPaste": "Tempel kunci API Kilo Code saat ini",
 			"getApiKeyText": "Dapatkan kunci API Anda dari",
 			"modelSelectionLabel": "Model Pembuatan Gambar",
 			"modelSelectionDescription": "Pilih model untuk pembuatan gambar",
-			"warningMissingKey": "⚠️ Kunci API diperlukan untuk pembuatan gambar, silakan konfigurasi di atas.",
+			"warningMissingKey": "⚠️ Kunci API OpenRouter diperlukan untuk pembuatan gambar. Silakan konfigurasi di atas.",
 			"successConfigured": "✓ Pembuatan gambar dikonfigurasi dan siap digunakan"
-		},
-		"INLINE_ASSIST": {
-			"name": "Autocomplete",
-			"description": "Aktifkan fitur Autocomplete untuk saran kode cepat dan perbaikan langsung di editor Anda. Termasuk Tugas Cepat (Cmd+I) untuk perubahan yang ditargetkan dan Autocomplete untuk perbaikan kontekstual."
 		},
 		"RUN_SLASH_COMMAND": {
 			"name": "Aktifkan perintah slash yang dimulai model",
-			"description": "Ketika diaktifkan, Kilo Code dapat menjalankan perintah slash Anda untuk mengeksekusi alur kerja."
+			"description": "Ketika diaktifkan, Roo dapat menjalankan perintah slash Anda untuk mengeksekusi alur kerja."
+		},
+		"MULTIPLE_NATIVE_TOOL_CALLS": {
+			"name": "Panggilan tool paralel",
+			"description": "Ketika diaktifkan, protokol native dapat mengeksekusi beberapa tool dalam satu giliran pesan asisten."
 		}
 	},
 	"promptCaching": {
 		"label": "Nonaktifkan prompt caching",
-		"description": "Ketika dicentang, Kilo Code tidak akan menggunakan prompt caching untuk model ini."
+		"description": "Ketika dicentang, Roo tidak akan menggunakan prompt caching untuk model ini."
 	},
 	"temperature": {
 		"useCustom": "Gunakan temperature kustom",
@@ -985,18 +884,17 @@
 		}
 	},
 	"modelPicker": {
-		"automaticFetch": "Ekstensi secara otomatis mengambil daftar model terbaru yang tersedia di <serviceLink>{{serviceName}}</serviceLink>. Jika kamu tidak yakin model mana yang harus dipilih, Kilo Code bekerja terbaik dengan <defaultModelLink>{{defaultModelId}}</defaultModelLink>.",
+		"automaticFetch": "Ekstensi secara otomatis mengambil daftar model terbaru yang tersedia di <serviceLink>{{serviceName}}</serviceLink>. Jika kamu tidak yakin model mana yang harus dipilih, Roo Code bekerja terbaik dengan <defaultModelLink>{{defaultModelId}}</defaultModelLink>. Kamu juga dapat mencoba mencari \"free\" untuk opsi tanpa biaya yang saat ini tersedia.",
 		"label": "Model",
 		"searchPlaceholder": "Cari",
 		"noMatchFound": "Tidak ada yang cocok ditemukan",
 		"useCustomModel": "Gunakan kustom: {{modelId}}"
 	},
 	"footer": {
-		"feedback": "Jika kamu punya pertanyaan atau feedback, jangan ragu untuk membuka issue di <githubLink>github.com/Kilo-Org/kilocode</githubLink> atau bergabung <redditLink>reddit.com/r/kilocode</redditLink> atau <discordLink>kilocode.ai/discord</discordLink>",
-		"support": "Untuk pertanyaan keuangan, silakan hubungi Customer Support di <supportLink>https://kilocode.ai/support</supportLink>",
+		"feedback": "Jika kamu punya pertanyaan atau feedback, jangan ragu untuk membuka issue di <githubLink>github.com/RooCodeInc/Roo-Code</githubLink> atau bergabung <redditLink>reddit.com/r/RooCode</redditLink> atau <discordLink>discord.gg/roocode</discordLink>",
 		"telemetry": {
-			"label": "Izinkan pelaporan error dan penggunaan",
-			"description": "Bantu tingkatkan Kilo Code dengan mengirim data penggunaan dan laporan error. Tidak ada kode, prompt, atau informasi pribadi yang pernah dikirim. Lihat kebijakan privasi kami untuk detail lebih lanjut."
+			"label": "Izinkan pelaporan error dan penggunaan anonim",
+			"description": "Bantu tingkatkan Roo Code dengan mengirimkan data penggunaan anonim dan laporan error. Telemetri ini tidak mengumpulkan kode, prompt, atau informasi pribadi. Lihat <privacyLink>kebijakan privasi</privacyLink> kami untuk detail lebih lanjut. Anda dapat menonaktifkannya kapan saja."
 		},
 		"settings": {
 			"import": "Impor",
@@ -1024,9 +922,7 @@
 		"providerNotAllowed": "Provider '{{provider}}' tidak diizinkan oleh organisasi kamu",
 		"modelNotAllowed": "Model '{{model}}' tidak diizinkan untuk provider '{{provider}}' oleh organisasi kamu",
 		"profileInvalid": "Profil ini berisi provider atau model yang tidak diizinkan oleh organisasi kamu",
-		"qwenCodeOauthPath": "Kamu harus memberikan jalur kredensial OAuth yang valid",
-		"sapAiCore": "Kamu harus menyediakan SAP AI Core Service Key yang valid.",
-		"sapAiCoreDeploymentId": "Kamu harus memilih deployment yang berjalan untuk model '{{model}}'."
+		"qwenCodeOauthPath": "Kamu harus memberikan jalur kredensial OAuth yang valid"
 	},
 	"placeholders": {
 		"apiKey": "Masukkan API Key...",
@@ -1060,32 +956,6 @@
 	"labels": {
 		"customArn": "ARN Kustom",
 		"useCustomArn": "Gunakan ARN kustom..."
-	},
-	"display": {
-		"taskTimeline": {
-			"label": "Tampilkan linimasa tugas",
-			"description": "Tampilkan timeline visual dari pesan-pesan tugas, diwarnai berdasarkan jenisnya, memungkinkan Anda untuk melihat kemajuan tugas dengan cepat dan menggulir kembali ke titik-titik tertentu dalam riwayat tugas."
-		},
-		"sendMessageOnEnter": {
-			"label": "Kirim pesan dengan Enter",
-			"description": "Saat diaktifkan, tekan Enter untuk mengirim dan Shift+Enter untuk baris baru. Matikan untuk menggunakan Shift+Enter untuk mengirim."
-		},
-		"costThreshold": {
-			"label": "Sembunyikan biaya di bawah ambang batas",
-			"currentValue": "Ambang batas saat ini: ${{value}}",
-			"description": "Hanya tampilkan biaya permintaan di atas jumlah ini. Biaya selalu terlihat saat panel detail terbuka."
-		},
-		"showTimestamps": {
-			"label": "Tampilkan stempel waktu",
-			"description": "Tampilkan stempel waktu untuk setiap pesan di tampilan obrolan"
-		}
-	},
-	"ghost": {
-		"showGutterAnimation": {
-			"label": "Tampilkan animasi gutter saat autocomplete",
-			"description": "Tampilkan indikator animasi di gutter editor saat autocompletion sedang berjalan",
-			"preview": "Pratinjau animasi"
-		}
 	},
 	"includeMaxOutputTokens": "Sertakan token output maksimum",
 	"includeMaxOutputTokensDescription": "Kirim parameter token output maksimum dalam permintaan API. Beberapa provider mungkin tidak mendukung ini.",

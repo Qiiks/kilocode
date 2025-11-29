@@ -1,16 +1,16 @@
 import React, { forwardRef, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { useEvent } from "react-use"
 import DynamicTextArea from "react-textarea-autosize"
+import { VolumeX, Image, WandSparkles, SendHorizontal, MessageSquareX } from "lucide-react"
 
-import { mentionRegex, mentionRegexGlobal, unescapeSpaces } from "@roo/context-mentions"
+import { mentionRegex, mentionRegexGlobal, commandRegexGlobal, unescapeSpaces } from "@roo/context-mentions"
 import { WebviewMessage } from "@roo/WebviewMessage"
 import { Mode, getAllModes } from "@roo/modes"
 import { ExtensionMessage } from "@roo/ExtensionMessage"
-import type { ProfileType } from "@roo-code/types" // kilocode_change - autocomplete profile type system
 
-import { vscode } from "@/utils/vscode"
-import { useExtensionState } from "@/context/ExtensionStateContext"
-import { useAppTranslation } from "@/i18n/TranslationContext"
+import { vscode } from "@src/utils/vscode"
+import { useExtensionState } from "@src/context/ExtensionStateContext"
+import { useAppTranslation } from "@src/i18n/TranslationContext"
 import {
 	ContextMenuOptionType,
 	getContextMenuOptions,
@@ -19,40 +19,19 @@ import {
 	shouldShowContextMenu,
 	SearchResult,
 } from "@src/utils/context-mentions"
-import { convertToMentionPath } from "@/utils/path-mentions"
-import { DropdownOptionType, Button, StandardTooltip } from "@/components/ui" // kilocode_change
+import { cn } from "@src/lib/utils"
+import { convertToMentionPath } from "@src/utils/path-mentions"
+import { StandardTooltip } from "@src/components/ui"
 
 import Thumbnails from "../common/Thumbnails"
 import { ModeSelector } from "./ModeSelector"
-import KiloModeSelector from "../kilocode/KiloModeSelector"
-import { KiloProfileSelector } from "../kilocode/chat/KiloProfileSelector" // kilocode_change
+import { ApiConfigSelector } from "./ApiConfigSelector"
+import { AutoApproveDropdown } from "./AutoApproveDropdown"
 import { MAX_IMAGES_PER_MESSAGE } from "./ChatView"
 import ContextMenu from "./ContextMenu"
-import { ImageWarningBanner } from "./ImageWarningBanner" // kilocode_change
-import {
-	VolumeX,
-	Pin,
-	Check,
-	// Image, // kilocode_change
-	WandSparkles,
-	SendHorizontal,
-	Paperclip, // kilocode_change
-	MessageSquareX,
-} from "lucide-react"
 import { IndexingStatusBadge } from "./IndexingStatusBadge"
-import { cn } from "@/lib/utils"
 import { usePromptHistory } from "./hooks/usePromptHistory"
-
-// kilocode_change start: pull slash commands from Cline
-import SlashCommandMenu from "@/components/chat/SlashCommandMenu"
-import {
-	SlashCommand,
-	shouldShowSlashCommandsMenu,
-	getMatchingSlashCommands,
-	insertSlashCommand,
-	validateSlashCommand,
-} from "@/utils/slash-commands"
-// kilocode_change end
+import { CloudAccountSwitcher } from "../cloud/CloudAccountSwitcher"
 
 interface ChatTextAreaProps {
 	inputValue: string
@@ -72,7 +51,9 @@ interface ChatTextAreaProps {
 	// Edit mode props
 	isEditMode?: boolean
 	onCancel?: () => void
-	sendMessageOnEnter?: boolean // kilocode_change
+	// Browser session status
+	isBrowserSessionActive?: boolean
+	showBrowserDockToggle?: boolean
 }
 
 export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
@@ -80,7 +61,6 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		{
 			inputValue,
 			setInputValue,
-			sendingDisabled,
 			selectApiConfigDisabled,
 			placeholderText,
 			selectedImages,
@@ -94,7 +74,8 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			modeShortcutText,
 			isEditMode = false,
 			onCancel,
-			sendMessageOnEnter = true,
+			isBrowserSessionActive = false,
+			showBrowserDockToggle = false,
 		},
 		ref,
 	) => {
@@ -103,69 +84,30 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			filePaths,
 			openedTabs,
 			currentApiConfigName,
-			listApiConfigMeta: listApiConfigMeta_unfilteredByKiloCodeProfileType,
+			listApiConfigMeta,
 			customModes,
 			customModePrompts,
 			cwd,
 			pinnedApiConfigs,
 			togglePinnedApiConfig,
-			localWorkflows, // kilocode_change
-			globalWorkflows, // kilocode_change
-			taskHistoryVersion, // kilocode_change
+			taskHistory,
 			clineMessages,
+			commands,
+			cloudUserInfo,
 		} = useExtensionState()
 
-		// kilocode_change start - autocomplete profile type system
-		// Filter out autocomplete profiles - only show chat profiles in the chat interface
-		const listApiConfigMeta = useMemo(() => {
-			if (!listApiConfigMeta_unfilteredByKiloCodeProfileType) {
-				return []
-			}
-			return listApiConfigMeta_unfilteredByKiloCodeProfileType.filter((config) => {
-				const profileType = (config as { profileType?: ProfileType }).profileType
-				return profileType !== "autocomplete"
-			})
-		}, [listApiConfigMeta_unfilteredByKiloCodeProfileType])
-		// kilocode_change end
-		// Find the ID and display text for the currently selected API configuration
+		// Find the ID and display text for the currently selected API configuration.
 		const { currentConfigId, displayName } = useMemo(() => {
 			const currentConfig = listApiConfigMeta?.find((config) => config.name === currentApiConfigName)
 			return {
 				currentConfigId: currentConfig?.id || "",
-				displayName: currentApiConfigName || "", // Use the name directly for display
+				displayName: currentApiConfigName || "", // Use the name directly for display.
 			}
 		}, [listApiConfigMeta, currentApiConfigName])
 
 		const [gitCommits, setGitCommits] = useState<any[]>([])
 		const [showDropdown, setShowDropdown] = useState(false)
 		const [fileSearchResults, setFileSearchResults] = useState<SearchResult[]>([])
-
-		// kilocode_change begin: remove button from chat when it gets to small
-		const [containerWidth, setContainerWidth] = useState<number>(300) // Default to a value larger than our threshold
-
-		const containerRef = useRef<HTMLDivElement>(null)
-
-		useEffect(() => {
-			if (!containerRef.current) return
-
-			// Check if ResizeObserver is available (it won't be in test environment)
-			if (typeof ResizeObserver === "undefined") return
-
-			const resizeObserver = new ResizeObserver((entries) => {
-				for (const entry of entries) {
-					const width = entry.contentRect.width
-					setContainerWidth(width)
-				}
-			})
-
-			resizeObserver.observe(containerRef.current)
-
-			return () => {
-				resizeObserver.disconnect()
-			}
-		}, [])
-		// kilocode_change end
-
 		const [searchLoading, setSearchLoading] = useState(false)
 		const [searchRequestId, setSearchRequestId] = useState<string>("")
 
@@ -209,6 +151,36 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					}
 
 					setIsEnhancingPrompt(false)
+				} else if (message.type === "insertTextIntoTextarea") {
+					if (message.text && textAreaRef.current) {
+						// Insert the command text at the current cursor position
+						const textarea = textAreaRef.current
+						const currentValue = inputValue
+						const cursorPos = textarea.selectionStart || 0
+
+						// Check if we need to add a space before the command
+						const textBefore = currentValue.slice(0, cursorPos)
+						const needsSpaceBefore = textBefore.length > 0 && !textBefore.endsWith(" ")
+						const prefix = needsSpaceBefore ? " " : ""
+
+						// Insert the text at cursor position
+						const newValue =
+							currentValue.slice(0, cursorPos) +
+							prefix +
+							message.text +
+							" " +
+							currentValue.slice(cursorPos)
+						setInputValue(newValue)
+
+						// Set cursor position after the inserted text
+						const newCursorPos = cursorPos + prefix.length + message.text.length + 1
+						setTimeout(() => {
+							if (textAreaRef.current) {
+								textAreaRef.current.focus()
+								textAreaRef.current.setSelectionRange(newCursorPos, newCursorPos)
+							}
+						}, 0)
+					}
 				} else if (message.type === "commitSearchResults") {
 					const commits = message.commits.map((commit: any) => ({
 						type: ContextMenuOptionType.Git,
@@ -224,31 +196,14 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					if (message.requestId === searchRequestId) {
 						setFileSearchResults(message.results || [])
 					}
-					// kilocode_change start
-				} else if (message.type === "insertTextToChatArea") {
-					if (message.text) {
-						setInputValue(message.text)
-						setTimeout(() => {
-							if (textAreaRef.current) {
-								textAreaRef.current.focus()
-							}
-						}, 0)
-					}
 				}
-				// kilocode_change end
 			}
 
 			window.addEventListener("message", messageHandler)
 			return () => window.removeEventListener("message", messageHandler)
-		}, [setInputValue, searchRequestId])
+		}, [setInputValue, searchRequestId, inputValue])
 
 		const [isDraggingOver, setIsDraggingOver] = useState(false)
-		// kilocode_change start: pull slash commands from Cline
-		const [showSlashCommandsMenu, setShowSlashCommandsMenu] = useState(false)
-		const [selectedSlashCommandsIndex, setSelectedSlashCommandsIndex] = useState(0)
-		const [slashCommandsQuery, setSlashCommandsQuery] = useState("")
-		const slashCommandsMenuContainerRef = useRef<HTMLDivElement>(null)
-		// kilocode_end
 		const [textAreaBaseHeight, setTextAreaBaseHeight] = useState<number | undefined>(undefined)
 		const [showContextMenu, setShowContextMenu] = useState(false)
 		const [cursorPosition, setCursorPosition] = useState(0)
@@ -263,12 +218,11 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const contextMenuContainerRef = useRef<HTMLDivElement>(null)
 		const [isEnhancingPrompt, setIsEnhancingPrompt] = useState(false)
 		const [isFocused, setIsFocused] = useState(false)
-		const [imageWarning, setImageWarning] = useState<string | null>(null) // kilocode_change
 
 		// Use custom hook for prompt history navigation
 		const { handleHistoryNavigation, resetHistoryNavigation, resetOnInputChange } = usePromptHistory({
 			clineMessages,
-			taskHistoryVersion, // kilocode_change
+			taskHistory,
 			cwd,
 			inputValue,
 			setInputValue,
@@ -296,29 +250,12 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			}
 		}, [inputValue, setInputValue, t])
 
-		// kilocode_change start: Image warning handlers
-		const showImageWarning = useCallback((messageKey: string) => {
-			setImageWarning(messageKey)
-		}, [])
-
-		const dismissImageWarning = useCallback(() => {
-			setImageWarning(null)
-		}, [])
-		// kilocode_change end: Image warning handlers
-
-		// kilocode_change start: Clear images if unsupported
-		// Track previous shouldDisableImages state to detect when model image support changes
-		const prevShouldDisableImages = useRef<boolean>(shouldDisableImages)
-		useEffect(() => {
-			if (!prevShouldDisableImages.current && shouldDisableImages && selectedImages.length > 0) {
-				setSelectedImages([])
-				showImageWarning("kilocode:imageWarnings.imagesRemovedNoSupport")
-			}
-			prevShouldDisableImages.current = shouldDisableImages
-		}, [shouldDisableImages, selectedImages.length, setSelectedImages, showImageWarning])
-		// kilocode_change end: Clear images if unsupported
-
 		const allModes = useMemo(() => getAllModes(customModes), [customModes])
+
+		// Memoized check for whether the input has content (text or images)
+		const hasInputContent = useMemo(() => {
+			return inputValue.trim().length > 0 || selectedImages.length > 0
+		}, [inputValue, selectedImages])
 
 		const queryItems = useMemo(() => {
 			return [
@@ -362,29 +299,6 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 		const handleMentionSelect = useCallback(
 			(type: ContextMenuOptionType, value?: string) => {
-				// kilocode_change start
-				if (type === ContextMenuOptionType.Image) {
-					// Close the context menu and remove the @character in this case
-					setShowContextMenu(false)
-					setSelectedType(null)
-
-					if (textAreaRef.current) {
-						const beforeCursor = textAreaRef.current.value.slice(0, cursorPosition)
-						const afterCursor = textAreaRef.current.value.slice(cursorPosition)
-						const lastAtIndex = beforeCursor.lastIndexOf("@")
-
-						if (lastAtIndex !== -1) {
-							const newValue = beforeCursor.slice(0, lastAtIndex) + afterCursor
-							setInputValue(newValue)
-						}
-					}
-
-					// Call the image selection function
-					onSelectImages()
-					return
-				}
-				// kilocode_change end
-
 				if (type === ContextMenuOptionType.NoResults) {
 					return
 				}
@@ -395,6 +309,27 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					setInputValue("")
 					setShowContextMenu(false)
 					vscode.postMessage({ type: "mode", text: value })
+					return
+				}
+
+				if (type === ContextMenuOptionType.Command && value) {
+					// Handle command selection.
+					setSelectedMenuIndex(-1)
+					setInputValue("")
+					setShowContextMenu(false)
+
+					// Insert the command mention into the textarea
+					const commandMention = `/${value}`
+					setInputValue(commandMention + " ")
+					setCursorPosition(commandMention.length + 1)
+					setIntendedCursorPosition(commandMention.length + 1)
+
+					// Focus the textarea
+					setTimeout(() => {
+						if (textAreaRef.current) {
+							textAreaRef.current.focus()
+						}
+					}, 0)
 					return
 				}
 
@@ -427,12 +362,18 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						insertValue = "terminal"
 					} else if (type === ContextMenuOptionType.Git) {
 						insertValue = value || ""
+					} else if (type === ContextMenuOptionType.Command) {
+						insertValue = value ? `/${value}` : ""
 					}
+
+					// Determine if this is a slash command selection
+					const isSlashCommand = type === ContextMenuOptionType.Mode || type === ContextMenuOptionType.Command
 
 					const { newValue, mentionIndex } = insertMention(
 						textAreaRef.current.value,
 						cursorPosition,
 						insertValue,
+						isSlashCommand,
 					)
 
 					setInputValue(newValue)
@@ -453,87 +394,8 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			[setInputValue, cursorPosition],
 		)
 
-		// kilocode_change start: pull slash commands from Cline
-		const handleSlashCommandsSelect = useCallback(
-			(command: SlashCommand) => {
-				setShowSlashCommandsMenu(false)
-
-				// Handle mode switching commands
-				const modeSwitchCommands = getAllModes(customModes).map((mode) => mode.slug)
-				if (modeSwitchCommands.includes(command.name)) {
-					// Switch to the selected mode
-					setMode(command.name as Mode)
-					setInputValue("")
-					vscode.postMessage({ type: "mode", text: command.name })
-					return
-				}
-
-				// Handle other slash commands (like newtask)
-				if (textAreaRef.current) {
-					const { newValue, commandIndex } = insertSlashCommand(textAreaRef.current.value, command.name)
-					const newCursorPosition = newValue.indexOf(" ", commandIndex + 1 + command.name.length) + 1
-
-					setInputValue(newValue)
-					setCursorPosition(newCursorPosition)
-					setIntendedCursorPosition(newCursorPosition)
-
-					setTimeout(() => {
-						if (textAreaRef.current) {
-							textAreaRef.current.blur()
-							textAreaRef.current.focus()
-						}
-					}, 0)
-				}
-			},
-			[setInputValue, setMode, customModes],
-		)
-		// kilocode_change end
-
 		const handleKeyDown = useCallback(
 			(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-				// kilocode_change start: pull slash commands from Cline
-				if (showSlashCommandsMenu) {
-					if (event.key === "Escape") {
-						setShowSlashCommandsMenu(false)
-						return
-					}
-
-					if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-						event.preventDefault()
-						setSelectedSlashCommandsIndex((prevIndex) => {
-							const direction = event.key === "ArrowUp" ? -1 : 1
-							const commands = getMatchingSlashCommands(
-								slashCommandsQuery,
-								customModes,
-								localWorkflows,
-								globalWorkflows,
-							) // kilocode_change
-
-							if (commands.length === 0) {
-								return prevIndex
-							}
-
-							const newIndex = (prevIndex + direction + commands.length) % commands.length
-							return newIndex
-						})
-						return
-					}
-
-					if ((event.key === "Enter" || event.key === "Tab") && selectedSlashCommandsIndex !== -1) {
-						event.preventDefault()
-						const commands = getMatchingSlashCommands(
-							slashCommandsQuery,
-							customModes,
-							localWorkflows,
-							globalWorkflows,
-						) // kilocode_change
-						if (commands.length > 0) {
-							handleSlashCommandsSelect(commands[selectedSlashCommandsIndex])
-						}
-						return
-					}
-				}
-				// kilocode_change end
 				if (showContextMenu) {
 					if (event.key === "Escape") {
 						setSelectedType(null)
@@ -551,6 +413,7 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								queryItems,
 								fileSearchResults,
 								allModes,
+								commands,
 							)
 							const optionsLength = options.length
 
@@ -560,7 +423,8 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							const selectableOptions = options.filter(
 								(option) =>
 									option.type !== ContextMenuOptionType.URL &&
-									option.type !== ContextMenuOptionType.NoResults,
+									option.type !== ContextMenuOptionType.NoResults &&
+									option.type !== ContextMenuOptionType.SectionHeader,
 							)
 
 							if (selectableOptions.length === 0) return -1 // No selectable options
@@ -587,11 +451,13 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 							queryItems,
 							fileSearchResults,
 							allModes,
+							commands,
 						)[selectedMenuIndex]
 						if (
 							selectedOption &&
 							selectedOption.type !== ContextMenuOptionType.URL &&
-							selectedOption.type !== ContextMenuOptionType.NoResults
+							selectedOption.type !== ContextMenuOptionType.NoResults &&
+							selectedOption.type !== ContextMenuOptionType.SectionHeader
 						) {
 							handleMentionSelect(selectedOption.type, selectedOption.value)
 						}
@@ -601,24 +467,18 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 
 				const isComposing = event.nativeEvent?.isComposing ?? false
 
-				// kilocode_change start
-				const shouldSendMessage =
-					!isComposing &&
-					event.key === "Enter" &&
-					((sendMessageOnEnter && !event.shiftKey) || (!sendMessageOnEnter && event.shiftKey))
-
-				if (shouldSendMessage) {
-					event.preventDefault()
-
-					resetHistoryNavigation()
-					onSend()
-				}
-
 				// Handle prompt history navigation using custom hook
 				if (handleHistoryNavigation(event, showContextMenu, isComposing)) {
 					return
 				}
-				// kilocode_change end
+
+				if (event.key === "Enter" && !event.shiftKey && !isComposing) {
+					event.preventDefault()
+
+					// Always call onSend - let ChatView handle queueing when disabled
+					resetHistoryNavigation()
+					onSend()
+				}
 
 				if (event.key === "Backspace" && !isComposing) {
 					const charBeforeCursor = inputValue[cursorPosition - 1]
@@ -665,15 +525,6 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				}
 			},
 			[
-				// kilocode_change start
-				showSlashCommandsMenu,
-				localWorkflows,
-				globalWorkflows,
-				customModes,
-				handleSlashCommandsSelect,
-				selectedSlashCommandsIndex,
-				slashCommandsQuery,
-				// kilocode_change end
 				onSend,
 				showContextMenu,
 				searchQuery,
@@ -689,7 +540,7 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				fileSearchResults,
 				handleHistoryNavigation,
 				resetHistoryNavigation,
-				sendMessageOnEnter,
+				commands,
 			],
 		)
 
@@ -714,45 +565,21 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				const newCursorPosition = e.target.selectionStart
 				setCursorPosition(newCursorPosition)
 
-				// kilocode_change start: pull slash commands from Cline
-				let showMenu = shouldShowContextMenu(newValue, newCursorPosition)
-				const showSlashCommandsMenu = shouldShowSlashCommandsMenu(newValue, newCursorPosition)
-
-				// we do not allow both menus to be shown at the same time
-				// the slash commands menu has precedence bc its a narrower component
-				if (showSlashCommandsMenu) {
-					showMenu = false
-				}
-
-				setShowSlashCommandsMenu(showSlashCommandsMenu)
-				// kilocode_change end
-
+				const showMenu = shouldShowContextMenu(newValue, newCursorPosition)
 				setShowContextMenu(showMenu)
 
-				// kilocode_change start: pull slash commands from Cline
-				if (showSlashCommandsMenu) {
-					const slashIndex = newValue.indexOf("/")
-					const query = newValue.slice(slashIndex + 1, newCursorPosition)
-					setSlashCommandsQuery(query)
-					setSelectedSlashCommandsIndex(0)
-				} else {
-					setSlashCommandsQuery("")
-					setSelectedSlashCommandsIndex(0)
-				}
-				// kilocode_change end
-
 				if (showMenu) {
-					// kilocode_change start - check lastAtIndex before handling slash commands
-					const lastAtIndex = newValue.lastIndexOf("@", newCursorPosition - 1)
-
-					// if (newValue.startsWith("/")) { ⚠️ kilocode_change added lastAtIndex check
-					if (newValue.startsWith("/") && lastAtIndex === -1) {
-						// Handle slash command.
+					if (newValue.startsWith("/") && !newValue.includes(" ")) {
+						// Handle slash command - request fresh commands
 						const query = newValue
 						setSearchQuery(query)
-						setSelectedMenuIndex(0)
+						// Set to first selectable item (skip section headers)
+						setSelectedMenuIndex(1) // Section header is at 0, first command is at 1
+						// Request commands fresh each time slash menu is shown
+						vscode.postMessage({ type: "requestCommands" })
 					} else {
 						// Existing @ mention handling.
+						const lastAtIndex = newValue.lastIndexOf("@", newCursorPosition - 1)
 						const query = newValue.slice(lastAtIndex + 1, newCursorPosition)
 						setSearchQuery(query)
 
@@ -783,7 +610,7 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								})
 							}, 200) // 200ms debounce.
 						} else {
-							setSelectedMenuIndex(-1)
+							setSelectedMenuIndex(3) // Set to "File" option by default.
 						}
 					}
 				} else {
@@ -805,7 +632,6 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			// Only hide the context menu if the user didn't click on it.
 			if (!isMouseDownOnMenu) {
 				setShowContextMenu(false)
-				setShowSlashCommandsMenu(false) // kilocode_change: pull slash commands from Cline
 			}
 
 			setIsFocused(false)
@@ -848,19 +674,8 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					return type === "image" && acceptedTypes.includes(subtype)
 				})
 
-				// kilocode_change start: Image validation with warning messages
-				if (imageItems.length > 0) {
+				if (!shouldDisableImages && imageItems.length > 0) {
 					e.preventDefault()
-
-					if (shouldDisableImages) {
-						showImageWarning(`kilocode:imageWarnings.modelNoImageSupport`)
-						return
-					}
-					if (selectedImages.length >= MAX_IMAGES_PER_MESSAGE) {
-						showImageWarning(`kilocode:imageWarnings.maxImagesReached`)
-						return
-					}
-					// kilocode_change end: Image validation with warning messages
 
 					const imagePromises = imageItems.map((item) => {
 						return new Promise<string | null>((resolve) => {
@@ -897,16 +712,7 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 					}
 				}
 			},
-			[
-				shouldDisableImages,
-				setSelectedImages,
-				cursorPosition,
-				setInputValue,
-				inputValue,
-				t,
-				selectedImages.length, // kilocode_change - added selectedImages.length
-				showImageWarning, // kilocode_change - added showImageWarning
-			],
+			[shouldDisableImages, setSelectedImages, cursorPosition, setInputValue, inputValue, t],
 		)
 
 		const handleMenuMouseDown = useCallback(() => {
@@ -916,40 +722,43 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 		const updateHighlights = useCallback(() => {
 			if (!textAreaRef.current || !highlightLayerRef.current) return
 
-			// kilocode_change start: pull slash commands from Cline
-			let processedText = textAreaRef.current.value
+			const text = textAreaRef.current.value
 
-			processedText = processedText
+			// Helper function to check if a command is valid
+			const isValidCommand = (commandName: string): boolean => {
+				return commands?.some((cmd) => cmd.name === commandName) || false
+			}
+
+			// Process the text to highlight mentions and valid commands
+			let processedText = text
 				.replace(/\n$/, "\n\n")
 				.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c] || c)
 				.replace(mentionRegexGlobal, '<mark class="mention-context-textarea-highlight">$&</mark>')
 
-			// check for highlighting /slash-commands
-			if (/^\s*\//.test(processedText)) {
-				const slashIndex = processedText.indexOf("/")
+			// Custom replacement for commands - only highlight valid ones
+			processedText = processedText.replace(commandRegexGlobal, (match, commandName) => {
+				// Only highlight if the command exists in the valid commands list
+				if (isValidCommand(commandName)) {
+					// Check if the match starts with a space
+					const startsWithSpace = match.startsWith(" ")
+					const commandPart = `/${commandName}`
 
-				// end of command is end of text or first whitespace
-				const spaceIndex = processedText.indexOf(" ", slashIndex)
-				const endIndex = spaceIndex > -1 ? spaceIndex : processedText.length
-
-				// extract and validate the exact command text
-				const commandText = processedText.substring(slashIndex + 1, endIndex)
-				const isValidCommand = validateSlashCommand(commandText, customModes)
-
-				if (isValidCommand) {
-					const fullCommand = processedText.substring(slashIndex, endIndex) // includes slash
-
-					const highlighted = `<mark class="slash-command-match-textarea-highlight">${fullCommand}</mark>`
-					processedText =
-						processedText.substring(0, slashIndex) + highlighted + processedText.substring(endIndex)
+					if (startsWithSpace) {
+						// Keep the space but only highlight the command part
+						return ` <mark class="mention-context-textarea-highlight">${commandPart}</mark>`
+					} else {
+						// Highlight the entire command (starts at beginning of line)
+						return `<mark class="mention-context-textarea-highlight">${commandPart}</mark>`
+					}
 				}
-			}
-			// kilocode_change end
+				return match // Return unhighlighted if command is not valid
+			})
 
 			highlightLayerRef.current.innerHTML = processedText
+
 			highlightLayerRef.current.scrollTop = textAreaRef.current.scrollTop
 			highlightLayerRef.current.scrollLeft = textAreaRef.current.scrollLeft
-		}, [customModes])
+		}, [commands])
 
 		useLayoutEffect(() => {
 			updateHighlights()
@@ -1026,18 +835,7 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						return type === "image" && acceptedTypes.includes(subtype)
 					})
 
-					// kilocode_change start: Image validation with warning messages for drag and drop
-					if (imageFiles.length > 0) {
-						if (shouldDisableImages) {
-							showImageWarning("kilocode:imageWarnings.modelNoImageSupport")
-							return
-						}
-						if (selectedImages.length >= MAX_IMAGES_PER_MESSAGE) {
-							showImageWarning("kilocode:imageWarnings.maxImagesReached")
-							return
-						}
-						// kilocode_change end: Image validation with warning messages for drag and drop
-
+					if (!shouldDisableImages && imageFiles.length > 0) {
 						const imagePromises = imageFiles.map((file) => {
 							return new Promise<string | null>((resolve) => {
 								const reader = new FileReader()
@@ -1083,8 +881,6 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				shouldDisableImages,
 				setSelectedImages,
 				t,
-				selectedImages.length, // kilocode_change - added selectedImages.length
-				showImageWarning, // kilocode_change - added showImageWarning
 			],
 		)
 
@@ -1111,413 +907,20 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 			[setMode],
 		)
 
-		// Helper function to render mode
-		// kilocode_change: unused
-		const _renderModeSelector = () => (
-			<ModeSelector
-				value={mode}
-				title={t("chat:selectMode")}
-				onChange={handleModeChange}
-				triggerClassName="w-full"
-				modeShortcutText={modeShortcutText}
-				customModes={customModes}
-				customModePrompts={customModePrompts}
-			/>
-		)
-
-		// Helper function to get API config dropdown options
-		// kilocode_change: unused
-		const _getApiConfigOptions = useMemo(() => {
-			const pinnedConfigs = (listApiConfigMeta || [])
-				.filter((config) => pinnedApiConfigs && pinnedApiConfigs[config.id])
-				.map((config) => ({
-					value: config.id,
-					label: config.name,
-					name: config.name,
-					type: DropdownOptionType.ITEM,
-					pinned: true,
-				}))
-				.sort((a, b) => a.label.localeCompare(b.label))
-
-			const unpinnedConfigs = (listApiConfigMeta || [])
-				.filter((config) => !pinnedApiConfigs || !pinnedApiConfigs[config.id])
-				.map((config) => ({
-					value: config.id,
-					label: config.name,
-					name: config.name,
-					type: DropdownOptionType.ITEM,
-					pinned: false,
-				}))
-				.sort((a, b) => a.label.localeCompare(b.label))
-
-			const hasPinnedAndUnpinned = pinnedConfigs.length > 0 && unpinnedConfigs.length > 0
-
-			return [
-				...pinnedConfigs,
-				...(hasPinnedAndUnpinned
-					? [
-							{
-								value: "sep-pinned",
-								label: t("chat:separator"),
-								type: DropdownOptionType.SEPARATOR,
-							},
-						]
-					: []),
-				...unpinnedConfigs,
-				{
-					value: "sep-2",
-					label: t("chat:separator"),
-					type: DropdownOptionType.SEPARATOR,
-				},
-				{
-					value: "settingsButtonClicked",
-					label: t("chat:edit"),
-					type: DropdownOptionType.ACTION,
-				},
-			]
-		}, [listApiConfigMeta, pinnedApiConfigs, t])
-
 		// Helper function to handle API config change
-		// kilocode_change: unused
-		const _handleApiConfigChange = useCallback((value: string) => {
-			if (value === "settingsButtonClicked") {
-				vscode.postMessage({
-					type: "loadApiConfiguration",
-					text: value,
-					values: { section: "providers" },
-				})
-			} else {
-				vscode.postMessage({ type: "loadApiConfigurationById", text: value })
-			}
+		const handleApiConfigChange = useCallback((value: string) => {
+			vscode.postMessage({ type: "loadApiConfigurationById", text: value })
 		}, [])
-
-		// Helper function to render API config item
-		// kilocode_change: unused
-		const _renderApiConfigItem = useCallback(
-			({ type, value, label, pinned }: any) => {
-				if (type !== DropdownOptionType.ITEM) {
-					return label
-				}
-
-				const config = listApiConfigMeta?.find((c) => c.id === value)
-				const isCurrentConfig = config?.name === currentApiConfigName
-
-				return (
-					<div className="flex justify-between gap-2 w-full h-5">
-						<div
-							className={cn("truncate min-w-0 overflow-hidden", {
-								"font-medium": isCurrentConfig,
-							})}>
-							{label}
-						</div>
-						<div className="flex justify-end w-10 flex-shrink-0">
-							<div
-								className={cn("size-5 p-1", {
-									"block group-hover:hidden": !pinned,
-									hidden: !isCurrentConfig,
-								})}>
-								<Check className="size-3" />
-							</div>
-							<StandardTooltip content={pinned ? t("chat:unpin") : t("chat:pin")}>
-								<Button
-									variant="ghost"
-									size="icon"
-									onClick={(e) => {
-										e.stopPropagation()
-										togglePinnedApiConfig(value)
-										vscode.postMessage({
-											type: "toggleApiConfigPin",
-											text: value,
-										})
-									}}
-									className={cn("size-5", {
-										"hidden group-hover:flex": !pinned,
-										"bg-accent": pinned,
-									})}>
-									<Pin className="size-3 p-0.5 opacity-50" />
-								</Button>
-							</StandardTooltip>
-						</div>
-					</div>
-				)
-			},
-			[listApiConfigMeta, currentApiConfigName, t, togglePinnedApiConfig],
-		)
-
-		// Helper function to render the text area section
-		const renderTextAreaSection = () => (
-			<div
-				className={cn(
-					"relative",
-					"flex-1",
-					"flex",
-					"flex-col-reverse",
-					"min-h-0",
-					"overflow-hidden",
-					"rounded",
-				)}>
-				<div
-					ref={highlightLayerRef}
-					className={cn(
-						"absolute",
-						"inset-0",
-						"pointer-events-none",
-						"whitespace-pre-wrap",
-						"break-words",
-						"text-transparent",
-						"overflow-hidden",
-						"font-vscode-font-family",
-						"text-vscode-editor-font-size",
-						"leading-vscode-editor-line-height",
-						isFocused
-							? "border border-vscode-focusBorder outline outline-vscode-focusBorder"
-							: isDraggingOver
-								? "border-2 border-dashed border-vscode-focusBorder"
-								: "border border-transparent",
-						isEditMode ? "pt-1.5 pb-10 px-2" : "py-1.5 px-2",
-						"px-[8px]",
-						"pr-9",
-						"z-10",
-						"forced-color-adjust-none",
-						"pb-16", // kilocode_change
-					)}
-					style={{
-						color: "transparent",
-					}}
-				/>
-				<DynamicTextArea
-					ref={(el) => {
-						if (typeof ref === "function") {
-							ref(el)
-						} else if (ref) {
-							ref.current = el
-						}
-						textAreaRef.current = el
-					}}
-					value={inputValue}
-					onChange={(e) => {
-						handleInputChange(e)
-						updateHighlights()
-					}}
-					onFocus={() => setIsFocused(true)}
-					onKeyDown={(e) => {
-						// Handle ESC to cancel in edit mode
-						if (isEditMode && e.key === "Escape" && !e.nativeEvent?.isComposing) {
-							e.preventDefault()
-							onCancel?.()
-							return
-						}
-						handleKeyDown(e)
-					}}
-					onKeyUp={handleKeyUp}
-					onBlur={handleBlur}
-					onPaste={handlePaste}
-					onSelect={updateCursorPosition}
-					onMouseUp={updateCursorPosition}
-					onHeightChange={(height) => {
-						if (textAreaBaseHeight === undefined || height < textAreaBaseHeight) {
-							setTextAreaBaseHeight(height)
-						}
-
-						onHeightChange?.(height)
-					}}
-					// kilocode_change: combine placeholderText and placeholderBottomText here
-					placeholder={`${placeholderText}\n${placeholderBottomText}`}
-					minRows={3}
-					maxRows={15}
-					autoFocus={true}
-					className={cn(
-						"w-full",
-						"text-vscode-input-foreground",
-						"font-vscode-font-family",
-						"text-vscode-editor-font-size",
-						"leading-vscode-editor-line-height",
-						"cursor-text",
-						isEditMode ? "pt-1.5 pb-10 px-2" : "py-1.5 px-2",
-						isFocused
-							? "border border-vscode-focusBorder outline outline-vscode-focusBorder"
-							: isDraggingOver
-								? "border-2 border-dashed border-vscode-focusBorder"
-								: "border border-transparent",
-						isDraggingOver
-							? "bg-[color-mix(in_srgb,var(--vscode-input-background)_95%,var(--vscode-focusBorder))]"
-							: "bg-vscode-input-background",
-						"transition-background-color duration-150 ease-in-out",
-						"will-change-background-color",
-						"min-h-[90px]",
-						"box-border",
-						"rounded",
-						"resize-none",
-						"overflow-x-hidden",
-						"overflow-y-auto",
-						"pr-9",
-						"flex-none flex-grow",
-						"z-[2]",
-						"scrollbar-none",
-						"scrollbar-hide",
-						"pb-16", // kilocode_change: Increased padding to prevent overlap with control bar
-					)}
-					onScroll={() => updateHighlights()}
-				/>
-				{/* kilocode_change {Transparent overlay at bottom of textArea to avoid text overlap } */}
-				<div
-					className="absolute bottom-[1px] left-2 right-2 h-16 bg-gradient-to-t from-[var(--vscode-input-background)] via-[var(--vscode-input-background)] to-transparent pointer-events-none z-[2]"
-					aria-hidden="true"
-				/>
-
-				{isTtsPlaying && (
-					<StandardTooltip content={t("chat:stopTts")}>
-						<Button
-							variant="ghost"
-							size="icon"
-							className="absolute top-0 right-0 opacity-25 hover:opacity-100 z-10"
-							onClick={() => vscode.postMessage({ type: "stopTts" })}>
-							<VolumeX className="size-4" />
-						</Button>
-					</StandardTooltip>
-				)}
-
-				{/* kilocode_change: position tweaked */}
-				<div className="absolute top-2 right-2 z-30">
-					<StandardTooltip content={t("chat:enhancePrompt")}>
-						<button
-							aria-label={t("chat:enhancePrompt")}
-							disabled={false}
-							onClick={handleEnhancePrompt}
-							className={cn(
-								"relative inline-flex items-center justify-center",
-								"bg-transparent border-none p-1.5",
-								"rounded-md min-w-[28px] min-h-[28px]",
-								"opacity-60 hover:opacity-100 text-vscode-descriptionForeground hover:text-vscode-foreground",
-								"transition-all duration-150",
-								"hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
-								"focus:outline-none focus-visible:ring-1 focus-visible:ring-vscode-focusBorder",
-								"active:bg-[rgba(255,255,255,0.1)]",
-								"cursor-pointer",
-							)}>
-							<WandSparkles className={cn("w-4 h-4", isEnhancingPrompt && "animate-spin")} />
-						</button>
-					</StandardTooltip>
-				</div>
-
-				{/* kilocode_change: position tweaked, rtl support */}
-				<div className="absolute bottom-2 end-2 z-30">
-					{/* kilocode_change start */}
-					{!isEditMode && <IndexingStatusBadge className={cn({ hidden: containerWidth < 235 })} />}
-					<StandardTooltip content="Add Context (@)">
-						<button
-							aria-label="Add Context (@)"
-							disabled={showContextMenu}
-							onClick={() => {
-								if (showContextMenu || !textAreaRef.current) return
-
-								textAreaRef.current.focus()
-
-								setInputValue(`${inputValue} @`)
-								setShowContextMenu(true)
-								// Empty search query explicitly to show all options
-								// and set to "File" option by default
-								setSearchQuery("")
-								setSelectedMenuIndex(4)
-							}}
-							className={cn(
-								"relative inline-flex items-center justify-center",
-								"bg-transparent border-none p-1.5",
-								"rounded-md min-w-[28px] min-h-[28px]",
-								"opacity-60 hover:opacity-100 text-vscode-descriptionForeground hover:text-vscode-foreground",
-								"transition-all duration-150",
-								"hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
-								"focus:outline-none focus-visible:ring-1 focus-visible:ring-vscode-focusBorder",
-								"active:bg-[rgba(255,255,255,0.1)]",
-								!showContextMenu && "cursor-pointer",
-								showContextMenu &&
-									"opacity-40 cursor-not-allowed grayscale-[30%] hover:bg-transparent hover:border-[rgba(255,255,255,0.08)] active:bg-transparent",
-							)}>
-							<Paperclip className={cn("w-4", "h-4", { hidden: containerWidth < 235 })} />
-						</button>
-					</StandardTooltip>
-					{isEditMode && (
-						<StandardTooltip content={t("chat:cancel.title")}>
-							<button
-								aria-label={t("chat:cancel.title")}
-								disabled={false}
-								onClick={onCancel}
-								className={cn(
-									"relative inline-flex items-center justify-center",
-									"bg-transparent border-none p-1.5",
-									"rounded-md min-w-[28px] min-h-[28px]",
-									"opacity-60 hover:opacity-100 text-vscode-descriptionForeground hover:text-vscode-foreground",
-									"transition-all duration-150",
-									"hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
-									"focus:outline-none focus-visible:ring-1 focus-visible:ring-vscode-focusBorder",
-									"active:bg-[rgba(255,255,255,0.1)]",
-									"cursor-pointer",
-								)}>
-								<MessageSquareX className="w-4 h-4" />
-							</button>
-						</StandardTooltip>
-					)}
-					<StandardTooltip content={t("chat:sendMessage")}>
-						<button
-							aria-label={t("chat:sendMessage")}
-							disabled={sendingDisabled}
-							onClick={!sendingDisabled ? onSend : undefined}
-							className={cn(
-								"relative inline-flex items-center justify-center",
-								"bg-transparent border-none p-1.5",
-								"rounded-md min-w-[28px] min-h-[28px]",
-								"opacity-60 hover:opacity-100 text-vscode-descriptionForeground hover:text-vscode-foreground",
-								"transition-all duration-150",
-								"hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
-								"focus:outline-none focus-visible:ring-1 focus-visible:ring-vscode-focusBorder",
-								"active:bg-[rgba(255,255,255,0.1)]",
-								!sendingDisabled && "cursor-pointer",
-								sendingDisabled &&
-									"opacity-40 cursor-not-allowed grayscale-[30%] hover:bg-transparent hover:border-[rgba(255,255,255,0.08)] active:bg-transparent",
-							)}>
-							{/* kilocode_change: rtl */}
-							<SendHorizontal className="w-4 h-4 rtl:-scale-x-100" />
-						</button>
-					</StandardTooltip>
-					{/* kilocode_change end */}
-				</div>
-
-				{!inputValue && (
-					<div
-						className="absolute left-2 z-30 pr-9 flex items-center h-8"
-						style={{
-							bottom: "0.25rem",
-							color: "var(--vscode-tab-inactiveForeground)",
-							userSelect: "none",
-							pointerEvents: "none",
-						}}>
-						{/* kilocode_change {placeholderBottomText} */}
-					</div>
-				)}
-			</div>
-		)
 
 		return (
 			<div
 				className={cn(
-					"relative",
-					"flex",
-					"flex-col",
-					"gap-1",
-					"bg-editor-background",
-					isEditMode ? "px-0" : "px-1.5",
-					"pb-1",
-					"outline-none",
-					"border",
-					"border-none",
-					isEditMode ? "w-full" : "w-[calc(100%-16px)]",
-					"ml-auto",
-					"mr-auto",
-					"box-border",
+					"flex flex-col gap-1 bg-editor-background outline-none border border-none box-border",
+					isEditMode ? "p-2 w-full" : "relative px-1.5 pb-1 w-[calc(100%-16px)] ml-auto mr-auto",
 				)}>
-				<div className="relative">
+				<div className={cn(!isEditMode && "relative")}>
 					<div
-						className={cn("chat-text-area", "relative", "flex", "flex-col", "outline-none")}
+						className={cn("chat-text-area", !isEditMode && "relative", "flex", "flex-col", "outline-none")}
 						onDrop={handleDrop}
 						onDragOver={(e) => {
 							// Only allowed to drop images/files on shift key pressed.
@@ -1543,37 +946,16 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 								setIsDraggingOver(false)
 							}
 						}}>
-						{/* kilocode_change start: ImageWarningBanner integration */}
-						<ImageWarningBanner
-							messageKey={imageWarning ?? ""}
-							onDismiss={dismissImageWarning}
-							isVisible={!!imageWarning}
-						/>
-						{/* kilocode_change end: ImageWarningBanner integration */}
-						{/* kilocode_change start: pull slash commands from Cline */}
-						{showSlashCommandsMenu && (
-							<div ref={slashCommandsMenuContainerRef}>
-								<SlashCommandMenu
-									onSelect={handleSlashCommandsSelect}
-									selectedIndex={selectedSlashCommandsIndex}
-									setSelectedIndex={setSelectedSlashCommandsIndex}
-									onMouseDown={handleMenuMouseDown}
-									query={slashCommandsQuery}
-									customModes={customModes}
-								/>
-							</div>
-						)}
-						{/* kilocode_change end: pull slash commands from Cline */}
 						{showContextMenu && (
 							<div
 								ref={contextMenuContainerRef}
 								className={cn(
 									"absolute",
 									"bottom-full",
-									"left-0",
+									isEditMode ? "left-6" : "left-0",
 									"right-0",
 									"z-[1000]",
-									"mb-2",
+									isEditMode ? "-mb-3" : "mb-2",
 									"filter",
 									"drop-shadow-md",
 								)}>
@@ -1589,94 +971,234 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 									modes={allModes}
 									loading={searchLoading}
 									dynamicSearchResults={fileSearchResults}
+									commands={commands}
 								/>
 							</div>
 						)}
 
-						{renderTextAreaSection()}
-
 						<div
-							// kilocode_change start
-							style={{
-								marginTop: "-38px",
-								zIndex: 2,
-								paddingLeft: "8px",
-								paddingRight: "8px",
-								paddingBottom: isEditMode ? "10px" : "0",
-							}}
-							ref={containerRef}
-							// kilocode_change end
-							className={cn("flex", "justify-between", "items-center", "mt-auto")}>
-							<div className={cn("flex", "items-center", "gap-1", "min-w-0")}>
-								<div className="shrink-0">
-									{/* kilocode_change start: KiloModeSelector instead of ModeSelector */}
-									<KiloModeSelector
-										value={mode}
-										onChange={setMode}
-										modeShortcutText={modeShortcutText}
-										customModes={customModes}
-									/>
-									{/* kilocode_change end */}
-								</div>
+							className={cn(
+								"relative",
+								"flex-1",
+								"flex",
+								"flex-col-reverse",
+								"min-h-0",
+								"overflow-hidden",
+								"rounded-lg",
+							)}>
+							<div
+								ref={highlightLayerRef}
+								data-testid="highlight-layer"
+								className={cn(
+									"absolute",
+									"inset-0",
+									"pointer-events-none",
+									"whitespace-pre-wrap",
+									"break-words",
+									"text-transparent",
+									"overflow-hidden",
+									"font-vscode-font-family",
+									"text-vscode-editor-font-size",
+									"leading-vscode-editor-line-height",
+									isFocused
+										? "border border-vscode-focusBorder outline outline-vscode-focusBorder"
+										: isDraggingOver
+											? "border-2 border-dashed border-vscode-focusBorder"
+											: "border border-transparent",
+									"pl-2",
+									"py-2",
+									isEditMode ? "pr-20" : "pr-9",
+									"z-10",
+									"forced-color-adjust-none",
+									"rounded-lg",
+								)}
+								style={{
+									color: "transparent",
+								}}
+							/>
+							<DynamicTextArea
+								ref={(el) => {
+									if (typeof ref === "function") {
+										ref(el)
+									} else if (ref) {
+										ref.current = el
+									}
+									textAreaRef.current = el
+								}}
+								value={inputValue}
+								onChange={(e) => {
+									handleInputChange(e)
+									updateHighlights()
+								}}
+								onFocus={() => setIsFocused(true)}
+								onKeyDown={(e) => {
+									// Handle ESC to cancel in edit mode
+									if (isEditMode && e.key === "Escape" && !e.nativeEvent?.isComposing) {
+										e.preventDefault()
+										onCancel?.()
+										return
+									}
+									handleKeyDown(e)
+								}}
+								onKeyUp={handleKeyUp}
+								onBlur={handleBlur}
+								onPaste={handlePaste}
+								onSelect={updateCursorPosition}
+								onMouseUp={updateCursorPosition}
+								onHeightChange={(height) => {
+									if (textAreaBaseHeight === undefined || height < textAreaBaseHeight) {
+										setTextAreaBaseHeight(height)
+									}
 
-								<KiloProfileSelector
-									currentConfigId={currentConfigId}
-									currentApiConfigName={currentApiConfigName}
-									displayName={displayName}
-									listApiConfigMeta={listApiConfigMeta}
-									pinnedApiConfigs={pinnedApiConfigs}
-									togglePinnedApiConfig={togglePinnedApiConfig}
-									selectApiConfigDisabled={selectApiConfigDisabled}
-								/>
-							</div>
+									onHeightChange?.(height)
+								}}
+								placeholder={placeholderText}
+								minRows={3}
+								maxRows={15}
+								autoFocus={true}
+								className={cn(
+									"w-full",
+									"text-vscode-input-foreground",
+									"font-vscode-font-family",
+									"text-vscode-editor-font-size",
+									"leading-vscode-editor-line-height",
+									"cursor-text",
+									"py-2 pl-2",
+									isFocused
+										? "border border-vscode-focusBorder outline outline-vscode-focusBorder"
+										: isDraggingOver
+											? "border-2 border-dashed border-vscode-focusBorder"
+											: "border border-transparent",
+									isDraggingOver
+										? "bg-[color-mix(in_srgb,var(--vscode-input-background)_95%,var(--vscode-focusBorder))]"
+										: "bg-vscode-input-background",
+									"transition-background-color duration-150 ease-in-out",
+									"will-change-background-color",
+									"min-h-[94px]",
+									"box-border",
+									"rounded",
+									"resize-none",
+									"overflow-x-hidden",
+									"overflow-y-auto",
+									isEditMode ? "pr-20" : "pr-9",
+									"flex-none flex-grow",
+									"z-[2]",
+									"scrollbar-none",
+									"scrollbar-hide",
+								)}
+								onScroll={() => updateHighlights()}
+							/>
 
-							{/* kilocode_change: hidden on small containerWidth
-								<div className={cn("flex", "items-center", "gap-0.5", "shrink-0")}>
-									{isTtsPlaying && (
-										<StandardTooltip content={t("chat:stopTts")}>
-											<button
-												aria-label={t("chat:stopTts")}
-												onClick={() => vscode.postMessage({ type: "stopTts" })}
-												className={cn(
-													"relative inline-flex items-center justify-center",
-													"bg-transparent border-none p-1.5",
-													"rounded-md min-w-[28px] min-h-[28px]",
-													"text-vscode-foreground opacity-85",
-													"transition-all duration-150",
-													"hover:opacity-100 hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
-													"focus:outline-none focus-visible:ring-1 focus-visible:ring-vscode-focusBorder",
-													"active:bg-[rgba(255,255,255,0.1)]",
-													"cursor-pointer",
-												)}>
-												<VolumeX className="w-4 h-4" />
-											</button>
-										</StandardTooltip>
-									)}
-									<IndexingStatusBadge />
-									<StandardTooltip content={t("chat:addImages")}>
+							<div className="absolute bottom-2 right-1 z-30 flex flex-col items-center gap-0">
+								<StandardTooltip content={t("chat:addImages")}>
+									<button
+										aria-label={t("chat:addImages")}
+										disabled={shouldDisableImages}
+										onClick={!shouldDisableImages ? onSelectImages : undefined}
+										className={cn(
+											"relative inline-flex items-center justify-center",
+											"bg-transparent border-none p-1.5",
+											"rounded-md min-w-[28px] min-h-[28px]",
+											"text-vscode-descriptionForeground hover:text-vscode-foreground",
+											"transition-all duration-1000",
+											"cursor-pointer",
+											!shouldDisableImages
+												? "opacity-50 hover:opacity-100 delay-750 pointer-events-auto"
+												: "opacity-0 pointer-events-none duration-200 delay-0",
+											!shouldDisableImages &&
+												"hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
+											"focus:outline-none focus-visible:ring-1 focus-visible:ring-vscode-focusBorder",
+											!shouldDisableImages && "active:bg-[rgba(255,255,255,0.1)]",
+											shouldDisableImages &&
+												"opacity-40 cursor-not-allowed grayscale-[30%] hover:bg-transparent hover:border-[rgba(255,255,255,0.08)] active:bg-transparent",
+										)}>
+										<Image className="w-4 h-4" />
+									</button>
+								</StandardTooltip>
+								<StandardTooltip content={t("chat:enhancePrompt")}>
+									<button
+										aria-label={t("chat:enhancePrompt")}
+										disabled={false}
+										onClick={handleEnhancePrompt}
+										className={cn(
+											"relative inline-flex items-center justify-center",
+											"bg-transparent border-none p-1.5",
+											"rounded-md min-w-[28px] min-h-[28px]",
+											"text-vscode-descriptionForeground hover:text-vscode-foreground",
+											"transition-all duration-1000",
+											"cursor-pointer",
+											hasInputContent
+												? "opacity-50 hover:opacity-100 delay-750 pointer-events-auto"
+												: "opacity-0 pointer-events-none duration-200 delay-0",
+											hasInputContent &&
+												"hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
+											"focus:outline-none focus-visible:ring-1 focus-visible:ring-vscode-focusBorder",
+											hasInputContent && "active:bg-[rgba(255,255,255,0.1)]",
+										)}>
+										<WandSparkles className={cn("w-4 h-4", isEnhancingPrompt && "animate-spin")} />
+									</button>
+								</StandardTooltip>
+								{isEditMode && (
+									<StandardTooltip content={t("chat:cancel.title")}>
 										<button
-											aria-label={t("chat:addImages")}
-											disabled={shouldDisableImages}
-											onClick={!shouldDisableImages ? onSelectImages : undefined}
+											aria-label={t("chat:cancel.title")}
+											disabled={false}
+											onClick={onCancel}
 											className={cn(
 												"relative inline-flex items-center justify-center",
 												"bg-transparent border-none p-1.5",
 												"rounded-md min-w-[28px] min-h-[28px]",
-												"text-vscode-foreground opacity-85",
+												"opacity-60 hover:opacity-100 text-vscode-descriptionForeground hover:text-vscode-foreground",
 												"transition-all duration-150",
-												"hover:opacity-100 hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
+												"hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
 												"focus:outline-none focus-visible:ring-1 focus-visible:ring-vscode-focusBorder",
 												"active:bg-[rgba(255,255,255,0.1)]",
-												!shouldDisableImages && "cursor-pointer",
-												shouldDisableImages &&
-													"opacity-40 cursor-not-allowed grayscale-[30%] hover:bg-transparent hover:border-[rgba(255,255,255,0.08)] active:bg-transparent",
-												"mr-1",
+												"cursor-pointer",
 											)}>
-											<Image className="w-4 h-4" />
+											<MessageSquareX className="w-4 h-4" />
 										</button>
 									</StandardTooltip>
+								)}
+								<StandardTooltip content={t("chat:sendMessage")}>
+									<button
+										aria-label={t("chat:sendMessage")}
+										disabled={false}
+										onClick={onSend}
+										className={cn(
+											"relative inline-flex items-center justify-center",
+											"bg-transparent border-none p-1.5",
+											"rounded-md min-w-[28px] min-h-[28px]",
+											"text-vscode-descriptionForeground hover:text-vscode-foreground",
+											"transition-all duration-200",
+											hasInputContent
+												? "opacity-100 hover:opacity-100 pointer-events-auto"
+												: "opacity-0 pointer-events-none",
+											hasInputContent &&
+												"hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
+											"focus:outline-none focus-visible:ring-1 focus-visible:ring-vscode-focusBorder",
+											hasInputContent && "active:bg-[rgba(255,255,255,0.1)]",
+											hasInputContent && "cursor-pointer",
+										)}>
+										<SendHorizontal className="w-4 h-4" />
+									</button>
+								</StandardTooltip>
+							</div>
+
+							{!inputValue && (
+								<div
+									className={cn(
+										"absolute left-2 z-30 flex items-center h-8 font-vscode-font-family text-vscode-editor-font-size leading-vscode-editor-line-height",
+										isEditMode ? "pr-20" : "pr-9",
+									)}
+									style={{
+										bottom: "0.75rem",
+										color: "color-mix(in oklab, var(--vscode-input-foreground) 50%, transparent)",
+										userSelect: "none",
+										pointerEvents: "none",
+									}}>
+									{placeholderBottomText}
 								</div>
-								*/}
+							)}
 						</div>
 					</div>
 				</div>
@@ -1688,11 +1210,70 @@ export const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						style={{
 							left: "16px",
 							zIndex: 2,
-							marginTop: "14px", // kilocode_change
 							marginBottom: 0,
 						}}
 					/>
 				)}
+
+				<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 min-w-0 overflow-clip flex-1">
+						<ModeSelector
+							value={mode}
+							title={t("chat:selectMode")}
+							onChange={handleModeChange}
+							triggerClassName="text-ellipsis overflow-hidden flex-shrink-0"
+							modeShortcutText={modeShortcutText}
+							customModes={customModes}
+							customModePrompts={customModePrompts}
+						/>
+						<ApiConfigSelector
+							value={currentConfigId}
+							displayName={displayName}
+							disabled={selectApiConfigDisabled}
+							title={t("chat:selectApiConfig")}
+							onChange={handleApiConfigChange}
+							triggerClassName="min-w-[28px] text-ellipsis overflow-hidden flex-shrink"
+							listApiConfigMeta={listApiConfigMeta || []}
+							pinnedApiConfigs={pinnedApiConfigs}
+							togglePinnedApiConfig={togglePinnedApiConfig}
+						/>
+						<AutoApproveDropdown triggerClassName="min-w-[28px] text-ellipsis overflow-hidden flex-shrink" />
+					</div>
+					<div
+						className={cn(
+							"flex flex-shrink-0 items-center gap-0.5 h-5 leading-none",
+							!isEditMode && cloudUserInfo ? "" : "pr-2",
+						)}>
+						{isTtsPlaying && (
+							<StandardTooltip content={t("chat:stopTts")}>
+								<button
+									aria-label={t("chat:stopTts")}
+									onClick={() => vscode.postMessage({ type: "stopTts" })}
+									className={cn(
+										"relative inline-flex items-center justify-center",
+										"bg-transparent border-none p-1.5",
+										"rounded-md min-w-[28px] min-h-[28px]",
+										"text-vscode-foreground opacity-85",
+										"transition-all duration-150",
+										"hover:opacity-100 hover:bg-[rgba(255,255,255,0.03)] hover:border-[rgba(255,255,255,0.15)]",
+										"focus:outline-none focus-visible:ring-1 focus-visible:ring-vscode-focusBorder",
+										"active:bg-[rgba(255,255,255,0.1)]",
+										"cursor-pointer",
+									)}>
+									<VolumeX className="w-4 h-4" />
+								</button>
+							</StandardTooltip>
+						)}
+						{!isEditMode ? <IndexingStatusBadge /> : null}
+						{!isEditMode && cloudUserInfo && <CloudAccountSwitcher />}
+						{/* keep props referenced after moving browser button */}
+						<div
+							className="hidden"
+							data-browser-session-active={isBrowserSessionActive}
+							data-show-browser-dock-toggle={showBrowserDockToggle}
+						/>
+					</div>
+				</div>
 			</div>
 		)
 	},

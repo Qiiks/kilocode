@@ -1,6 +1,6 @@
 {
-	"greeting": "Xin chào, tôi là Kilo Code!",
-	"introduction": "<strong>Kilo Code là công cụ lập trình tự động hàng đầu.</strong> Hãy sẵn sàng để thiết kế kiến trúc, viết mã, gỡ lỗi và tăng năng suất của bạn như chưa từng có trước đây. Để tiếp tục, Kilo Code yêu cầu một khóa API.",
+	"greeting": "Chào mừng đến với Roo Code!",
+	"introduction": "Với nhiều Chế độ tích hợp và có thể mở rộng, Roo Code cho phép bạn lập kế hoạch, thiết kế kiến trúc, viết mã, gỡ lỗi và tăng năng suất như chưa từng có trước đây.",
 	"notice": "Để bắt đầu, tiện ích mở rộng này cần một nhà cung cấp API.",
 	"start": "Bắt đầu thôi!",
 	"routers": {
@@ -16,12 +16,28 @@
 			"incentive": "Dùng thử Roo miễn phí"
 		}
 	},
-	"chooseProvider": "Để thực hiện phép màu của mình, Kilo Code cần một khóa API.",
+	"chooseProvider": "Để bắt đầu, bạn cần một nhà cung cấp LLM:",
+	"providerSignup": {
+		"rooCloudProvider": "Nhà cung cấp Roo Code Cloud",
+		"rooCloudDescription": "Cách đơn giản nhất để sử dụng Roo. Sự kết hợp được tuyển chọn của các mô hình miễn phí và trả phí với chi phí thấp",
+		"learnMore": "tìm hiểu thêm",
+		"useAnotherProvider": "Sử dụng nhà cung cấp khác",
+		"useAnotherProviderDescription": "Nhập khóa API và bắt đầu.",
+		"getStarted": "Bắt đầu"
+	},
+	"waitingForCloud": {
+		"heading": "Đang đưa bạn đến Roo Code Cloud...",
+		"description": "Hoàn thành đăng ký trong trình duyệt và bạn sẽ tự động quay lại đây.",
+		"noPrompt": "Nếu bạn không được nhắc mở URL, <clickHere>hãy nhấp vào đây</clickHere>.",
+		"havingTrouble": "Nếu bạn đã hoàn thành đăng ký nhưng gặp sự cố, <clickHere>hãy nhấp vào đây</clickHere>.",
+		"pasteUrl": "Dán URL callback từ trình duyệt của bạn:",
+		"goBack": "Quay lại"
+	},
 	"startRouter": "Chúng tôi khuyên bạn nên sử dụng bộ định tuyến LLM:",
 	"startCustom": "Hoặc bạn có thể sử dụng khóa API của riêng mình:",
 	"telemetry": {
-		"helpImprove": "Giúp cải thiện Kilo Code",
-		"helpImproveMessage": "Kilo Code thu thập dữ liệu lỗi và sử dụng để giúp chúng tôi sửa lỗi và cải thiện tiện ích mở rộng. Dữ liệu viễn trắc này không thu thập mã, prompts hoặc thông tin cá nhân. Bạn có thể tắt tính năng này trong <settingsLink>cài đặt</settingsLink>."
+		"helpImprove": "Giúp cải thiện Roo Code",
+		"helpImproveMessage": "Roo Code thu thập dữ liệu lỗi và sử dụng để giúp chúng tôi sửa lỗi và cải thiện tiện ích mở rộng. Telemetry này không thu thập mã, prompt hoặc thông tin cá nhân. Bạn có thể tắt điều này trong <settingsLink>cài đặt</settingsLink>."
 	},
 	"importSettings": "Nhập cài đặt"
 }

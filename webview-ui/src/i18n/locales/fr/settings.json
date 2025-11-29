@@ -25,7 +25,6 @@
 		"autoApprove": "Auto-approbation",
 		"browser": "Accès ordinateur",
 		"checkpoints": "Points de contrôle",
-		"display": "Afficher",
 		"notifications": "Notifications",
 		"contextManagement": "Contexte",
 		"terminal": "Terminal",
@@ -34,14 +33,33 @@
 		"ui": "UI",
 		"experimental": "Expérimental",
 		"language": "Langue",
-		"about": "À propos de Kilo Code",
-		"autoPurge": "Auto-nettoyage"
+		"about": "À propos de Roo Code"
+	},
+	"about": {
+		"bugReport": {
+			"label": "Vous avez trouvé un bug ?",
+			"link": "Signaler sur GitHub"
+		},
+		"featureRequest": {
+			"label": "Vous avez une idée ?",
+			"link": "Partagez-la avec nous"
+		},
+		"securityIssue": {
+			"label": "Vous avez découvert une vulnérabilité ?",
+			"link": "Suivez notre processus de divulgation"
+		},
+		"contact": {
+			"label": "Besoin de nous parler ? Écrivez"
+		},
+		"community": "Vous voulez des conseils ou simplement discuter avec d'autres utilisateurs de Roo Code ? Rejoignez <redditLink>reddit.com/r/RooCode</redditLink> ou <discordLink>discord.gg/roocode</discordLink>",
+		"contactAndCommunity": "Contact et Communauté",
+		"manageSettings": "Gérer les Paramètres"
 	},
 	"slashCommands": {
 		"description": "Gérez vos commandes slash pour exécuter rapidement des flux de travail et des actions personnalisées. <DocsLink>En savoir plus</DocsLink>"
 	},
 	"prompts": {
-		"description": "Configurez les invites de support utilisées pour les actions rapides comme l'amélioration des invites, l'explication du code et la résolution des problèmes. Ces invites aident Kilo Code à fournir une meilleure assistance pour les tâches de développement courantes."
+		"description": "Configurez les invites de support utilisées pour les actions rapides comme l'amélioration des invites, l'explication du code et la résolution des problèmes. Ces invites aident Roo à fournir une meilleure assistance pour les tâches de développement courantes."
 	},
 	"codeIndex": {
 		"title": "Indexation de la base de code",
@@ -51,9 +69,9 @@
 		"enableDescription": "Activer l'indexation du code pour une recherche et une compréhension du contexte améliorées",
 		"settingsTitle": "Paramètres d'indexation",
 		"disabledMessage": "L'indexation de la base de code est actuellement désactivée. Activez-la dans les paramètres globaux pour configurer les options d'indexation.",
-		"profileLabel": "Fournisseur d'embeddings",
+		"providerLabel": "Fournisseur d'embeddings",
 		"embedderProviderLabel": "Fournisseur d'embedder",
-		"selectProfilePlaceholder": "Sélectionner un fournisseur",
+		"selectProviderPlaceholder": "Sélectionner un fournisseur",
 		"openaiProvider": "OpenAI",
 		"ollamaProvider": "Ollama",
 		"geminiProvider": "Gemini",
@@ -62,12 +80,18 @@
 		"vercelAiGatewayProvider": "Vercel AI Gateway",
 		"vercelAiGatewayApiKeyLabel": "Clé API",
 		"vercelAiGatewayApiKeyPlaceholder": "Entrez votre clé API Vercel AI Gateway",
+		"bedrockProvider": "Amazon Bedrock",
+		"bedrockRegionLabel": "Région AWS",
+		"bedrockRegionPlaceholder": "us-east-1",
+		"bedrockProfileLabel": "Profil AWS",
+		"bedrockProfilePlaceholder": "default",
+		"bedrockProfileDescription": "Nom du profil AWS depuis ~/.aws/credentials (requis).",
 		"openRouterProvider": "OpenRouter",
 		"openRouterApiKeyLabel": "Clé d'API OpenRouter",
 		"openRouterApiKeyPlaceholder": "Entrez votre clé d'API OpenRouter",
 		"mistralProvider": "Mistral",
 		"mistralApiKeyLabel": "Clé d'API:",
-		"mistralApiKeyPlaceholder": "Entrez votre clé API Mistral",
+		"mistralApiKeyPlaceholder": "Entrez votre clé d'API Mistral",
 		"openaiCompatibleProvider": "Compatible OpenAI",
 		"openAiKeyLabel": "Clé API OpenAI",
 		"openAiKeyPlaceholder": "Entrez votre clé API OpenAI",
@@ -84,14 +108,10 @@
 		"selectModelPlaceholder": "Sélectionner un modèle",
 		"ollamaUrlLabel": "URL Ollama :",
 		"ollamaBaseUrlLabel": "URL de base Ollama",
-		"vectorStoreProviderLabel": "Fournisseur de stockage vectoriel",
 		"qdrantUrlLabel": "URL Qdrant",
 		"qdrantKeyLabel": "Clé Qdrant :",
 		"qdrantApiKeyLabel": "Clé API Qdrant",
 		"qdrantApiKeyPlaceholder": "Entrez votre clé API Qdrant (optionnel)",
-		"lancedbVectorStoreDirectoryLabel": "Chemin du LanceDB Vector Store",
-		"lancedbVectorStoreDirectoryPlaceholder": "Entrez un chemin personnalisé du stockage vectoriel (optionnel)",
-		"lancedbVectorStoreDirectoryDescription": "Chemin pour stocker la base de données vectorielle LanceDB. Si vide, utilise l'emplacement par défaut dans globalStorageUri/vector.",
 		"setupConfigLabel": "Configuration",
 		"startIndexingButton": "Démarrer",
 		"clearIndexDataButton": "Effacer l'index",
@@ -131,34 +151,35 @@
 			"geminiApiKeyRequired": "La clé API Gemini est requise",
 			"mistralApiKeyRequired": "La clé API Mistral est requise",
 			"vercelAiGatewayApiKeyRequired": "La clé API Vercel AI Gateway est requise",
+			"bedrockRegionRequired": "La région AWS est requise",
+			"bedrockProfileRequired": "Le profil AWS est requis",
 			"ollamaBaseUrlRequired": "L'URL de base Ollama est requise",
 			"baseUrlRequired": "L'URL de base est requise",
 			"modelDimensionMinValue": "La dimension du modèle doit être supérieure à 0",
 			"openRouterApiKeyRequired": "Clé API OpenRouter est requise"
 		},
+		"optional": "optionnel",
 		"advancedConfigLabel": "Configuration avancée",
 		"searchMinScoreLabel": "Seuil de score de recherche",
 		"searchMinScoreDescription": "Score de similarité minimum (0.0-1.0) requis pour les résultats de recherche. Des valeurs plus faibles renvoient plus de résultats mais peuvent être moins pertinents. Des valeurs plus élevées renvoient moins de résultats mais plus pertinents.",
 		"searchMinScoreResetTooltip": "Réinitialiser à la valeur par défaut (0.4)",
 		"searchMaxResultsLabel": "Résultats de recherche maximum",
 		"searchMaxResultsDescription": "Nombre maximum de résultats de recherche à retourner lors de l'interrogation de l'index de code. Des valeurs plus élevées fournissent plus de contexte mais peuvent inclure des résultats moins pertinents.",
-		"resetToDefault": "Réinitialiser par défaut",
-		"cancelling": "Annulation...",
-		"cancelIndexingButton": "Annuler l'indexation"
+		"resetToDefault": "Réinitialiser par défaut"
 	},
 	"autoApprove": {
 		"toggleShortcut": "Vous pouvez configurer un raccourci global pour ce paramètre <SettingsLink>dans les préférences de votre IDE</SettingsLink>.",
-		"description": "Permettre à Kilo Code d'effectuer automatiquement des opérations sans requérir d'approbation. Activez ces paramètres uniquement si vous faites entièrement confiance à l'IA et que vous comprenez les risques de sécurité associés.",
+		"description": "Permettre à Roo d'effectuer automatiquement des opérations sans requérir d'approbation. Activez ces paramètres uniquement si vous faites entièrement confiance à l'IA et que vous comprenez les risques de sécurité associés.",
 		"enabled": "Auto-approbation activée",
 		"toggleAriaLabel": "Activer/désactiver l'approbation automatique",
 		"disabledAriaLabel": "Approbation automatique désactivée - sélectionnez d'abord les options",
 		"selectOptionsFirst": "Sélectionnez au moins une option ci-dessous pour activer l'approbation automatique",
 		"readOnly": {
 			"label": "Lecture",
-			"description": "Lorsque cette option est activée, Kilo Code affichera automatiquement le contenu des répertoires et lira les fichiers sans que vous ayez à cliquer sur le bouton Approuver.",
+			"description": "Lorsque cette option est activée, Roo affichera automatiquement le contenu des répertoires et lira les fichiers sans que vous ayez à cliquer sur le bouton Approuver.",
 			"outsideWorkspace": {
 				"label": "Inclure les fichiers en dehors de l'espace de travail",
-				"description": "Permettre à Kilo Code de lire des fichiers en dehors de l'espace de travail actuel sans nécessiter d'approbation."
+				"description": "Permettre à Roo de lire des fichiers en dehors de l'espace de travail actuel sans nécessiter d'approbation."
 			}
 		},
 		"write": {
@@ -167,11 +188,11 @@
 			"delayLabel": "Délai après les écritures pour permettre aux diagnostics de détecter les problèmes potentiels",
 			"outsideWorkspace": {
 				"label": "Inclure les fichiers en dehors de l'espace de travail",
-				"description": "Permettre à Kilo Code de créer et modifier des fichiers en dehors de l'espace de travail actuel sans nécessiter d'approbation."
+				"description": "Permettre à Roo de créer et modifier des fichiers en dehors de l'espace de travail actuel sans nécessiter d'approbation."
 			},
 			"protected": {
 				"label": "Inclure les fichiers protégés",
-				"description": "Permettre à Kilo Code de créer et modifier des fichiers protégés (comme .kilocodeignore et les fichiers de configuration .kilocode/) sans nécessiter d'approbation."
+				"description": "Permettre à Roo de créer et modifier des fichiers protégés (comme .rooignore et les fichiers de configuration .roo/) sans nécessiter d'approbation."
 			}
 		},
 		"browser": {
@@ -212,10 +233,6 @@
 			"addButton": "Ajouter",
 			"autoDenied": "Les commandes avec le préfixe `{{prefix}}` ont été interdites par l'utilisateur. Ne contourne pas cette restriction en exécutant une autre commande."
 		},
-		"showMenu": {
-			"label": "Afficher le menu d'approbation automatique dans la vue de chat",
-			"description": "Lorsque cette option est activée, le menu d'approbation automatique sera affiché en bas de la vue de chat, permettant un accès rapide aux paramètres d'approbation automatique"
-		},
 		"updateTodoList": {
 			"label": "Todo",
 			"description": "La liste de tâches est mise à jour automatiquement sans approbation"
@@ -237,8 +254,6 @@
 		"providerDocumentation": "Documentation {{provider}}",
 		"configProfile": "Profil de configuration",
 		"description": "Enregistrez différentes configurations d'API pour basculer rapidement entre les fournisseurs et les paramètres.",
-		"makeActiveProfile": "Définir comme profil actif",
-		"makeActiveTooltip": "Active ce profil pour l'utiliser dans les requêtes API",
 		"apiProvider": "Fournisseur d'API",
 		"model": "Modèle",
 		"nameEmpty": "Le nom ne peut pas être vide",
@@ -256,18 +271,7 @@
 		"searchProviderPlaceholder": "Rechercher des fournisseurs",
 		"noProviderMatchFound": "Aucun fournisseur trouvé",
 		"noMatchFound": "Aucun profil correspondant trouvé",
-		"profileName": "Nom du profil",
-		"profileType": "Type de profil",
-		"profileTypeChat": "Chat",
-		"profileTypeAutocomplete": "Autocomplétion",
-		"profileTypeDescription": "Les profils de chat sont utilisés pour les conversations. Un seul profil d'autocomplétion est autorisé.",
-		"autocompleteLabel": "(Autocomplétion)",
-		"autocomplete": {
-			"onlyOneAllowed": "Un seul profil d'autocomplétion est autorisé. Le profil \"{{existingName}}\" est déjà configuré pour l'autocomplétion. Veuillez d'abord changer son type ou le supprimer."
-		},
 		"vscodeLmDescription": "L'API du modèle de langage VS Code vous permet d'exécuter des modèles fournis par d'autres extensions VS Code (y compris, mais sans s'y limiter, GitHub Copilot). Le moyen le plus simple de commencer est d'installer les extensions Copilot et Copilot Chat depuis le VS Code Marketplace.",
-		"vscodeLmUnavailable": "La prise en charge des modèles linguistiques de VS Code est disponible uniquement dans Visual Studio Code. Des forks comme VSCodium et d'autres peuvent ne pas fonctionner. De plus, cette fonctionnalité n'est pas disponible dans les outils JetBrains.",
-		"vscodeLmUnavailableInstructions": "Assurez-vous d'utiliser un outil pris en charge et que VS Code Chat est installé et activé",
 		"awsCustomArnUse": "Entrez un ARN Amazon Bedrock valide pour le modèle que vous souhaitez utiliser. Exemples de format :",
 		"awsCustomArnDesc": "Assurez-vous que la région dans l'ARN correspond à la région AWS sélectionnée ci-dessus.",
 		"openRouterApiKey": "Clé API OpenRouter",
@@ -304,14 +308,14 @@
 		"anthropic1MContextBetaDescription": "Étend la fenêtre de contexte à 1 million de tokens pour Claude Sonnet 4",
 		"awsBedrock1MContextBetaLabel": "Activer la fenêtre de contexte de 1M (Bêta)",
 		"awsBedrock1MContextBetaDescription": "Étend la fenêtre de contexte à 1 million de tokens pour Claude Sonnet 4",
+		"basetenApiKey": "Clé API Baseten",
+		"getBasetenApiKey": "Obtenir la clé API Baseten",
 		"cerebrasApiKey": "Clé API Cerebras",
 		"getCerebrasApiKey": "Obtenir la clé API Cerebras",
 		"chutesApiKey": "Clé API Chutes",
 		"getChutesApiKey": "Obtenir la clé API Chutes",
 		"fireworksApiKey": "Clé API Fireworks",
 		"getFireworksApiKey": "Obtenir la clé API Fireworks",
-		"syntheticApiKey": "Clé API Synthetic",
-		"getSyntheticApiKey": "Obtenir la clé API Synthetic",
 		"featherlessApiKey": "Clé API Featherless",
 		"getFeatherlessApiKey": "Obtenir la clé API Featherless",
 		"ioIntelligenceApiKey": "Clé API IO Intelligence",
@@ -338,10 +342,6 @@
 		"sambaNovaApiKey": "Clé API SambaNova",
 		"getHuggingFaceApiKey": "Obtenir la clé API Hugging Face",
 		"huggingFaceApiKey": "Clé API Hugging Face",
-		"getOvhCloudAiEndpointsApiKey": "Obtenir la clé API d'OVHcloud AI Endpoints",
-		"ovhCloudAiEndpointsApiKey": "Clé API d'OVHcloud AI Endpoints",
-		"ovhCloudAiEndpointsBaseUrl": "URL de base",
-		"getOvhCloudAiEndpointsBaseUrl": "Utiliser une URL de base personnalisée",
 		"huggingFaceModelId": "ID du modèle",
 		"huggingFaceLoading": "Chargement...",
 		"huggingFaceModelsCount": "({{count}} modèles)",
@@ -358,26 +358,10 @@
 		"apiKey": "Clé API",
 		"openAiBaseUrl": "URL de base",
 		"getOpenAiApiKey": "Obtenir la clé API OpenAI",
-		"copilotAuthentication": "Authentification GitHub Copilot",
-		"copilotDeviceCodeNotice": "GitHub Copilot utilise le flux de code d'appareil OAuth pour une authentification sécurisée. Tu seras redirigé vers GitHub pour autoriser l'accès.",
-		"copilotModelDescription": "Te permet d'utiliser les modèles sur Copilot",
-		"authenticating": "Authentification en cours...",
-		"waitingForAuth": "En attente d'authentification...",
-		"authenticateWithGitHub": "S'authentifier avec GitHub",
-		"authenticated": "Authentifié",
-		"clearAuthentication": "Effacer l'authentification",
 		"mistralApiKey": "Clé API Mistral",
 		"getMistralApiKey": "Obtenir la clé API Mistral / Codestral",
 		"codestralBaseUrl": "URL de base Codestral (Optionnel)",
 		"codestralBaseUrlDesc": "Définir une URL alternative pour le modèle Codestral.",
-		"nanoGptApiKey": "Clé API Nano-GPT",
-		"getNanoGptApiKey": "Obtenir la clé API Nano-GPT",
-		"nanoGptModelList": "Liste de modèles",
-		"nanoGptModelListOptions": {
-			"all": "Tous les modèles",
-			"personalized": "Modèles personnalisés",
-			"subscription": "Modèles d'abonnement"
-		},
 		"xaiApiKey": "Clé API xAI",
 		"getXaiApiKey": "Obtenir la clé API xAI",
 		"litellmApiKey": "Clé API LiteLLM",
@@ -430,18 +414,17 @@
 			"draftModelDesc": "Le modèle brouillon doit être de la même famille de modèles pour que le décodage spéculatif fonctionne correctement.",
 			"selectDraftModel": "Sélectionner le modèle brouillon",
 			"noModelsFound": "Aucun modèle brouillon trouvé. Veuillez vous assurer que LM Studio est en cours d'exécution avec le mode serveur activé.",
-			"description": "LM Studio vous permet d'exécuter des modèles localement sur votre ordinateur. Pour obtenir des instructions sur la mise en route, consultez leur <a>guide de démarrage rapide</a>. Vous devrez également démarrer la fonction <b>serveur local</b> de LM Studio pour l'utiliser avec cette extension. <span>Remarque :</span> Kilo Code utilise des prompts complexes et fonctionne mieux avec les modèles Claude. Les modèles moins performants peuvent ne pas fonctionner comme prévu."
+			"description": "LM Studio vous permet d'exécuter des modèles localement sur votre ordinateur. Pour obtenir des instructions sur la mise en route, consultez leur <a>guide de démarrage rapide</a>. Vous devrez également démarrer la fonction <b>serveur local</b> de LM Studio pour l'utiliser avec cette extension. <span>Remarque :</span> Roo Code utilise des prompts complexes et fonctionne mieux avec les modèles Claude. Les modèles moins performants peuvent ne pas fonctionner comme prévu."
 		},
 		"ollama": {
 			"baseUrl": "URL de base (optionnel)",
 			"modelId": "ID du modèle",
 			"apiKey": "Clé API Ollama",
-			"apiKeyPlaceholder": "Entrez votre clé API",
 			"apiKeyHelp": "Clé API optionnelle pour les instances Ollama authentifiées ou les services cloud. Laissez vide pour les installations locales.",
 			"numCtx": "Taille de la fenêtre de contexte (num_ctx)",
 			"numCtxHelp": "Remplace la taille de la fenêtre de contexte par défaut du modèle. Laissez vide pour utiliser la configuration du Modelfile du modèle. La valeur minimale est 128.",
 			"description": "Ollama vous permet d'exécuter des modèles localement sur votre ordinateur. Pour obtenir des instructions sur la mise en route, consultez le guide de démarrage rapide.",
-			"warning": "Remarque : Kilo Code utilise des prompts complexes et fonctionne mieux avec les modèles Claude. Les modèles moins performants peuvent ne pas fonctionner comme prévu."
+			"warning": "Remarque : Roo Code utilise des prompts complexes et fonctionne mieux avec les modèles Claude. Les modèles moins performants peuvent ne pas fonctionner comme prévu."
 		},
 		"unboundApiKey": "Clé API Unbound",
 		"getUnboundApiKey": "Obtenir la clé API Unbound",
@@ -463,7 +446,7 @@
 			}
 		},
 		"customModel": {
-			"capabilities": "Configurez les capacités et les prix pour votre modèle personnalisé compatible OpenAI. Soyez prudent lors de la spécification des capacités du modèle, car elles peuvent affecter le fonctionnement de Kilo Code.",
+			"capabilities": "Configurez les capacités et les prix pour votre modèle personnalisé compatible OpenAI. Soyez prudent lors de la spécification des capacités du modèle, car elles peuvent affecter le fonctionnement de Roo Code.",
 			"maxTokens": {
 				"label": "Tokens de sortie maximum",
 				"description": "Nombre maximum de tokens que le modèle peut générer dans une réponse. (Spécifiez -1 pour permettre au serveur de définir les tokens maximum.)"
@@ -504,17 +487,13 @@
 			},
 			"resetDefaults": "Réinitialiser les valeurs par défaut"
 		},
-		"rateLimitAfter": {
-			"label": "Limite de débit en fin",
-			"description": "Commencez à limiter le débit après la fin du flux API."
-		},
 		"rateLimitSeconds": {
 			"label": "Limite de débit",
 			"description": "Temps minimum entre les requêtes API."
 		},
 		"consecutiveMistakeLimit": {
 			"label": "Limite d'erreurs et de répétitions",
-			"description": "Nombre d'erreurs consécutives ou d'actions répétées avant d'afficher la boîte de dialogue 'Kilo a des difficultés'. Mettre à 0 pour désactiver ce mécanisme de sécurité (il ne se déclenchera jamais).",
+			"description": "Nombre d'erreurs consécutives ou d'actions répétées avant d'afficher la boîte de dialogue 'Roo a des difficultés'. Mettre à 0 pour désactiver ce mécanisme de sécurité (il ne se déclenchera jamais).",
 			"unlimitedDescription": "Réessais illimités activés (poursuite automatique). La boîte de dialogue n'apparaîtra jamais.",
 			"warning": "⚠️ Mettre à 0 autorise des réessais illimités, ce qui peut consommer une utilisation importante de l'API"
 		},
@@ -540,60 +519,12 @@
 			"placeholder": "Défaut : claude",
 			"maxTokensLabel": "Jetons de sortie max",
 			"maxTokensDescription": "Nombre maximum de jetons de sortie pour les réponses de Claude Code. La valeur par défaut est 8000."
-		},
-		"geminiCli": {
-			"description": "Ce fournisseur utilise l'authentification OAuth de l'outil Gemini CLI et ne nécessite pas de clés API.",
-			"oauthPath": "Chemin des Identifiants OAuth (optionnel)",
-			"oauthPathDescription": "Chemin vers le fichier d'identifiants OAuth. Laissez vide pour utiliser l'emplacement par défaut (~/.gemini/oauth_creds.json).",
-			"instructions": "Si vous ne vous êtes pas encore authentifié, veuillez exécuter",
-			"instructionsContinued": "dans votre terminal d'abord.",
-			"setupLink": "Instructions de Configuration Gemini CLI",
-			"requirementsTitle": "Exigences Importantes",
-			"requirement1": "D'abord, vous devez installer l'outil Gemini CLI",
-			"requirement2": "Ensuite, exécutez gemini dans votre terminal et assurez-vous de vous connecter avec Google",
-			"requirement3": "Fonctionne uniquement avec les comptes Google personnels (pas les comptes Google Workspace)",
-			"requirement4": "N'utilise pas de clés API - l'authentification est gérée via OAuth",
-			"requirement5": "Nécessite que l'outil Gemini CLI soit installé et authentifié d'abord",
-			"freeAccess": "Accès gratuit via l'authentification OAuth"
-		},
-		"qwenCode": {
-			"oauthPath": "Chemin des identifiants OAuth (optionnel)",
-			"oauthPathDescription": "Chemin vers le fichier d'identifiants OAuth. Laissez vide pour utiliser l'emplacement par défaut (~/.qwen/oauth_creds.json).",
-			"description": "Ce fournisseur utilise l'authentification OAuth du service Qwen et ne nécessite pas de clés API.",
-			"instructions": "Veuillez suivre la documentation officielle pour obtenir le fichier d'autorisation et le placer dans le chemin spécifié.",
-			"setupLink": "Documentation officielle Qwen"
-		},
-		"sapAiCore": {
-			"serviceKey": "Clé de service AI Core",
-			"serviceKeyJson": "Entrez le JSON de la clé de service...",
-			"resourceGroup": "Groupe de ressources AI Core",
-			"credentialsNote": "Ces identifiants sont stockés localement et utilisés uniquement pour effectuer des requêtes API depuis cette extension.",
-			"learnMore": "Vous pouvez trouver plus d'informations sur l'accès à l'API SAP AI Core ici.",
-			"orchestrationMode": "Mode Orchestration",
-			"orchestrationEnabledDesc": "Lorsqu'activé, donne accès à tous les modèles disponibles sans nécessiter de déploiements individuels.",
-			"orchestrationDisabledDesc": "Lorsque désactivé, donne accès uniquement aux modèles de fondation déployés dans votre instance de service AI Core.",
-			"modelDeploymentDesc": "Vous ne pouvez sélectionner que des modèles avec des déploiements disponibles.",
-			"deployment": "Déploiement",
-			"loading": "Chargement...",
-			"modelsCount": "({{count}} modèles)",
-			"deploymentsCount": "({{count}} déploiements)",
-			"selectModel": "Sélectionner un modèle...",
-			"selectDeployment": "Sélectionner un déploiement...",
-			"searchModels": "Rechercher des modèles...",
-			"searchDeployments": "Rechercher des déploiements...",
-			"noModelsFound": "Aucun modèle trouvé",
-			"noDeploymentFound": "Aucun déploiement trouvé",
-			"getStarted": "Démarrer avec SAP AI Core",
-			"supportedProviders": "Fournisseurs pris en charge",
-			"supportedProvidersDesc1": "Le fournisseur SAP AI Core ne prend actuellement en charge que les modèles de fondation pour les fournisseurs LLM suivants :",
-			"supportedProvidersDesc2": "Envisagez de passer au mode Orchestration pour accéder à plus de modèles.",
-			"supportedProvidersDesc3": "En savoir plus sur le mode Orchestration"
 		}
 	},
 	"browser": {
 		"enable": {
 			"label": "Activer l'outil de navigateur",
-			"description": "Lorsque cette option est activée, Kilo Code peut utiliser un navigateur pour interagir avec des sites web lors de l'utilisation de modèles qui prennent en charge l'utilisation de l'ordinateur. <0>En savoir plus</0>"
+			"description": "Lorsque cette option est activée, Roo peut utiliser un navigateur pour interagir avec des sites web lors de l'utilisation de modèles qui prennent en charge l'utilisation de l'ordinateur. <0>En savoir plus</0>"
 		},
 		"viewport": {
 			"label": "Taille de la fenêtre d'affichage",
@@ -625,50 +556,18 @@
 		},
 		"enable": {
 			"label": "Activer les points de contrôle automatiques",
-			"description": "Lorsque cette option est activée, Kilo Code créera automatiquement des points de contrôle pendant l'exécution des tâches, facilitant la révision des modifications ou le retour à des états antérieurs. <0>En savoir plus</0>"
-		}
-	},
-	"autoPurge": {
-		"enable": {
-			"label": "Activer le nettoyage automatique des tâches",
-			"description": "Supprimer automatiquement les anciennes tâches pour libérer de l'espace disque et améliorer les performances. Les tâches sont classées par type et âge pour déterminer quand elles doivent être supprimées."
-		},
-		"defaultRetention": {
-			"label": "Période de rétention par défaut (jours)",
-			"description": "Nombre de jours pour conserver les tâches avant qu'elles soient éligibles au nettoyage"
-		},
-		"neverPurgeFavorited": {
-			"label": "Ne jamais supprimer les tâches favorites",
-			"description": "Lorsque activé, les tâches favorites ne seront jamais supprimées automatiquement quel que soit leur âge"
-		},
-		"favoritedRetention": {
-			"label": "Rétention des tâches favorites (jours)",
-			"description": "Nombre de jours pour conserver les tâches favorites (s'applique uniquement lorsque 'Ne jamais supprimer les tâches favorites' est désactivé)"
-		},
-		"completedRetention": {
-			"label": "Rétention des tâches terminées (jours)",
-			"description": "Nombre de jours pour conserver les tâches qui ont été terminées avec succès"
-		},
-		"incompleteRetention": {
-			"label": "Rétention des tâches incomplètes (jours)",
-			"description": "Nombre de jours pour conserver les tâches qui n'ont pas été terminées (généralement plus court que les tâches terminées)"
-		},
-		"lastRun": {
-			"label": "Dernier nettoyage"
-		},
-		"manualPurge": {
-			"button": "Exécuter le nettoyage maintenant"
+			"description": "Lorsque cette option est activée, Roo créera automatiquement des points de contrôle pendant l'exécution des tâches, facilitant la révision des modifications ou le retour à des états antérieurs. <0>En savoir plus</0>"
 		}
 	},
 	"notifications": {
 		"sound": {
 			"label": "Activer les effets sonores",
-			"description": "Lorsque cette option est activée, Kilo Code jouera des effets sonores pour les notifications et les événements.",
+			"description": "Lorsque cette option est activée, Roo jouera des effets sonores pour les notifications et les événements.",
 			"volumeLabel": "Volume"
 		},
 		"tts": {
 			"label": "Activer la synthèse vocale",
-			"description": "Lorsque cette option est activée, Kilo Code lira ses réponses à haute voix en utilisant la synthèse vocale.",
+			"description": "Lorsque cette option est activée, Roo lira ses réponses à haute voix en utilisant la synthèse vocale.",
 			"speedLabel": "Vitesse"
 		}
 	},
@@ -676,7 +575,7 @@
 		"description": "Contrôlez quelles informations sont incluses dans la fenêtre de contexte de l'IA, affectant l'utilisation de token et la qualité des réponses",
 		"autoCondenseContextPercent": {
 			"label": "Seuil de déclenchement de la condensation intelligente du contexte",
-			"description": "Lorsque la fenêtre de contexte atteint ce seuil, Kilo Code la condensera automatiquement."
+			"description": "Lorsque la fenêtre de contexte atteint ce seuil, Roo la condensera automatiquement."
 		},
 		"condensingApiConfiguration": {
 			"label": "Configuration API pour la condensation du contexte",
@@ -692,7 +591,7 @@
 		},
 		"autoCondenseContext": {
 			"name": "Déclencher automatiquement la condensation intelligente du contexte",
-			"description": "Lorsque cette option est activée, Kilo Code condensera automatiquement le contexte lorsque le seuil est atteint. Lorsqu'elle est désactivée, vous pouvez toujours déclencher manuellement la condensation du contexte."
+			"description": "Lorsque cette option est activée, Roo condensera automatiquement le contexte lorsque le seuil est atteint. Lorsqu'elle est désactivée, vous pouvez toujours déclencher manuellement la condensation du contexte."
 		},
 		"openTabs": {
 			"label": "Limite de contexte des onglets ouverts",
@@ -703,12 +602,12 @@
 			"description": "Nombre maximum de fichiers à inclure dans les détails du répertoire de travail actuel. Des valeurs plus élevées fournissent plus de contexte mais augmentent l'utilisation de token."
 		},
 		"rooignore": {
-			"label": "Afficher les fichiers .kilocodeignore dans les listes et recherches",
-			"description": "Lorsque cette option est activée, les fichiers correspondant aux modèles dans .kilocodeignore seront affichés dans les listes avec un symbole de cadenas. Lorsqu'elle est désactivée, ces fichiers seront complètement masqués des listes de fichiers et des recherches."
+			"label": "Afficher les fichiers .rooignore dans les listes et recherches",
+			"description": "Lorsque cette option est activée, les fichiers correspondant aux modèles dans .rooignore seront affichés dans les listes avec un symbole de cadenas. Lorsqu'elle est désactivée, ces fichiers seront complètement masqués des listes de fichiers et des recherches."
 		},
 		"maxReadFile": {
 			"label": "Seuil d'auto-troncature de lecture de fichier",
-			"description": "Kilo Code lit ce nombre de lignes lorsque le modèle omet les valeurs de début/fin. Si ce nombre est inférieur au total du fichier, Kilo Code génère un index des numéros de ligne des définitions de code. Cas spéciaux : -1 indique à Kilo Code de lire le fichier entier (sans indexation), et 0 indique de ne lire aucune ligne et de fournir uniquement les index de ligne pour un contexte minimal. Des valeurs plus basses minimisent l'utilisation initiale du contexte, permettant des lectures ultérieures de plages de lignes précises. Les requêtes avec début/fin explicites ne sont pas limitées par ce paramètre.",
+			"description": "Roo lit ce nombre de lignes lorsque le modèle omet les valeurs de début/fin. Si ce nombre est inférieur au total du fichier, Roo génère un index des numéros de ligne des définitions de code. Cas spéciaux : -1 indique à Roo de lire le fichier entier (sans indexation), et 0 indique de ne lire aucune ligne et de fournir uniquement les index de ligne pour un contexte minimal. Des valeurs plus basses minimisent l'utilisation initiale du contexte, permettant des lectures ultérieures de plages de lignes précises. Les requêtes avec début/fin explicites ne sont pas limitées par ce paramètre.",
 			"lines": "lignes",
 			"always_full_read": "Toujours lire le fichier entier"
 		},
@@ -758,6 +657,10 @@
 		"includeCurrentCost": {
 			"label": "Inclure le coût actuel dans le contexte",
 			"description": "Lorsque cette option est activée, le coût d'utilisation actuel de l'API sera inclus dans le prompt système. Désactivez cette option si les modèles cessent de fonctionner en raison de problèmes de coût."
+		},
+		"maxGitStatusFiles": {
+			"label": "Git status max fichiers",
+			"description": "Nombre maximum de fichiers à inclure dans le contexte de statut git. Mettre à 0 pour désactiver. Les informations de branche et les commits sont toujours affichés si > 0."
 		}
 	},
 	"terminal": {
@@ -771,11 +674,11 @@
 		},
 		"outputLineLimit": {
 			"label": "Limite de sortie du terminal",
-			"description": "Conserve les premières et dernières lignes et supprime celles du milieu pour rester sous la limite. Réduire pour économiser des jetons ; augmenter pour donner à Kilo plus de détails intermédiaires. Kilo voit un espace réservé là où le contenu est ignoré.<0>En savoir plus</0>"
+			"description": "Conserve les premières et dernières lignes et supprime celles du milieu pour rester sous la limite. Réduire pour économiser des jetons ; augmenter pour donner à Roo plus de détails intermédiaires. Roo voit un espace réservé là où le contenu est ignoré.<0>En savoir plus</0>"
 		},
 		"outputCharacterLimit": {
 			"label": "Limite de caractères du terminal",
-			"description": "Remplace la limite de lignes pour éviter les problèmes de mémoire en imposant un plafond strict sur la taille de sortie. Si dépassé, conserve le début et la fin et affiche un espace réservé à Kilo là où le contenu est ignoré. <0>En savoir plus</0>"
+			"description": "Remplace la limite de lignes pour éviter les problèmes de mémoire en imposant un plafond strict sur la taille de sortie. Si dépassé, conserve le début et la fin et affiche un espace réservé à Roo là où le contenu est ignoré. <0>En savoir plus</0>"
 		},
 		"shellIntegrationTimeout": {
 			"label": "Délai d'attente d'intégration du shell du terminal",
@@ -783,7 +686,7 @@
 		},
 		"shellIntegrationDisabled": {
 			"label": "Utiliser le terminal en ligne (recommandé)",
-			"description": "Exécute des commandes dans le terminal en ligne (chat) pour contourner les profils/intégration du shell pour des exécutions plus rapides et fiables. Lorsque désactivé, Kilo utilise le terminal VS Code avec votre profil de shell, invites et plugins. <0>En savoir plus</0>"
+			"description": "Exécute des commandes dans le terminal en ligne (chat) pour contourner les profils/intégration du shell pour des exécutions plus rapides et fiables. Lorsque désactivé, Roo utilise le terminal VS Code avec votre profil de shell, invites et plugins. <0>En savoir plus</0>"
 		},
 		"commandDelay": {
 			"label": "Délai de commande du terminal",
@@ -821,10 +724,18 @@
 	"advancedSettings": {
 		"title": "Paramètres avancés"
 	},
+	"toolProtocol": {
+		"label": "Protocole d'appel d'outil",
+		"description": "Choisissez comment Roo communique avec l'API. Natif utilise l'API d'appel de fonction du fournisseur, tandis que XML utilise des définitions d'outils au format XML.",
+		"default": "Défaut",
+		"xml": "XML",
+		"native": "Natif",
+		"currentDefault": "Défaut: {{protocol}}"
+	},
 	"advanced": {
 		"diff": {
 			"label": "Activer l'édition via des diffs",
-			"description": "Lorsque cette option est activée, Kilo Code pourra éditer des fichiers plus rapidement et rejettera automatiquement les écritures de fichiers complets tronqués",
+			"description": "Lorsque cette option est activée, Roo pourra éditer des fichiers plus rapidement et rejettera automatiquement les écritures de fichiers complets tronqués",
 			"strategy": {
 				"label": "Stratégie de diff",
 				"options": {
@@ -840,12 +751,12 @@
 			},
 			"matchPrecision": {
 				"label": "Précision de correspondance",
-				"description": "Ce curseur contrôle la précision avec laquelle les sections de code doivent correspondre lors de l'application des diffs. Des valeurs plus basses permettent des correspondances plus flexibles mais augmentent le risque de remplacement incorrects. Utilisez des valeurs inférieures à 100 % avec une extrême prudence."
+				"description": "Ce curseur contrôle la précision avec laquelle les sections de code doivent correspondre lors de l'application des diffs. Des valeurs plus basses permettent des correspondances plus flexibles mais augmentent le risque de remplacements incorrects. Utilisez des valeurs inférieures à 100 % avec une extrême prudence."
 			}
 		},
 		"todoList": {
 			"label": "Activer l'outil de liste de tâches",
-			"description": "Lorsqu'activé, Kilo Code peut créer et gérer des listes de tâches pour suivre la progression. Cela aide à organiser les tâches complexes en étapes gérables."
+			"description": "Lorsqu'activé, Roo peut créer et gérer des listes de tâches pour suivre la progression. Cela aide à organiser les tâches complexes en étapes gérables."
 		}
 	},
 	"experimental": {
@@ -855,19 +766,19 @@
 		},
 		"INSERT_BLOCK": {
 			"name": "Utiliser l'outil d'insertion de contenu expérimental",
-			"description": "Activer l'outil d'insertion de contenu expérimental, permettant à Kilo Code d'insérer du contenu à des numéros de ligne spécifiques sans avoir besoin de créer un diff."
+			"description": "Activer l'outil d'insertion de contenu expérimental, permettant à Roo d'insérer du contenu à des numéros de ligne spécifiques sans avoir besoin de créer un diff."
 		},
 		"POWER_STEERING": {
 			"name": "Utiliser le mode \"direction assistée\" expérimental",
-			"description": "Lorsqu'il est activé, Kilo Code rappellera plus fréquemment au modèle les détails de sa définition de mode actuelle. Cela conduira à une adhérence plus forte aux définitions de rôles et aux instructions personnalisées, mais utilisera plus de tokens par message."
+			"description": "Lorsqu'il est activé, Roo rappellera plus fréquemment au modèle les détails de sa définition de mode actuelle. Cela conduira à une adhérence plus forte aux définitions de rôles et aux instructions personnalisées, mais utilisera plus de tokens par message."
 		},
 		"MULTI_SEARCH_AND_REPLACE": {
 			"name": "Utiliser l'outil diff multi-blocs expérimental",
-			"description": "Lorsqu'il est activé, Kilo Code utilisera l'outil diff multi-blocs. Cela tentera de mettre à jour plusieurs blocs de code dans le fichier en une seule requête."
+			"description": "Lorsqu'il est activé, Roo utilisera l'outil diff multi-blocs. Cela tentera de mettre à jour plusieurs blocs de code dans le fichier en une seule requête."
 		},
 		"CONCURRENT_FILE_READS": {
 			"name": "Activer la lecture simultanée de fichiers",
-			"description": "Lorsqu'activé, Kilo Code peut lire plusieurs fichiers dans une seule requête. Lorsque désactivé, Kilo Code doit lire les fichiers un par un. La désactivation peut aider lors du travail avec des modèles moins performants ou lorsque tu souhaites plus de contrôle sur l'accès aux fichiers."
+			"description": "Lorsqu'activé, Roo peut lire plusieurs fichiers dans une seule requête. Lorsque désactivé, Roo doit lire les fichiers un par un. La désactivation peut aider lors du travail avec des modèles moins performants ou lorsque tu souhaites plus de contrôle sur l'accès aux fichiers."
 		},
 		"MARKETPLACE": {
 			"name": "Activer le Marketplace",
@@ -875,29 +786,11 @@
 		},
 		"MULTI_FILE_APPLY_DIFF": {
 			"name": "Activer les éditions de fichiers concurrentes",
-			"description": "Lorsque cette option est activée, Kilo Code peut éditer plusieurs fichiers en une seule requête. Lorsqu'elle est désactivée, Kilo Code doit éditer les fichiers un par un. Désactiver cette option peut aider lorsque tu travailles avec des modèles moins capables ou lorsque tu veux plus de contrôle sur les modifications de fichiers."
-		},
-		"MORPH_FAST_APPLY": {
-			"name": "Activer Fast Apply",
-			"description": "Lorsque cette option est activée, Kilo Code peut éditer des fichiers en utilisant Fast Apply avec des modèles spécialisés optimisés pour les modifications de code. Nécessite Kilo Gateway Provider, OpenRouter ou une clé API Morph.",
-			"apiProvider": "Fournisseur d'API",
-			"apiProviderList": {
-				"current": "Actuel"
-			},
-			"apiKey": "Clé API (optionnel)",
-			"placeholder": "Entrez votre clé API (optionnel)",
-			"modelLabel": "Sélection du modèle",
-			"modelDescription": "Choisissez quel modèle Fast Apply utiliser pour les éditions de fichiers",
-			"models": {
-				"auto": "Auto (Par défaut - choisit le meilleur disponible)",
-				"morphFast": "Morph v3 Fast (Plus rapide, coût réduit)",
-				"morphLarge": "Morph v3 Large (Plus performant)",
-				"relace": "Relace Apply v3"
-			}
+			"description": "Lorsque cette option est activée, Roo peut éditer plusieurs fichiers en une seule requête. Lorsqu'elle est désactivée, Roo doit éditer les fichiers un par un. Désactiver cette option peut aider lorsque tu travailles avec des modèles moins capables ou lorsque tu veux plus de contrôle sur les modifications de fichiers."
 		},
 		"PREVENT_FOCUS_DISRUPTION": {
 			"name": "Édition en arrière-plan",
-			"description": "Empêche la perturbation du focus de l'éditeur lorsqu'activé. Les modifications de fichiers se font en arrière-plan sans ouvrir de vues de différences ou voler le focus. Vous pouvez continuer à travailler sans interruption pendant que Kilo Code effectue des changements. Les fichiers peuvent être ouverts sans focus pour capturer les diagnostics ou rester complètement fermés."
+			"description": "Empêche la perturbation du focus de l'éditeur lorsqu'activé. Les modifications de fichiers se font en arrière-plan sans ouvrir de vues de différences ou voler le focus. Vous pouvez continuer à travailler sans interruption pendant que Roo effectue des changements. Les fichiers peuvent être ouverts sans focus pour capturer les diagnostics ou rester complètement fermés."
 		},
 		"ASSISTANT_MESSAGE_PARSER": {
 			"name": "Utiliser le nouveau parseur de messages",
@@ -909,31 +802,29 @@
 		},
 		"IMAGE_GENERATION": {
 			"name": "Activer la génération d'images IA",
-			"description": "Lorsqu'activé, Kilo Code peut générer des images à partir de prompts textuels. Nécessite qu'une clé API Kilo Code ou OpenRouter soit configurée.",
-			"apiProvider": "Fournisseur d'API",
+			"providerLabel": "Fournisseur",
+			"providerDescription": "Sélectionnez le fournisseur pour la génération d'images.",
+			"description": "Lorsqu'activé, Roo peut générer des images à partir de prompts textuels en utilisant les modèles de génération d'images d'OpenRouter. Nécessite qu'une clé API OpenRouter soit configurée.",
 			"openRouterApiKeyLabel": "Clé API OpenRouter",
 			"openRouterApiKeyPlaceholder": "Entrez votre clé API OpenRouter",
-			"kiloCodeApiKeyLabel": "Clé API Kilo Code",
-			"kiloCodeApiKeyPlaceholder": "Entrez votre clé API Kilo Code",
-			"kiloCodeApiKeyPaste": "Coller la clé API Kilo Code actuelle",
 			"getApiKeyText": "Obtenez votre clé API depuis",
 			"modelSelectionLabel": "Modèle de génération d'images",
 			"modelSelectionDescription": "Sélectionnez le modèle pour la génération d'images",
-			"warningMissingKey": "⚠️ Une clé API est requise pour la génération d'images, veuillez la configurer ci-dessus.",
+			"warningMissingKey": "⚠️ Une clé API OpenRouter est requise pour la génération d'images. Veuillez la configurer ci-dessus.",
 			"successConfigured": "✓ La génération d'images est configurée et prête à utiliser"
-		},
-		"INLINE_ASSIST": {
-			"name": "Autocomplete",
-			"description": "Active les fonctionnalités Autocomplete pour des suggestions de code rapides et des améliorations directement dans ton éditeur. Inclut Tâche Rapide (Cmd+I) pour des changements ciblés et Autocomplete pour des améliorations contextuelles."
 		},
 		"RUN_SLASH_COMMAND": {
 			"name": "Activer les commandes slash initiées par le modèle",
-			"description": "Lorsque activé, Kilo Code peut exécuter tes commandes slash pour lancer des workflows."
+			"description": "Lorsque activé, Roo peut exécuter tes commandes slash pour lancer des workflows."
+		},
+		"MULTIPLE_NATIVE_TOOL_CALLS": {
+			"name": "Appels d'outils parallèles",
+			"description": "Lorsqu'activé, le protocole natif peut exécuter plusieurs outils en un seul tour de message d'assistant."
 		}
 	},
 	"promptCaching": {
 		"label": "Désactiver la mise en cache des prompts",
-		"description": "Lorsque cette option est cochée, Kilo Code n'utilisera pas la mise en cache des prompts pour ce modèle."
+		"description": "Lorsque cette option est cochée, Roo n'utilisera pas la mise en cache des prompts pour ce modèle."
 	},
 	"temperature": {
 		"useCustom": "Utiliser une température personnalisée",
@@ -963,18 +854,17 @@
 		}
 	},
 	"modelPicker": {
-		"automaticFetch": "L'extension récupère automatiquement la liste la plus récente des modèles disponibles sur <serviceLink>{{serviceName}}</serviceLink>. Si vous ne savez pas quel modèle choisir, Kilo Code fonctionne mieux avec <defaultModelLink>{{defaultModelId}}</defaultModelLink>.",
+		"automaticFetch": "L'extension récupère automatiquement la liste la plus récente des modèles disponibles sur <serviceLink>{{serviceName}}</serviceLink>. Si vous ne savez pas quel modèle choisir, Roo Code fonctionne mieux avec <defaultModelLink>{{defaultModelId}}</defaultModelLink>. Vous pouvez également rechercher \"free\" pour les options gratuites actuellement disponibles.",
 		"label": "Modèle",
 		"searchPlaceholder": "Rechercher",
 		"noMatchFound": "Aucune correspondance trouvée",
 		"useCustomModel": "Utiliser personnalisé : {{modelId}}"
 	},
 	"footer": {
-		"feedback": "Si vous avez des questions ou des commentaires, n'hésitez pas à ouvrir un problème sur <githubLink>github.com/Kilo-Org/kilocode</githubLink> ou à rejoindre <redditLink>reddit.com/r/kilocode</redditLink> ou <discordLink>kilocode.ai/discord</discordLink>",
-		"support": "Pour les questions financières, veuillez contacter le Support Client à <supportLink>https://kilocode.ai/support</supportLink>",
+		"feedback": "Si vous avez des questions ou des commentaires, n'hésitez pas à ouvrir un problème sur <githubLink>github.com/RooCodeInc/Roo-Code</githubLink> ou à rejoindre <redditLink>reddit.com/r/RooCode</redditLink> ou <discordLink>discord.gg/roocode</discordLink>",
 		"telemetry": {
-			"label": "Autoriser les rapports d'erreurs et d'utilisation",
-			"description": "Aide à améliorer Kilo Code en envoyant des données d'utilisation et des rapports d'erreurs. Aucun code, prompt ou information personnelle n'est jamais envoyé. Consulte notre politique de confidentialité pour plus de détails."
+			"label": "Autoriser les rapports anonymes d'erreurs et d'utilisation",
+			"description": "Aidez à améliorer Roo Code en envoyant des données d'utilisation anonymes et des rapports d'erreurs. Cette télémétrie ne collecte pas de code, de prompts ou d'informations personnelles. Consultez notre <privacyLink>politique de confidentialité</privacyLink> pour plus de détails."
 		},
 		"settings": {
 			"import": "Importer",
@@ -993,8 +883,6 @@
 		"modelId": "Vous devez fournir un ID de modèle valide.",
 		"modelSelector": "Vous devez fournir un sélecteur de modèle valide.",
 		"openAi": "Vous devez fournir une URL de base, une clé API et un ID de modèle valides.",
-		"sapAiCore": "Vous devez fournir une clé de service SAP AI Core valide.",
-		"sapAiCoreDeploymentId": "Vous devez sélectionner un déploiement en cours d'exécution pour le modèle '{{model}}'.",
 		"arn": {
 			"invalidFormat": "Format ARN invalide. Veuillez vérifier les exigences de format.",
 			"regionMismatch": "Attention : La région dans votre ARN ({{arnRegion}}) ne correspond pas à votre région sélectionnée ({{region}}). Cela peut causer des problèmes d'accès. Le fournisseur utilisera la région de l'ARN."
@@ -1038,32 +926,6 @@
 	"labels": {
 		"customArn": "ARN personnalisé",
 		"useCustomArn": "Utiliser un ARN personnalisé..."
-	},
-	"display": {
-		"taskTimeline": {
-			"label": "Afficher la chronologie des tâches",
-			"description": "Afficher une chronologie visuelle des messages de tâches, colorés selon leur type, permettant de voir rapidement la progression des tâches et de revenir à des points spécifiques dans l'historique de la tâche."
-		},
-		"sendMessageOnEnter": {
-			"label": "Envoyer le message avec Entrée",
-			"description": "Lorsque cette option est activée, appuyez sur Entrée pour envoyer et sur Maj+Entrée pour une nouvelle ligne. Désactivez-la pour utiliser Maj+Entrée pour envoyer à la place."
-		},
-		"costThreshold": {
-			"label": "Masquer le coût en dessous du seuil",
-			"currentValue": "Seuil actuel : ${{value}}",
-			"description": "N'afficher que les coûts de requête supérieurs à ce montant. Les coûts sont toujours visibles lorsque le volet de détails est ouvert."
-		},
-		"showTimestamps": {
-			"label": "Afficher les horodatages",
-			"description": "Afficher l'horodatage pour chaque message dans la vue de discussion"
-		}
-	},
-	"ghost": {
-		"showGutterAnimation": {
-			"label": "Afficher l'animation dans la gouttière lors de l'autocomplétion",
-			"description": "Affiche un indicateur animé dans la gouttière de l'éditeur lorsque l'autocomplétion est en cours",
-			"preview": "Aperçu de l'animation"
-		}
 	},
 	"includeMaxOutputTokens": "Inclure les tokens de sortie maximum",
 	"includeMaxOutputTokensDescription": "Envoyer le paramètre de tokens de sortie maximum dans les requêtes API. Certains fournisseurs peuvent ne pas supporter cela.",

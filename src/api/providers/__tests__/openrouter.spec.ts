@@ -72,10 +72,9 @@ describe("OpenRouterHandler", () => {
 			baseURL: "https://openrouter.ai/api/v1",
 			apiKey: mockOptions.openRouterApiKey,
 			defaultHeaders: {
-				"HTTP-Referer": "https://kilocode.ai",
-				"X-Title": "Kilo Code",
-				"X-KiloCode-Version": Package.version,
-				"User-Agent": `Kilo-Code/${Package.version}`,
+				"HTTP-Referer": "https://github.com/RooVetGit/Roo-Cline",
+				"X-Title": "Roo Code",
+				"User-Agent": `RooCode/${Package.version}`,
 			},
 		})
 	})
@@ -195,7 +194,7 @@ describe("OpenRouterHandler", () => {
 					top_p: undefined,
 					transforms: ["middle-out"],
 				}),
-				undefined, // kilocode_change
+				{ headers: { "x-anthropic-beta": "fine-grained-tool-streaming-2025-05-14" } },
 			)
 		})
 
@@ -220,10 +219,9 @@ describe("OpenRouterHandler", () => {
 
 			await handler.createMessage("test", []).next()
 
-			expect(mockCreate).toHaveBeenCalledWith(
-				expect.objectContaining({ transforms: ["middle-out"] }),
-				undefined, // kilocode_change
-			)
+			expect(mockCreate).toHaveBeenCalledWith(expect.objectContaining({ transforms: ["middle-out"] }), {
+				headers: { "x-anthropic-beta": "fine-grained-tool-streaming-2025-05-14" },
+			})
 		})
 
 		it("adds cache control for supported models", async () => {
@@ -265,7 +263,7 @@ describe("OpenRouterHandler", () => {
 						}),
 					]),
 				}),
-				undefined, // kilocode_change
+				{ headers: { "x-anthropic-beta": "fine-grained-tool-streaming-2025-05-14" } },
 			)
 		})
 
@@ -305,12 +303,11 @@ describe("OpenRouterHandler", () => {
 				{
 					model: mockOptions.openRouterModelId,
 					max_tokens: 8192,
-					thinking: undefined,
 					temperature: 0,
 					messages: [{ role: "user", content: "test prompt" }],
 					stream: false,
 				},
-				undefined, // kilocode_change options
+				{ headers: { "x-anthropic-beta": "fine-grained-tool-streaming-2025-05-14" } },
 			)
 		})
 

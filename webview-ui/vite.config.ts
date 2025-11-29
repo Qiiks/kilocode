@@ -27,9 +27,9 @@ const wasmPlugin = (): Plugin => ({
 			const wasmBinary = await import(id)
 
 			return `
-          			const wasmModule = new WebAssembly.Module(${wasmBinary.default});
-          			export default wasmModule;
-        		`
+           			const wasmModule = new WebAssembly.Module(${wasmBinary.default});
+           			export default wasmModule;
+         		`
 		}
 	},
 })
@@ -55,17 +55,7 @@ const persistPortPlugin = (): Plugin => ({
 export default defineConfig(({ mode }) => {
 	let outDir = "../src/webview-ui/build"
 
-	// kilocode_change start - read package.json fresh every time to avoid caching issues
-	const getPkg = () => {
-		try {
-			return JSON.parse(fs.readFileSync(path.join(__dirname, "..", "src", "package.json"), "utf8"))
-		} catch (error) {
-			throw new Error(`Could not read package.json: ${error}`)
-		}
-	}
-
-	const pkg = getPkg()
-	// kilocode_change end
+	const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "src", "package.json"), "utf8"))
 	const gitSha = getGitSha()
 
 	const define: Record<string, any> = {
@@ -73,7 +63,7 @@ export default defineConfig(({ mode }) => {
 		"process.env.VSCODE_TEXTMATE_DEBUG": JSON.stringify(process.env.VSCODE_TEXTMATE_DEBUG),
 		"process.env.PKG_NAME": JSON.stringify(pkg.name),
 		"process.env.PKG_VERSION": JSON.stringify(pkg.version),
-		"process.env.PKG_OUTPUT_CHANNEL": JSON.stringify("Kilo-Code"),
+		"process.env.PKG_OUTPUT_CHANNEL": JSON.stringify("Roo-Code"),
 		...(gitSha ? { "process.env.PKG_SHA": JSON.stringify(gitSha) } : {}),
 	}
 
@@ -88,7 +78,7 @@ export default defineConfig(({ mode }) => {
 
 		define["process.env.PKG_NAME"] = JSON.stringify(nightlyPkg.name)
 		define["process.env.PKG_VERSION"] = JSON.stringify(nightlyPkg.version)
-		define["process.env.PKG_OUTPUT_CHANNEL"] = JSON.stringify("Kilo-Code-Nightly")
+		define["process.env.PKG_OUTPUT_CHANNEL"] = JSON.stringify("Roo-Code-Nightly")
 	}
 
 	const plugins: PluginOption[] = [react(), tailwindcss(), persistPortPlugin(), wasmPlugin(), sourcemapPlugin()]
@@ -110,8 +100,13 @@ export default defineConfig(({ mode }) => {
 			sourcemap: true,
 			// Ensure source maps are properly included in the build
 			minify: mode === "production" ? "esbuild" : false,
+			// Use a single combined CSS bundle so both webviews share styles
+			cssCodeSplit: false,
 			rollupOptions: {
-				external: ["vscode"], // kilocode_change: we inadvertently import vscode into the webview: @roo/modes => src/shared/modes => ../core/prompts/sections/custom-instructions
+				input: {
+					index: resolve(__dirname, "index.html"),
+					"browser-panel": resolve(__dirname, "browser-panel.html"),
+				},
 				output: {
 					entryFileNames: `assets/[name].js`,
 					chunkFileNames: (chunkInfo) => {
@@ -122,16 +117,18 @@ export default defineConfig(({ mode }) => {
 						return `assets/chunk-[hash].js`
 					},
 					assetFileNames: (assetInfo) => {
-						if (
-							assetInfo.name &&
-							(assetInfo.name.endsWith(".woff2") ||
-								assetInfo.name.endsWith(".woff") ||
-								assetInfo.name.endsWith(".ttf"))
-						) {
+						const name = assetInfo.name || ""
+
+						// Force all CSS into a single predictable file used by both webviews
+						if (name.endsWith(".css")) {
+							return "assets/index.css"
+						}
+
+						if (name.endsWith(".woff2") || name.endsWith(".woff") || name.endsWith(".ttf")) {
 							return "assets/fonts/[name][extname]"
 						}
 						// Ensure source maps are included in the build
-						if (assetInfo.name && assetInfo.name.endsWith(".map")) {
+						if (name.endsWith(".map")) {
 							return "assets/[name]"
 						}
 						return "assets/[name][extname]"
@@ -164,9 +161,8 @@ export default defineConfig(({ mode }) => {
 			},
 		},
 		server: {
-			host: "0.0.0.0", // kilocode_change
 			hmr: {
-				// host: "localhost", kilocode_change
+				host: "localhost",
 				protocol: "ws",
 			},
 			cors: {
@@ -182,7 +178,7 @@ export default defineConfig(({ mode }) => {
 				"dagre", // Explicitly include dagre for pre-bundling
 				// Add other known large mermaid dependencies if identified
 			],
-			exclude: ["@vscode/codicons", "vscode-oniguruma", "shiki", "vscode" /*kilocode_change*/],
+			exclude: ["@vscode/codicons", "vscode-oniguruma", "shiki"],
 		},
 		assetsInclude: ["**/*.wasm", "**/*.wav"],
 	}
