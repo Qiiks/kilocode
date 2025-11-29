@@ -162,7 +162,7 @@ export interface ExtensionMessage {
 	// kilocode_change start: add kilocode-specific message properties
 	sapAiCoreModels?: ModelRecord
 	sapAiCoreDeployments?: Record<string, any>
-	copilotModels?: string[]
+	copilotModels?: ModelRecord
 	copilotAuthenticated?: boolean
 	copilotDeviceCode?: any
 	globalRules?: ClineRulesToggles

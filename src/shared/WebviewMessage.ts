@@ -100,6 +100,12 @@ export interface BalanceDataResponsePayload {
 
 export type GlobalStateValue = string | number | boolean | object | null | undefined
 
+export interface UpdateGlobalStateMessage {
+	type: "updateGlobalState"
+	stateKey: string
+	stateValue: GlobalStateValue
+}
+
 // MaybeTypedWebviewMessage is used in webviewMessageHandler for kilocode extensions
 // It allows for additional message types that aren't strictly typed in WebviewMessage
 export type MaybeTypedWebviewMessage = WebviewMessage

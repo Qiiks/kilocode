@@ -223,6 +223,7 @@ export const globalSettingsSchema = z.object({
 	kilocodeDefaultModel: z.string().optional(),
 	virtualQuotaActiveModel: z.string().optional(),
 	globalWorkflowToggles: z.record(z.string(), z.boolean()).optional(),
+	globalRulesToggles: z.record(z.string(), z.boolean()).optional(),
 	// kilocode_change end
 })
 
