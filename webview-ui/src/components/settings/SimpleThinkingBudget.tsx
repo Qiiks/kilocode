@@ -30,13 +30,16 @@ export const SimpleThinkingBudget = ({
 	const isReasoningEffortRequired = !!modelInfo && modelInfo.requiredReasoningEffort
 
 	// Build available reasoning efforts list
-	// Include "none" option unless reasoning effort is required
+	// Always include "none" option so users can control whether to use reasoning
 	const baseEfforts = [...reasoningEfforts] as ReasoningEffort[]
-	const availableReasoningEfforts: ReadonlyArray<ReasoningEffortWithNone> = isReasoningEffortRequired
-		? baseEfforts
-		: (["none", ...baseEfforts] as ReasoningEffortWithNone[])
+	const availableReasoningEfforts: ReadonlyArray<ReasoningEffortWithNone> = [
+		"none",
+		...baseEfforts,
+	] as ReasoningEffortWithNone[]
 
-	// Default reasoning effort - use model's default if available, otherwise "medium"
+	// Default reasoning effort - use model's default if available
+	// For models that require reasoning, default to their preference or "medium"
+	// For optional reasoning, default to "none"
 	const modelDefaultReasoningEffort = modelInfo?.reasoningEffort as ReasoningEffort | undefined
 	const defaultReasoningEffort: ReasoningEffortWithNone = isReasoningEffortRequired
 		? modelDefaultReasoningEffort || "medium"

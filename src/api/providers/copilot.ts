@@ -7,9 +7,11 @@ import {
 	GITHUB_COPILOT_API_BASE,
 	type ModelInfo,
 	openAiModelInfoSaneDefaults,
+	type ReasoningEffort,
 } from "@roo-code/types"
 
 import type { ApiHandlerOptions, ModelRecord } from "../../shared/api"
+import { shouldUseReasoningEffort } from "../../shared/api"
 
 import { convertToOpenAiMessages } from "../transform/openai-format"
 import { ApiStream, ApiStreamUsageChunk } from "../transform/stream"
@@ -147,7 +149,10 @@ export class CopilotHandler extends BaseProvider implements SingleCompletionHand
 			headers["Copilot-Vision-Request"] = "true"
 		}
 
-		const requestOptions: OpenAI.Chat.Completions.ChatCompletionCreateParamsStreaming = {
+		// Build request options
+		const requestOptions: OpenAI.Chat.Completions.ChatCompletionCreateParamsStreaming & {
+			reasoning_effort?: ReasoningEffort
+		} = {
 			model: modelId,
 			temperature: this.options.modelTemperature ?? 0,
 			messages: convertedMessages,
@@ -156,12 +161,28 @@ export class CopilotHandler extends BaseProvider implements SingleCompletionHand
 			max_completion_tokens: modelInfo.maxTokens,
 		}
 
+		// Add reasoning effort if enabled for this model
+		const reasoningEffort = this.getReasoningEffort(modelInfo)
+		if (reasoningEffort) {
+			requestOptions.reasoning_effort = reasoningEffort
+		}
+
 		const stream = await this.client.chat.completions.create(requestOptions, {
 			headers,
 		})
 
 		for await (const chunk of stream) {
-			const delta = chunk.choices?.[0]?.delta
+			const delta = chunk.choices?.[0]?.delta as any // Cast to any to access reasoning fields
+
+			// Handle reasoning text (if present)
+			if (delta?.reasoning_text) {
+				yield {
+					type: "reasoning",
+					text: delta.reasoning_text,
+				}
+			}
+
+			// Handle regular content
 			if (delta?.content) {
 				yield {
 					type: "text",
@@ -180,13 +201,48 @@ export class CopilotHandler extends BaseProvider implements SingleCompletionHand
 	 * Process usage metrics from OpenAI response
 	 */
 	private processUsageMetrics(usage: any): ApiStreamUsageChunk {
+		const reasoningTokens =
+			typeof usage?.completion_tokens_details?.reasoning_tokens === "number"
+				? usage.completion_tokens_details.reasoning_tokens
+				: undefined
+
 		return {
 			type: "usage",
 			inputTokens: usage?.prompt_tokens || 0,
 			outputTokens: usage?.completion_tokens || 0,
 			cacheWriteTokens: usage?.prompt_tokens_details?.cache_miss_tokens,
 			cacheReadTokens: usage?.prompt_tokens_details?.cached_tokens,
+			...(typeof reasoningTokens === "number" ? { reasoningTokens } : {}),
 		}
+	}
+
+	/**
+	 * Get reasoning effort setting for the model
+	 */
+	private getReasoningEffort(modelInfo: ModelInfo): ReasoningEffort | undefined {
+		// Check if model supports reasoning effort
+		if (!shouldUseReasoningEffort({ model: modelInfo, settings: this.options })) {
+			return undefined
+		}
+
+		// Get the configured reasoning effort
+		const effort = this.options.reasoningEffort ?? modelInfo.reasoningEffort
+		if (!effort || effort === "disable") {
+			return undefined
+		}
+
+		// Map extended efforts to standard OpenAI efforts
+		// OpenAI only supports "low" | "medium" | "high"
+		if (effort === "minimal" || effort === "none") {
+			return "low"
+		}
+
+		// Only return if it's a valid ReasoningEffort value
+		if (effort === "low" || effort === "medium" || effort === "high") {
+			return effort
+		}
+
+		return undefined
 	}
 
 	override getModel() {

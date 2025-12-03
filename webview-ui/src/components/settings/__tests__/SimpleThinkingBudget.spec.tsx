@@ -88,7 +88,7 @@ describe("SimpleThinkingBudget", () => {
 		expect(screen.getByText("Model Reasoning Effort")).toBeInTheDocument()
 	})
 
-	it("should not render None option when reasoning effort is required", () => {
+	it("should render reasoning effort control when reasoning effort is required", () => {
 		const modelWithRequiredReasoningEffort: ModelInfo = {
 			...modelWithReasoningEffort,
 			requiredReasoningEffort: true,
@@ -102,6 +102,7 @@ describe("SimpleThinkingBudget", () => {
 			/>,
 		)
 
+		// None option is always available so users can control reasoning
 		expect(screen.getByTestId("simple-reasoning-effort")).toBeInTheDocument()
 	})
 
@@ -150,7 +151,7 @@ describe("SimpleThinkingBudget", () => {
 		expect(screen.getByRole("combobox")).toBeInTheDocument()
 	})
 
-	it("should exclude None option when reasoning effort is required", () => {
+	it("should include None option even when reasoning effort is required", () => {
 		const modelWithRequiredReasoningEffort: ModelInfo = {
 			...modelWithReasoningEffort,
 			requiredReasoningEffort: true,
@@ -164,7 +165,7 @@ describe("SimpleThinkingBudget", () => {
 			/>,
 		)
 
-		// Component should render with the select
+		// None option is always available so users can control reasoning
 		expect(screen.getByRole("combobox")).toBeInTheDocument()
 	})
 

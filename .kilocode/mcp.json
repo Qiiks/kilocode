@@ -3,9 +3,8 @@
 		"context7": {
 			"command": "npx",
 			"args": ["-y", "@upstash/context7-mcp"],
-			"env": {
-				"DEFAULT_MINIMUM_TOKENS": ""
-			}
+			"env": { "DEFAULT_MINIMUM_TOKENS": "" },
+			"alwaysAllow": ["get-library-docs", "resolve-library-id"]
 		}
 	}
 }

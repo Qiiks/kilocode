@@ -209,17 +209,20 @@ export const Copilot = ({
 			{isAuthenticated && (
 				<>
 					{copilotModels && Object.keys(copilotModels).length > 0 ? (
-						<ModelPicker
-							apiConfiguration={apiConfiguration}
-							setApiConfigurationField={setApiConfigurationField}
-							defaultModelId={copilotDefaultModelId}
-							models={copilotModels}
-							modelIdKey="copilotModelId"
-							serviceName="Copilot"
-							serviceUrl="https://github.com/features/copilot"
-							organizationAllowList={organizationAllowList}
-							errorMessage={modelValidationError}
-						/>
+						<>
+							<ModelPicker
+								apiConfiguration={apiConfiguration}
+								setApiConfigurationField={setApiConfigurationField}
+								defaultModelId={copilotDefaultModelId}
+								models={copilotModels}
+								modelIdKey="copilotModelId"
+								serviceName="Copilot"
+								serviceUrl="https://github.com/features/copilot"
+								organizationAllowList={organizationAllowList}
+								errorMessage={modelValidationError}
+							/>
+							{/* Reasoning effort settings are rendered in ApiOptions.tsx via ThinkingBudget */}
+						</>
 					) : (
 						<div className="text-sm text-vscode-descriptionForeground">
 							{t("settings:providers.copilotModelDescription")}

@@ -353,6 +353,8 @@ export async function getCopilotModels(): Promise<ModelRecord> {
 			if (model.model_picker_enabled !== true) {
 				continue
 			}
+			// Check if model supports reasoning/thinking budget
+			const supportsReasoning = !!model?.capabilities?.supports?.max_thinking_budget
 			result[model.id] = {
 				maxTokens: model?.capabilities?.limits?.max_output_tokens,
 				maxThinkingTokens: model?.capabilities?.supports?.max_thinking_budget,
@@ -365,8 +367,9 @@ export async function getCopilotModels(): Promise<ModelRecord> {
 				// supportsReasoningBudget: !!model?.capabilities?.supports?.max_thinking_budget,
 				supportsReasoningBudget: false,
 				requiredReasoningBudget: false,
-				supportsReasoningEffort: false,
-				supportedParameters: model?.capabilities?.supports?.max_thinking_budget ? ["reasoning"] : [],
+				// Enable reasoning effort UI for models that support max_thinking_budget
+				supportsReasoningEffort: supportsReasoning,
+				supportedParameters: supportsReasoning ? ["reasoning"] : [],
 				inputPrice: 0,
 				outputPrice: 0,
 				cacheWritesPrice: 0,

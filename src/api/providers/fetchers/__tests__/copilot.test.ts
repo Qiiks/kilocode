@@ -163,7 +163,8 @@ describe("getCopilotModels", () => {
 			supportsVerbosity: false,
 			supportsReasoningBudget: false,
 			requiredReasoningBudget: false,
-			supportsReasoningEffort: false,
+			// Model supports reasoning effort because it has max_thinking_budget
+			supportsReasoningEffort: true,
 			supportedParameters: ["reasoning"],
 		})
 	})
