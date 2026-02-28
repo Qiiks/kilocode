@@ -599,6 +599,46 @@ export namespace Provider {
       }
     },
     // kilocode_change end
+
+    // kilocode_change start - Antigravity (Cloud Code) provider
+    antigravity: async () => {
+      const auth = await Auth.get("antigravity")
+      if (!auth || auth.type !== "oauth") return { autoload: false }
+
+      const { refreshAccessToken, createAntigravityFetch, fetchProjectId, PROXY_BASE } = await import(
+        "@/kilocode/antigravity/provider"
+      )
+
+      const accessToken =
+        auth.expires < Date.now() && auth.refresh
+          ? await (async () => {
+              const refreshed = await refreshAccessToken(auth.refresh)
+              await Auth.set("antigravity", { ...auth, access: refreshed.access, expires: refreshed.expires })
+              return refreshed.access as string
+            })()
+          : auth.access
+
+      const projectId = auth.accountId ?? (await fetchProjectId(accessToken))
+      if (projectId && !auth.accountId) {
+        await Auth.set("antigravity", { ...auth, access: accessToken, accountId: projectId })
+      }
+
+      const customFetch = createAntigravityFetch({
+        accessToken,
+        refreshToken: auth.refresh,
+        projectId,
+      })
+
+      return {
+        autoload: true,
+        options: {
+          baseURL: PROXY_BASE,
+          apiKey: "antigravity-internal",
+          fetch: customFetch,
+        },
+      }
+    },
+    // kilocode_change end
   }
 
   export const Model = z

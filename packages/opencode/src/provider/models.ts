@@ -167,6 +167,25 @@ export namespace ModelsDev {
       }
     }
 
+    // Inject Antigravity (Cloud Code) provider with hardcoded model list
+    if (!providers["antigravity"]) {
+      const antigravityAuth = await Auth.get("antigravity")
+      if (antigravityAuth?.type === "oauth") {
+        const { ANTIGRAVITY_MODELS, fetchAntigravityModels } = await import("@/kilocode/antigravity/models")
+        const models = await fetchAntigravityModels({
+          accessToken: antigravityAuth.access,
+          projectId: antigravityAuth.accountId ?? undefined,
+        }).catch(() => ANTIGRAVITY_MODELS)
+        providers["antigravity"] = {
+          id: "antigravity",
+          name: "Antigravity (Cloud Code)",
+          env: [],
+          npm: "@ai-sdk/google",
+          models,
+        }
+      }
+    }
+
     return providers
     // kilocode_change end
   }
