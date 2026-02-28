@@ -13,7 +13,10 @@ if (!expectedBunVersion) {
 const expectedBunVersionRange = `^${expectedBunVersion}`
 
 if (!semver.satisfies(process.versions.bun, expectedBunVersionRange)) {
-  throw new Error(`This script requires bun@${expectedBunVersionRange}, but you are using bun@${process.versions.bun}`)
+  if (!process.env["SKIP_BUN_VERSION_CHECK"]) { // kilocode_change - allow bypass for local dev
+    throw new Error(`This script requires bun@${expectedBunVersionRange}, but you are using bun@${process.versions.bun}`)
+  }
+  console.warn(`[warn] bun version mismatch: requires ${expectedBunVersionRange}, using ${process.versions.bun}`)
 }
 // kilocode_change start
 const env = {
